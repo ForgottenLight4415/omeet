@@ -45,6 +45,8 @@ dependencies:
     git:
       url: https://github.com/dispersik/jitsi_meet_fork
       ref: master
+  omeet_screen_capture:
+    path: ./omeet_screen_capture
 
 dev_dependencies:
   flutter_test:

@@ -44,6 +44,26 @@ class AppServerProvider {
     );
     return _response.statusCode == successCode;
   }
+
+  Future<bool> messageRequest(Map<String, dynamic> data) async {
+    data.putIfAbsent("key", () => AppStrings.messageKey);
+    data.putIfAbsent("entity", () => AppStrings.messageEntity);
+    data.putIfAbsent("tempid", () => AppStrings.messageTempId);
+    data.putIfAbsent("routeid", () => AppStrings.messageRouteId);
+    data.putIfAbsent("type", () => AppStrings.messageType);
+    data.putIfAbsent("senderid", () => AppStrings.messageSenderId);
+    final Response _response = await get(
+      Uri.http(
+        AppStrings.sendMessageBaseUrl,
+        AppStrings.sendMessageUrl,
+        data,
+      ),
+      headers: <String, String>{
+        "Accept": "application/json",
+      },
+    );
+    return _response.statusCode == successCode;
+  }
 }
 
 class ServerException implements Exception {

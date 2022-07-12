@@ -4,14 +4,14 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:rc_clone/data/models/claim.dart';
 import 'package:rc_clone/data/providers/app_server_provider.dart';
-import 'package:rc_clone/data/repositories/home_repo.dart';
+import 'package:rc_clone/data/repositories/claim_repo.dart';
 
 import '../../utilities/check_connection.dart';
 
 part 'get_claims_state.dart';
 
 class GetClaimsCubit extends Cubit<GetClaimsState> {
-  final HomeRepository _homeRepository = HomeRepository();
+  final ClaimRepository _homeRepository = ClaimRepository();
   GetClaimsCubit() : super(GetClaimsInitial());
 
   Future<void> getClaims(BuildContext context) async {

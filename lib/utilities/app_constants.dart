@@ -4,13 +4,26 @@ class AppStrings {
   static const String bridgeCallBaseUrl = "godjn.slashrtc.in";
   static const String bridgeCallBaseUrlNew = "cpaas-api-167-2.slashrtc.in";
 
+  static const String sendMessageBaseUrl = "sms.gooadvert.com";
+  static const String sendMessageUrl = "app/smsapi/index.php";
+  static const String messageKey = "562A39B5CE0B91";
+  static const String messageEntity = "1501693730000042530";
+  static const String messageTempId = "1507165743675014713";
+  static const String messageRouteId = "636";
+  static const String messageType = "text";
+  static const String messageSenderId = "GODJNO";
+  static const String messageMeetUrl = "https://omeet.in/BAGIC_Motor_Claim_Investigation/OMEET/index.php?id=";
+
   static const String loginUrl = "api/loginm.php";
 
   // CLAIMS
   static const String getClaimsUrl = "api/allclaims.php";
+  static const String newClaim = "api/addnewcase.php";
+  static const String claimConclusion = "api/conclusion.php";
 
   // DATA UPLOAD
   static const String uploadVideoUrl = "admin/meet/video_meet/s3upload/upload.php";
+  static const String uploadImageUrl = "userimages/s3upload/upload.php";
 
   // VOICE CALL
   static const String callToken = "79b12042acc016a955281aed7bfa09a5";
@@ -46,6 +59,8 @@ class AppStrings {
   static const String grantPermission = "GRANT PERMISSION";
   static const String stopRecording = "Stop recording";
   static const String startRecording = "Start recording";
+  static const String recordVideo = "Record video";
+  static const String recordAudio = "Record audio";
 
   // LONG INFORMATION TEXT
   static const String locationExplanation = "Location access is needed to access this feature.";

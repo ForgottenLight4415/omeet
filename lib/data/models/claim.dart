@@ -53,73 +53,77 @@ class Claim {
   final String faceMatch;
 
   Claim.fromJson(Map<String, dynamic> decodedJson)
-      : claimID = int.parse(decodedJson["id"]),
+      : claimID = decodedJson['id'] != null ? int.parse(decodedJson["id"]) : 0,
         //  CUSTOMER INFO
-        insuredName = cleanStrings(decodedJson["Insured_Name"]),
-        insuredCity = cleanOrConvert(decodedJson["Insured_City"]),
-        insuredState = cleanStrings(decodedJson["Insured_State"]),
-        insuredContactNumber = cleanStrings(
+        insuredName = _cleanOrConvert(decodedJson["Insured_Name"]),
+        insuredCity = _cleanOrConvert(decodedJson["Insured_City"]),
+        insuredState = _cleanOrConvert(decodedJson["Insured_State"]),
+        insuredContactNumber = _cleanOrConvert(
           decodedJson["Insured_Contact_Number"],
         ),
-        insuredAltContactNumber = cleanStrings(
+        insuredAltContactNumber = _cleanOrConvert(
           decodedJson["Insured_Alternate_Contact_Number"],
         ),
-        email = cleanStrings(decodedJson["Insured_Alternate_Contact_Number"]),
+        email =
+            _cleanOrConvert(decodedJson["Insured_Alternate_Contact_Number"]),
 
         // VEHICLE DETAILS
-        productType = cleanStrings(decodedJson["Product_Type"]),
-        make = cleanStrings(decodedJson["Make"]),
-        model = cleanStrings(decodedJson["Model"]),
-        engineNumber = cleanStrings(decodedJson["Engine_No"]),
-        chassisNumber = cleanStrings(decodedJson["Engine_No"]),
-        vehicleRegistrationNumber = cleanStrings(decodedJson["Vehicle_Reg_No"]),
+        productType = _cleanOrConvert(decodedJson["Product_Type"]),
+        make = _cleanOrConvert(decodedJson["Make"]),
+        model = _cleanOrConvert(decodedJson["Model"]),
+        engineNumber = _cleanOrConvert(decodedJson["Engine_No"]),
+        chassisNumber = _cleanOrConvert(decodedJson["Engine_No"]),
+        vehicleRegistrationNumber =
+            _cleanOrConvert(decodedJson["Vehicle_Reg_No"]),
 
         // POLICY DETAILS
-        policyNumber = cleanStrings(decodedJson["Policy_Number"]),
-        policyStartDate = cleanStrings(decodedJson["Policy_start_date_From"]),
-        policyEndDate = cleanStrings(decodedJson["Policy_start_date_To"]),
-        prevPolicyNumber = cleanStrings(decodedJson["Previous_Policy_Number"]),
-        prevPolicyExpDate = cleanStrings(
+        policyNumber = _cleanOrConvert(decodedJson["Policy_Number"]),
+        policyStartDate =
+            _cleanOrConvert(decodedJson["Policy_start_date_From"]),
+        policyEndDate = _cleanOrConvert(decodedJson["Policy_start_date_To"]),
+        prevPolicyNumber =
+            _cleanOrConvert(decodedJson["Previous_Policy_Number"]),
+        prevPolicyExpDate = _cleanOrConvert(
           decodedJson["Previous_Policy_Expiry_Date"],
         ),
 
         // CLAIM DETAILS
-        claimNumber = cleanStrings(decodedJson["Claim_No"]),
-        currentStatus = cleanStrings(decodedJson["Current_Status"]),
-        typeOfClaim = cleanStrings(decodedJson["Type_of_Claim"]),
-        pastClaimNumber = cleanStrings(decodedJson["Past_Claim_Number"]),
-        previousTypeOfClaim = cleanStrings(
+        claimNumber = _cleanOrConvert(decodedJson["Claim_No"]),
+        currentStatus = _cleanOrConvert(decodedJson["Current_Status"]),
+        typeOfClaim = _cleanOrConvert(decodedJson["Type_of_Claim"]),
+        pastClaimNumber = _cleanOrConvert(decodedJson["Past_Claim_Number"]),
+        previousTypeOfClaim = _cleanOrConvert(
           decodedJson["Previous_Type_of_Claim"],
         ),
-        dateOfTheft = cleanStrings(decodedJson["Date_of_Theft"]),
-        dateOfLoss = cleanStrings(decodedJson["Date_of_Loss"]),
-        dateOfIntimation = cleanStrings(decodedJson["Date_of_Intimation"]),
-        invReferralDate = cleanStrings(decodedJson["Inv_Referral_Date"]),
-        lossLocationCity = cleanStrings(decodedJson["Loss_Location_City"]),
-        lossLocationState = cleanStrings(decodedJson["Loss_Location_State"]),
-        locationCode = cleanOrConvert(decodedJson["Location_Code"]),
+        dateOfTheft = _cleanOrConvert(decodedJson["Date_of_Theft"]),
+        dateOfLoss = _cleanOrConvert(decodedJson["Date_of_Loss"]),
+        dateOfIntimation = _cleanOrConvert(decodedJson["Date_of_Intimation"]),
+        invReferralDate = _cleanOrConvert(decodedJson["Inv_Referral_Date"]),
+        lossLocationCity = _cleanOrConvert(decodedJson["Loss_Location_City"]),
+        lossLocationState = _cleanOrConvert(decodedJson["Loss_Location_State"]),
+        locationCode = _cleanOrConvert(decodedJson["Location_Code"]),
 
         // EXTRAS
-        managerName = cleanStrings(decodedJson["Manager_Name"]),
-        surveyorName = cleanStrings(decodedJson["Surveyor_Name"]),
-        dateOfAllocation = cleanStrings(decodedJson["Date_of_Allocation"]),
-        timeOfAllocation = cleanStrings(decodedJson["Time_of_Allocation"]),
-        prevInsurerName = cleanStrings(decodedJson["Previous_Insurer_Name"]),
-        reserveAmount = cleanOrConvert(decodedJson["Reserve_Amount"]),
-        noClaimBonus = cleanOrConvert(decodedJson["No_Claim_Bonus"]),
-        imtEndorsement = cleanOrConvert(decodedJson["IMT_Endorsement"]),
-        autoManualTrigger = cleanStrings(decodedJson["Auto_Manual_Trigger"]),
-        lotNo = cleanOrConvert(decodedJson["Lot_no"]),
-        scheduler = cleanStrings(decodedJson["Scheduler"]),
-        videoOps = cleanStrings(decodedJson["Video_Ops"]),
-        videoOpsStatement = cleanStrings(decodedJson["Video_Ops_Statement"]),
-        finalConclusion = cleanStrings(decodedJson["Final_Conclusion"]),
-        videoMeetDate = cleanStrings(decodedJson["Video_Meet_Date"]),
-        videoMeetTime = cleanStrings(decodedJson["Video_Meet_Time"]),
-        tat = cleanOrConvert(decodedJson["TAT"]),
-        kycStatus = cleanStrings(decodedJson["KYC_Status"]),
-        kycStatusProof = cleanStrings(decodedJson["KYC_Status_Proof"]),
-        faceMatch = cleanStrings(decodedJson["Face_Match"]);
+        managerName = _cleanOrConvert(decodedJson["Manager_Name"]),
+        surveyorName = _cleanOrConvert(decodedJson["Surveyor_Name"]),
+        dateOfAllocation = _cleanOrConvert(decodedJson["Date_of_Allocation"]),
+        timeOfAllocation = _cleanOrConvert(decodedJson["Time_of_Allocation"]),
+        prevInsurerName = _cleanOrConvert(decodedJson["Previous_Insurer_Name"]),
+        reserveAmount = _cleanOrConvert(decodedJson["Reserve_Amount"]),
+        noClaimBonus = _cleanOrConvert(decodedJson["No_Claim_Bonus"]),
+        imtEndorsement = _cleanOrConvert(decodedJson["IMT_Endorsement"]),
+        autoManualTrigger = _cleanOrConvert(decodedJson["Auto_Manual_Trigger"]),
+        lotNo = _cleanOrConvert(decodedJson["Lot_no"]),
+        scheduler = _cleanOrConvert(decodedJson["Scheduler"]),
+        videoOps = _cleanOrConvert(decodedJson["Video_Ops"]),
+        videoOpsStatement = _cleanOrConvert(decodedJson["Video_Ops_Statement"]),
+        finalConclusion = _cleanOrConvert(decodedJson["Final_Conclusion"]),
+        videoMeetDate = _cleanOrConvert(decodedJson["Video_Meet_Date"]),
+        videoMeetTime = _cleanOrConvert(decodedJson["Video_Meet_Time"]),
+        tat = _cleanOrConvert(decodedJson["TAT"]),
+        kycStatus = _cleanOrConvert(decodedJson["KYC_Status"]),
+        kycStatusProof = _cleanOrConvert(decodedJson["KYC_Status_Proof"]),
+        faceMatch = _cleanOrConvert(decodedJson["Face_Match"]);
 
   Map<String, Map<String, dynamic>> toMap() {
     return <String, Map<String, dynamic>>{
@@ -157,17 +161,66 @@ class Claim {
     };
   }
 
-  static String cleanStrings(String? string) {
+  Map<String, dynamic> toInternetMap() {
+    return <String, String>{
+      'Type_of_Claim': typeOfClaim,
+      'Date_of_Theft': dateOfTheft,
+      'Date_of_Intimation': dateOfIntimation,
+      'Inv_Referral_Date': invReferralDate,
+      'Product_Type': productType,
+      'Location_Code': locationCode,
+      'Claim_No': claimNumber,
+      'Policy_Number': policyNumber,
+      'Insured_Name': insuredName,
+      'Insured_Contact_Number': insuredContactNumber,
+      'Insured_Alternate_Contact_Number': insuredAltContactNumber,
+      'Email_Id': email,
+      'Policy_start_date_From': policyStartDate,
+      'Policy_start_date_To': policyEndDate,
+      'Vehicle_Reg_No': vehicleRegistrationNumber,
+      'Make': make,
+      'Model': model,
+      'Engine_No': engineNumber,
+      'Chassis_No': chassisNumber,
+      'Reserve_Amount': reserveAmount,
+      'Previous_Insurer_Name': prevInsurerName,
+      'Previous_Policy_Number': prevPolicyNumber,
+      'Previous_Policy_Expiry_Date': prevPolicyExpDate,
+      'No_Claim_Bonus': noClaimBonus,
+      'IMT_Endorsement': imtEndorsement,
+      'Insured_City': insuredCity,
+      'Insured_State': insuredState,
+      'Loss_Location_City': lossLocationCity,
+      'Loss_Location_State': lossLocationState,
+      'Past_Claim_Number': pastClaimNumber,
+      'Date_of_Loss': dateOfLoss,
+      'Previous_Type_of_Claim': previousTypeOfClaim,
+      'Auto_Manual_Trigger': autoManualTrigger,
+      'Manager_Name': managerName,
+      'Surveyor_Name': surveyorName,
+      'Lot_no': lotNo,
+    };
+  }
+
+  String get customerAddress {
+    return _createAddress(insuredCity, insuredState);
+  }
+
+  String get lossAddress {
+    return _createAddress(lossLocationCity, lossLocationState);
+  }
+
+  static String _cleanStrings(String? string) {
     if (string == null || string.isEmpty) {
       return "Unavailable";
     }
     return string;
   }
 
-  static String cleanOrConvert(Object? object) {
+  static String _cleanOrConvert(Object? object) {
     if (object != null) {
       String string = object.toString();
-      return cleanStrings(string);
+      return _cleanStrings(string);
     }
     return "Unavailable";
   }
@@ -184,11 +237,89 @@ class Claim {
     }
   }
 
-  String get customerAddress {
-    return _createAddress(insuredCity, insuredState);
+  static List<String> get fields {
+    return <String>[
+      'Type of claim',
+      'Date of theft',
+      'Date of Intimation',
+      'Inv Referral Date',
+      'Product Type',
+      'Location Code',
+      'Claim No',
+      'Policy Number',
+      'Insured Name',
+      'Insured Contact Number',
+      'Insured Alternate Contact Number',
+      'Email Id',
+      'Policy start date From',
+      'Policy start date To',
+      'Vehicle Reg No',
+      'Make',
+      'Model',
+      'Engine No',
+      'Chassis No',
+      'Reserve Amount',
+      'Previous Insurer Name',
+      'Previous Policy Number',
+      'Previous Policy Expiry Date',
+      'No Claim Bonus',
+      'IMT Endorsement',
+      'Insured City',
+      'Insured State',
+      'Loss Location City',
+      'Loss Location State',
+      'Past Claim Number',
+      'Date of Loss',
+      'Previous Type of Claim',
+      'Auto Manual Trigger',
+      'Manager Name',
+      'Surveyor Name',
+      'Lot no',
+    ];
   }
 
-  String get lossAddress {
-    return _createAddress(lossLocationCity, lossLocationState);
+  static List<String> get createFields {
+    return <String>[
+      'Type_of_Claim',
+      'Date_of_Theft',
+      'Date_of_Intimation',
+      'Inv_Referral_Date',
+      'Product_Type',
+      'Location_Code',
+      'Claim_No',
+      'Policy_Number',
+      'Insured_Name',
+      'Insured_Contact_Number',
+      'Insured_Alternate_Contact_Number',
+      'Email_Id',
+      'Policy_start_date_From',
+      'Policy_start_date_To',
+      'Vehicle_Reg_No',
+      'Make',
+      'Model',
+      'Engine_No',
+      'Chassis_No',
+      'Reserve_Amount',
+      'Previous_Insurer_Name',
+      'Previous_Policy_Number',
+      'Previous_Policy_Expiry_Date',
+      'No_Claim_Bonus',
+      'IMT_Endorsement',
+      'Insured_City',
+      'Insured_State',
+      'Loss_Location_City',
+      'Loss_Location_State',
+      'Past_Claim_Number',
+      'Date_of_Loss',
+      'Previous_Type_of_Claim',
+      'Auto_Manual_Trigger',
+      'Manager_Name',
+      'Surveyor_Name',
+      'Lot_no',
+    ];
+  }
+
+  static Map<String, String> getLabelDataMap() {
+    return Map.fromIterables(fields, createFields);
   }
 }

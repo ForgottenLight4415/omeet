@@ -4,6 +4,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 import 'package:rc_clone/utilities/location_service.dart';
+import 'package:rc_clone/utilities/screen_capture.dart';
 import 'package:rc_clone/utilities/screen_recorder.dart';
 
 import '../data/models/claim.dart';
@@ -12,7 +13,45 @@ import 'camera_utility.dart';
 import 'show_snackbars.dart';
 import '../views/recorder_pages/audio_record.dart';
 
-Future<bool> startScreenRecord(BuildContext context, ScreenRecorder screenRecorder, String claimNumber) async {
+Future<bool> handleScreenshotService(BuildContext context, ScreenCapture screenCapture, String claimNumber) async {
+  if (!screenCapture.isServiceRunning) {
+    return await _startScreenshotService(context, screenCapture, claimNumber);
+  } else {
+    return await _stopScreenshotService(context, screenCapture);
+  }
+}
+
+Future<bool> _startScreenshotService(BuildContext context, ScreenCapture screenCapture, String claimNumber) async {
+  bool storageStatus = await storagePermission();
+  if (storageStatus) {
+    return await screenCapture.startService(claimNumber: claimNumber);
+  } else {
+    showInfoSnackBar(context, "Storage permission is required to access this feature.", color: Colors.red);
+    return false;
+  }
+}
+
+Future<bool> _stopScreenshotService(BuildContext context, ScreenCapture screenCapture) async {
+  return await screenCapture.stopService();
+}
+
+Future<bool> handleScreenRecordingService(BuildContext context, ScreenRecorder screenRecorder, String claimNumber) async {
+  if (!screenRecorder.isRecording) {
+    return await _startScreenRecord(
+      context,
+      screenRecorder,
+      claimNumber,
+    );
+  } else {
+    return await _stopScreenRecord(
+      context,
+      screenRecorder,
+      claimNumber,
+    );
+  }
+}
+
+Future<bool> _startScreenRecord(BuildContext context, ScreenRecorder screenRecorder, String claimNumber) async {
   // Check permissions
   bool _microphoneStatus = await microphonePermission();
   bool _storageStatus = await storagePermission();
@@ -35,9 +74,9 @@ Future<bool> startScreenRecord(BuildContext context, ScreenRecorder screenRecord
   }
 }
 
-Future<bool> stopScreenRecord(BuildContext context, ScreenRecorder screenRecorder, Claim claim) async {
-  await screenRecorder.stopRecord(claim: claim, context: context);
-  return false;
+Future<bool> _stopScreenRecord(BuildContext context, ScreenRecorder screenRecorder, String claimNumber) async {
+  await screenRecorder.stopRecord(claimNumber: claimNumber, context: context);
+  return true;
 }
 
 Future<void> videoCall(BuildContext context, Claim claim) async {

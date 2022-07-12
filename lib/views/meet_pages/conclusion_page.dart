@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:rc_clone/data/models/claim.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:rc_clone/data/providers/claim_provider.dart';
+import 'package:rc_clone/utilities/show_snackbars.dart';
 
 import '../../widgets/input_fields.dart';
 
@@ -90,11 +92,28 @@ class _ConclusionPageState extends State<ConclusionPage> {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      FocusScope.of(context).unfocus();
+                      final ClaimProvider _provider = ClaimProvider();
+                      if (await _provider.submitConclusion(
+                        widget.claim.claimNumber,
+                        _selectedConclusion!,
+                        _controller!.text,
+                      )) {
+                        _selectedConclusion = "Select";
+                        _controller!.clear();
+                        setState(() {});
+                        showInfoSnackBar(context, "Submitted",
+                            color: Colors.green);
+                      } else {
+                        showInfoSnackBar(context, "Failed to submit conclusion",
+                            color: Colors.red);
+                      }
+                    },
                     child: const Text("Submit"),
                     style: ButtonStyle(
                       padding: MaterialStateProperty.resolveWith(
-                            (states) => EdgeInsets.symmetric(
+                        (states) => EdgeInsets.symmetric(
                           vertical: 20.h,
                         ),
                       ),

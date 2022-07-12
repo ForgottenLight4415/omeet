@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 import 'package:rc_clone/data/models/claim.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:rc_clone/utilities/show_snackbars.dart';
 import 'package:rc_clone/utilities/sound_recorder.dart';
 import 'package:rc_clone/widgets/buttons.dart';
 
@@ -67,7 +68,19 @@ class _AudioRecordPageState extends State<AudioRecordPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: const AppBackButton(),
+        leading: AppBackButton(
+          onPressed: () {
+            if (_recorder!.isRecording) {
+              showInfoSnackBar(
+                context,
+                "Recording is in progress. Stop recording to go back.",
+                color: Colors.orange,
+              );
+            } else {
+              Navigator.pop(context);
+            }
+          },
+        ),
         title: const Text("Record audio"),
       ),
       body: Padding(

@@ -78,12 +78,14 @@ class VideoMeetToggleButton extends StatelessWidget {
 }
 
 class AppBackButton extends StatelessWidget {
-  const AppBackButton({Key? key}) : super(key: key);
+  final VoidCallback? onPressed;
+
+  const AppBackButton({Key? key, this.onPressed}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return IconButton(
-      onPressed: () {
+      onPressed: onPressed ?? () {
         Navigator.pop(context);
       },
       icon: const Icon(CupertinoIcons.back),

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:rc_clone/views/create_claim_page.dart';
 import 'package:rc_clone/views/documents_page.dart';
 import 'package:rc_clone/views/pdf_viewer.dart';
 import 'package:rc_clone/views/uploads_page.dart';
@@ -55,6 +56,9 @@ class RouteGenerator {
       case '/view/document':
         final String _documentUrl = args as String;
         return _platformDependentRouting(PDFViewPage(documentUrl: _documentUrl));
+
+      case '/new/claim':
+        return _platformDependentRouting(const NewClaimPage());
 
       default:
         return _platformDependentRouting(const InvalidRoute());

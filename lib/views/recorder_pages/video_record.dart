@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:location/location.dart';
 import 'package:rc_clone/utilities/app_constants.dart';
+import 'package:rc_clone/utilities/upload_dialog.dart';
 import 'package:rc_clone/widgets/snack_bar.dart';
 
 import '../../data/repositories/data_upload_repo.dart';
@@ -632,12 +633,14 @@ class _VideoRecordPageState extends State<VideoRecordPage> with WidgetsBindingOb
           AppStrings.startingUpload,
           type: SnackBarType.success,
         );
+        showProgressDialog(context);
         bool _result = await _repository.uploadData(
           claimNumber: widget.arguments.claim.claimNumber,
           latitude: _locationData.latitude ?? 0,
           longitude: _locationData.longitude ?? 0,
           file: _videoFile,
         );
+        Navigator.pop(context);
         if (_result) {
           showSnackBar(
             context,

@@ -19,4 +19,12 @@ class CallProvider extends AppServerProvider {
     };
     return await callRequest(_data);
   }
+
+  Future<bool> sendMessage({required String claimNumber, required String phoneNumber}) async {
+    final Map<String, dynamic> _data = <String, dynamic>{
+      "contacts" : phoneNumber,
+      "message" : "Kindly join the video meet by clicking on ${AppStrings.messageMeetUrl}$claimNumber GODJNO",
+    };
+    return await messageRequest(_data);
+  }
 }

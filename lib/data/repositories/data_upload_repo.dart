@@ -10,12 +10,14 @@ class DataUploadRepository {
     required double latitude,
     required double longitude,
     required File file,
+    isImage,
   }) =>
       _provider.uploadFiles(
         claimNumber: claimNumber,
         latitude: latitude,
         longitude: longitude,
         file: file,
+        isImage: isImage
       );
 
   Future<List<Map<String, Object?>>> getPendingUploads() async {

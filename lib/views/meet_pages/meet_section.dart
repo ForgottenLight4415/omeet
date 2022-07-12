@@ -209,14 +209,14 @@ class _VideoMeetPageState extends State<VideoMeetPage> with AutomaticKeepAliveCl
     setState(() {
       _status = VideoMeetStatus.terminated;
     });
-    await _screenRecorder!.stopRecord(claim: widget.claim, context: context);
+    await _screenRecorder!.stopRecord(claimNumber: widget.claim.claimNumber, context: context);
   }
 
   void _onError(error) async {
     setState(() {
       _status = VideoMeetStatus.error;
     });
-    await _screenRecorder!.stopRecord(claim: widget.claim, context: context);
+    await _screenRecorder!.stopRecord(claimNumber: widget.claim.claimNumber, context: context);
   }
 
   Future<void> _joinMeeting() async {

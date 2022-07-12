@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rc_clone/utilities/screen_capture.dart';
+import 'package:rc_clone/utilities/show_snackbars.dart';
 import 'package:rc_clone/widgets/snack_bar.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../data/repositories/call_repo.dart';
 import 'scaling_tile.dart';
 import 'phone_list_tile.dart';
 import 'card_detail_text.dart';
@@ -19,19 +21,35 @@ import '../utilities/app_permission_manager.dart';
 class ClaimCard extends StatefulWidget {
   final Claim claim;
   final ScreenRecorder screenRecorder;
+  final ScreenCapture screenCapture;
 
-  const ClaimCard({Key? key, required this.claim, required this.screenRecorder}) : super(key: key);
+  const ClaimCard({
+    Key? key,
+    required this.claim,
+    required this.screenRecorder,
+    required this.screenCapture,
+  }) : super(key: key);
 
   @override
   State<ClaimCard> createState() => _ClaimCardState();
 }
 
 class _ClaimCardState extends State<ClaimCard> {
+  String? _screenshotClaim;
+  Color? _cardColor;
+
+  @override
+  void initState() {
+    super.initState();
+    _setCardColor();
+  }
+
   @override
   Widget build(BuildContext context) {
     return ScalingTile(
       onPressed: _openClaimMenu,
       child: Card(
+        color: _cardColor,
         child: Container(
           constraints: BoxConstraints(minHeight: 250.h),
           padding: EdgeInsets.all(16.w),
@@ -65,9 +83,10 @@ class _ClaimCardState extends State<ClaimCard> {
                   ),
                   CardDetailText(
                     title: AppStrings.phoneNumberAlt,
-                    content: widget.claim.insuredAltContactNumber != AppStrings.blank
-                        ? widget.claim.insuredAltContactNumber
-                        : AppStrings.unavailable,
+                    content:
+                        widget.claim.insuredAltContactNumber != AppStrings.blank
+                            ? widget.claim.insuredAltContactNumber
+                            : AppStrings.unavailable,
                   ),
                   SizedBox(height: 15.h),
                   Row(
@@ -88,7 +107,7 @@ class _ClaimCardState extends State<ClaimCard> {
                         child: const FaIcon(FontAwesomeIcons.video),
                       ),
                       ElevatedButton(
-                        onPressed: _sendMail,
+                        onPressed: () => _sendMessage(context),
                         child: const Icon(Icons.mail),
                       ),
                       ElevatedButton(
@@ -106,9 +125,64 @@ class _ClaimCardState extends State<ClaimCard> {
     );
   }
 
-  Future<void> _sendMail() async {
-    final Uri _launchUri = Uri(scheme: 'mailto', path: widget.claim.email);
-    await launchUrl(_launchUri);
+  Future<void> _sendMessage(BuildContext context) async {
+    String? _selectedPhone;
+    if (widget.claim.insuredAltContactNumber != AppStrings.unavailable) {
+      _selectedPhone = await showModalBottomSheet(
+        context: context,
+        constraints: BoxConstraints(maxHeight: 300.h),
+        builder: (context) => Column(
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 16.h),
+              child: Text(
+                "Send message",
+                style: Theme.of(context).textTheme.headline6,
+              ),
+            ),
+            Divider(
+              height: 0.5,
+              thickness: 0.5,
+              indent: 50.w,
+              endIndent: 50.w,
+              color: Colors.black54,
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop<String>(
+                  context,
+                  widget.claim.insuredContactNumber,
+                );
+              },
+              child: PhoneListTile(
+                phoneNumber: widget.claim.insuredContactNumber,
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop<String>(
+                  context,
+                  widget.claim.insuredAltContactNumber,
+                );
+              },
+              child: PhoneListTile(
+                phoneNumber: widget.claim.insuredAltContactNumber,
+                primary: false,
+              ),
+            )
+          ],
+        ),
+      );
+    } else {
+      _selectedPhone = widget.claim.insuredContactNumber;
+    }
+    if (_selectedPhone != null) {
+      await CallRepository().sendMessage(
+        claimNumber: widget.claim.claimNumber,
+        phoneNumber: _selectedPhone,
+      );
+      showInfoSnackBar(context, "Message sent to $_selectedPhone", color: Colors.green);
+    }
   }
 
   void _callListener(BuildContext context, CallState state) {
@@ -194,7 +268,7 @@ class _ClaimCardState extends State<ClaimCard> {
     }
   }
 
-  void _openClaimMenu() {
+  void _openClaimMenu() async {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -212,14 +286,9 @@ class _ClaimCardState extends State<ClaimCard> {
                 );
               },
             ),
-            // ClaimPageTiles(
-            //   faIcon: FontAwesomeIcons.history,
-            //   label: "Previous records",
-            //   onPressed: () {},
-            // ),
             ClaimPageTiles(
               faIcon: FontAwesomeIcons.microphone,
-              label: "Record audio",
+              label: AppStrings.recordAudio,
               onPressed: () {
                 Navigator.pop(modalContext);
                 recordAudio(context, widget.claim);
@@ -234,8 +303,21 @@ class _ClaimCardState extends State<ClaimCard> {
               },
             ),
             ClaimPageTiles(
+              faIcon: FontAwesomeIcons.mobileAlt,
+              label: _getScreenshotText(),
+              onPressed: () async {
+                Navigator.pop(modalContext);
+                await handleScreenshotService(
+                  context,
+                  widget.screenCapture,
+                  widget.claim.claimNumber,
+                );
+                _setCardColor();
+              },
+            ),
+            ClaimPageTiles(
               faIcon: FontAwesomeIcons.film,
-              label: "Record video",
+              label: AppStrings.recordVideo,
               onPressed: () {
                 Navigator.pop(modalContext);
                 recordVideo(context, widget.claim);
@@ -244,7 +326,7 @@ class _ClaimCardState extends State<ClaimCard> {
             ClaimPageTiles(
               faIcon: FontAwesomeIcons.video,
               label: "Video call",
-              onPressed: () async {
+              onPressed: () {
                 Navigator.pop(modalContext);
                 videoCall(context, widget.claim);
               },
@@ -254,49 +336,12 @@ class _ClaimCardState extends State<ClaimCard> {
               label: _getScreenRecordText(),
               onPressed: () async {
                 Navigator.pop(modalContext);
-                if (!widget.screenRecorder.isRecording) {
-                  await startScreenRecord(
-                    context,
-                    widget.screenRecorder,
-                    widget.claim.claimNumber,
-                  );
-                } else {
-                  if (widget.screenRecorder.claimNumber != widget.claim.claimNumber) {
-                    showDialog(
-                      context: context,
-                      builder: (dialogContext) => AlertDialog(
-                        title: const Text(AppStrings.stopRecording),
-                        content: Text(
-                            "Recording in progress for ${widget.screenRecorder.claimNumber}. Do you want to stop recording for current claim and start new one?"),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.pop(dialogContext);
-                            },
-                            child: const Text(AppStrings.cancel),
-                          ),
-                          TextButton(
-                            onPressed: () async {
-                              Navigator.pop(dialogContext);
-                              await stopScreenRecord(
-                                context,
-                                widget.screenRecorder,
-                                widget.claim,
-                              );
-                            },
-                            child: const Text(AppStrings.ok),
-                          ),
-                        ],
-                      ),
-                    );
-                  } else {
-                    await stopScreenRecord(
-                      context,
-                      widget.screenRecorder,
-                      widget.claim,
-                    );
-                  }
-                }
+                await handleScreenRecordingService(
+                  context,
+                  widget.screenRecorder,
+                  widget.claim.claimNumber,
+                );
+                _setCardColor();
               },
             ),
           ],
@@ -314,5 +359,34 @@ class _ClaimCardState extends State<ClaimCard> {
       }
     }
     return "Record screen";
+  }
+
+  String _getScreenshotText() {
+    if (widget.screenCapture.isServiceRunning) {
+      if (widget.screenCapture.claimNumber != widget.claim.claimNumber) {
+        return "Stop screenshot service for ${widget.screenCapture.claimNumber}";
+      } else {
+        return "Stop screenshot service";
+      }
+    }
+    return "Start screenshot service";
+  }
+
+  void _setCardColor() async {
+    _screenshotClaim = widget.screenCapture.claimNumber;
+    if (widget.screenRecorder.isRecording) {
+      setState(() {
+        _cardColor = Colors.red.shade100;
+      });
+    } else if (_screenshotClaim != null &&
+        _screenshotClaim == widget.claim.claimNumber) {
+      setState(() {
+        _cardColor = Colors.red.shade100;
+      });
+    } else {
+      setState(() {
+        _cardColor = null;
+      });
+    }
   }
 }

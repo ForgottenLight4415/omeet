@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rc_clone/utilities/app_constants.dart';
+import 'package:rc_clone/utilities/screen_capture.dart';
 
 import '../blocs/home_bloc/get_claims_cubit.dart';
 import '../data/repositories/auth_repo.dart';
@@ -23,6 +24,7 @@ class _HomePageState extends State<HomePage> {
   TextEditingController? _searchController;
   String? _searchQuery;
   ScreenRecorder? _screenRecorder;
+  ScreenCapture? _screenCapture;
 
   @override
   void initState() {
@@ -33,6 +35,7 @@ class _HomePageState extends State<HomePage> {
       _claimsCubit.searchClaims(_searchQuery);
     });
     _screenRecorder = ScreenRecorder();
+    _screenCapture = ScreenCapture();
   }
 
   @override
@@ -74,9 +77,9 @@ class _HomePageState extends State<HomePage> {
               title: Text(
                 'Claims',
                 style: Theme.of(context).textTheme.headline3!.copyWith(
-                      color: Colors.black87,
-                      fontWeight: FontWeight.w700,
-                    ),
+                  color: Colors.black87,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
               centerTitle: false,
               flexibleSpace: FlexibleSpaceBar(
@@ -105,12 +108,18 @@ class _HomePageState extends State<HomePage> {
                     label: AppStrings.noClaims,
                   );
                 }
-                return ListView.builder(
-                  padding: EdgeInsets.only(left: 8.w, top: 8.h, right: 8.w),
-                  itemCount: state.claims.length,
-                  itemBuilder: (context, index) => ClaimCard(
-                    claim: state.claims[index],
-                    screenRecorder: _screenRecorder!,
+                return RefreshIndicator(
+                  onRefresh: () async {
+                    BlocProvider.of<GetClaimsCubit>(context).getClaims(context);
+                  },
+                  child: ListView.builder(
+                    padding: EdgeInsets.only(left: 8.w, top: 8.h, right: 8.w),
+                    itemCount: state.claims.length,
+                    itemBuilder: (context, index) => ClaimCard(
+                      claim: state.claims[index],
+                      screenRecorder: _screenRecorder!,
+                      screenCapture: _screenCapture!,
+                    ),
                   ),
                 );
               } else if (state is GetClaimsFailed) {
@@ -126,6 +135,12 @@ class _HomePageState extends State<HomePage> {
             },
           ),
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.add),
+        onPressed: () {
+          Navigator.pushNamed(context, '/new/claim');
+        },
       ),
     );
   }

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_sound_lite/flutter_sound.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:rc_clone/utilities/upload_dialog.dart';
 
 import '../data/models/claim.dart';
 import '../utilities/app_constants.dart';
@@ -44,12 +45,14 @@ class SoundRecorder {
     String? _path = await _audioRecorder!.stopRecorder();
     File _audioFile = File(_path!);
     final DataUploadRepository _repository = DataUploadRepository();
+    showProgressDialog(context);
     bool _result = await _repository.uploadData(
       claimNumber: claim.claimNumber,
       latitude: latitude,
       longitude: longitude,
       file: _audioFile,
     );
+    Navigator.pop(context);
     if (_result) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
