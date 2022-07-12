@@ -54,9 +54,9 @@ class _VideoMeetPageState extends State<VideoMeetPage> with AutomaticKeepAliveCl
 
   TextStyle customBodyTextOne(BuildContext context) {
     return Theme.of(context).textTheme.bodyText1!.copyWith(
-          fontWeight: FontWeight.w500,
-          color: Colors.white,
-        );
+      fontWeight: FontWeight.w500,
+      color: Colors.white,
+    );
   }
 
   @override
@@ -105,8 +105,8 @@ class _VideoMeetPageState extends State<VideoMeetPage> with AutomaticKeepAliveCl
           "Tap \"Start meeting\" to join the meet",
           textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.headline5!.copyWith(
-                fontFamily: 'Open Sans',
-              ),
+            fontFamily: 'Open Sans',
+          ),
         ),
         SizedBox(height: 10.h),
         Text(
@@ -229,7 +229,7 @@ class _VideoMeetPageState extends State<VideoMeetPage> with AutomaticKeepAliveCl
         FeatureFlagEnum.LIVE_STREAMING_ENABLED: false,
         FeatureFlagEnum.RECORDING_ENABLED: false,
       };
-      var options = JitsiMeetingOptions(room: "${widget.claim.claimNumber}_${DateTime.now().microsecondsSinceEpoch}")
+      var options = JitsiMeetingOptions(room: widget.claim.claimNumber)
         ..serverURL = "https://hi.omeet.in/${widget.claim.claimNumber.replaceAll('-', '')}"
         ..subject = "Meeting with ${widget.claim.insuredName}"
         ..userDisplayName = "OMeet Agent"
@@ -247,6 +247,10 @@ class _VideoMeetPageState extends State<VideoMeetPage> with AutomaticKeepAliveCl
 
   Future<void> _closeMeeting() async {
     await JitsiMeet.closeMeeting();
+    setState(() {
+      _status = VideoMeetStatus.terminated;
+    });
+    await _screenRecorder!.stopRecord(claimNumber: widget.claim.claimNumber, context: context);
   }
 
   @override
