@@ -13,14 +13,14 @@ class CustomTextFormField extends StatefulWidget {
 
   const CustomTextFormField(
       {Key? key,
-      this.textEditingController,
-      this.keyboardType,
-      this.textInputAction,
-      this.validator,
-      required this.label,
-      required this.hintText,
-      this.obscureText = false,
-      this.onFieldSubmitted})
+        this.textEditingController,
+        this.keyboardType,
+        this.textInputAction,
+        this.validator,
+        required this.label,
+        required this.hintText,
+        this.obscureText = false,
+        this.onFieldSubmitted})
       : super(key: key);
 
   @override
@@ -39,7 +39,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
     _focusNode!.addListener(() {
       setState(() {
         _borderColor =
-            _focusNode!.hasFocus ? Colors.deepOrange : Colors.transparent;
+        _focusNode!.hasFocus ? Colors.deepOrange : Colors.transparent;
       });
     });
   }
@@ -52,29 +52,32 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      elevation: 5.0,
-      borderRadius: BorderRadius.circular(14.r),
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(14.r),
-          border: Border.all(
-            color: _borderColor,
-            width: 2,
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 7.0),
+      child: Material(
+        elevation: 5.0,
+        borderRadius: BorderRadius.circular(14.r),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(14.r),
+            border: Border.all(
+              color: _borderColor,
+              width: 2,
+            ),
           ),
-        ),
-        child: TextFormField(
-          controller: widget.textEditingController,
-          focusNode: _focusNode,
-          keyboardType: widget.keyboardType,
-          decoration: InputDecoration(
-            label: Text(widget.label),
-            hintText: widget.hintText,
+          child: TextFormField(
+            controller: widget.textEditingController,
+            focusNode: _focusNode,
+            keyboardType: widget.keyboardType,
+            decoration: InputDecoration(
+              label: Text(widget.label),
+              hintText: widget.hintText,
+            ),
+            textInputAction: widget.textInputAction,
+            validator: widget.validator,
+            obscureText: widget.obscureText,
+            onFieldSubmitted: widget.onFieldSubmitted,
           ),
-          textInputAction: widget.textInputAction,
-          validator: widget.validator,
-          obscureText: widget.obscureText,
-          onFieldSubmitted: widget.onFieldSubmitted,
         ),
       ),
     );
@@ -93,14 +96,14 @@ class SearchField extends StatelessWidget {
 
   const SearchField(
       {Key? key,
-      this.textEditingController,
-      this.focusNode,
-      this.keyboardType,
-      this.textInputAction,
-      this.validator,
-      required this.hintText,
-      this.borderColor = Colors.transparent,
-      this.obscureText = false})
+        this.textEditingController,
+        this.focusNode,
+        this.keyboardType,
+        this.textInputAction,
+        this.validator,
+        required this.hintText,
+        this.borderColor = Colors.transparent,
+        this.obscureText = false})
       : super(key: key);
 
   @override

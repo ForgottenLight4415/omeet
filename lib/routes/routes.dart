@@ -13,6 +13,7 @@ import '../views/login.dart';
 import '../views/home.dart';
 import '../views/invalid_route.dart';
 import '../views/meet_pages/meet_main.dart';
+import '../views/otp_page.dart';
 import '../views/recorder_pages/audio_record.dart';
 import '../views/recorder_pages/image_capture.dart';
 import '../views/recorder_pages/video_record.dart';
@@ -26,13 +27,16 @@ class RouteGenerator {
         return _platformDependentRouting(const HomePage());
       case '/login':
         return _platformDependentRouting(const SignInPage());
+      case '/otp':
+        final String email = args as String;
+        return _platformDependentRouting(OtpPage(email: email));
 
-      // MEETING ROUTES
+    // MEETING ROUTES
       case '/claim/meeting':
         final Claim _claim = args as Claim;
         return _platformDependentRouting(MeetingMainPage(claim: _claim));
 
-      // RECORDER ROUTES
+    // RECORDER ROUTES
       case '/record/audio':
         final AudioRecordArguments _audioRecArguments = args as AudioRecordArguments;
         return _platformDependentRouting(AudioRecordPage(arguments: _audioRecArguments));

@@ -14,6 +14,26 @@ class AuthenticationProvider extends AppServerProvider {
     );
     if (_response.statusCode == successCode) {
       final Map<String, dynamic> _rData = _response.data!;
+      return _rData["code"] == successCode;
+    } else {
+      throw ServerException(
+        code: _response.statusCode,
+        cause: _response.reasonPhrase ?? AppStrings.unknown,
+      );
+    }
+  }
+
+  Future<bool> verifyOtp(String email, String otp) async {
+    final Map<String, String> _data = <String, String>{
+      "email": email.trim(),
+      "otp": otp,
+    };
+    final DecodedResponse _response = await postRequest(
+      path: AppStrings.verifyOtp,
+      data: _data,
+    );
+    if (_response.statusCode == successCode) {
+      final Map<String, dynamic> _rData = _response.data!;
       return _setLoginStatus(_rData["code"] == successCode, email: email);
     } else {
       throw ServerException(

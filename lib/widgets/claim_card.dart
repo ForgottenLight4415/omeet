@@ -7,6 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../data/repositories/call_repo.dart';
+import 'input_fields.dart';
 import 'scaling_tile.dart';
 import 'phone_list_tile.dart';
 import 'card_detail_text.dart';
@@ -107,7 +108,7 @@ class _ClaimCardState extends State<ClaimCard> {
                         child: const FaIcon(FontAwesomeIcons.video),
                       ),
                       ElevatedButton(
-                        onPressed: () => _sendMessage(context),
+                        onPressed: () => _sendMessageModal(context),
                         child: const Icon(Icons.mail),
                       ),
                       ElevatedButton(
@@ -125,63 +126,43 @@ class _ClaimCardState extends State<ClaimCard> {
     );
   }
 
-  Future<void> _sendMessage(BuildContext context) async {
-    String? _selectedPhone;
-    if (widget.claim.insuredAltContactNumber != AppStrings.unavailable) {
-      _selectedPhone = await showModalBottomSheet(
-        context: context,
-        constraints: BoxConstraints(maxHeight: 300.h),
-        builder: (context) => Column(
+  Future<void> _sendMessageModal(BuildContext context) async {
+    final TextEditingController _controller = TextEditingController();
+    await showModalBottomSheet(
+      context: context,
+      constraints: BoxConstraints(maxHeight: 200.h),
+      builder: (context) => Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: Column(
           children: <Widget>[
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 16.h),
-              child: Text(
-                "Send message",
-                style: Theme.of(context).textTheme.headline6,
+            CustomTextFormField(
+              textEditingController: _controller,
+              label: "Phone number",
+              hintText: "Enter phone number",
+              keyboardType: TextInputType.phone,
+            ),
+            const SizedBox(height: 10.0),
+            Align(
+              alignment: Alignment.centerRight,
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  showInfoSnackBar(context, "Sending message", color: Colors.orange);
+                },
+                child: const Text("SEND"),
               ),
             ),
-            Divider(
-              height: 0.5,
-              thickness: 0.5,
-              indent: 50.w,
-              endIndent: 50.w,
-              color: Colors.black54,
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pop<String>(
-                  context,
-                  widget.claim.insuredContactNumber,
-                );
-              },
-              child: PhoneListTile(
-                phoneNumber: widget.claim.insuredContactNumber,
-              ),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pop<String>(
-                  context,
-                  widget.claim.insuredAltContactNumber,
-                );
-              },
-              child: PhoneListTile(
-                phoneNumber: widget.claim.insuredAltContactNumber,
-                primary: false,
-              ),
-            )
           ],
         ),
-      );
-    } else {
-      _selectedPhone = widget.claim.insuredContactNumber;
-    }
-    if (_selectedPhone != null) {
+      ),
+    );
+    if (_controller.text.isNotEmpty || _controller.text.length != 10) {
       await CallRepository().sendMessage(
         claimNumber: widget.claim.claimNumber,
-        phoneNumber: _selectedPhone,
+        phoneNumber: _controller.text,
       );
-      showInfoSnackBar(context, "Message sent to $_selectedPhone", color: Colors.green);
+    } else {
+      showInfoSnackBar(context, "Enter a valid phone number", color: Colors.red);
     }
   }
 

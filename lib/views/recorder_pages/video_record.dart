@@ -640,6 +640,7 @@ class _VideoRecordPageState extends State<VideoRecordPage> with WidgetsBindingOb
           longitude: _locationData.longitude ?? 0,
           file: _videoFile,
         );
+        ScaffoldMessenger.of(context).removeCurrentSnackBar();
         Navigator.pop(context);
         if (_result) {
           showSnackBar(

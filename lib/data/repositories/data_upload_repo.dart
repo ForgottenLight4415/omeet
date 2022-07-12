@@ -10,7 +10,7 @@ class DataUploadRepository {
     required double latitude,
     required double longitude,
     required File file,
-    isImage,
+    bool isImage = false,
   }) =>
       _provider.uploadFiles(
         claimNumber: claimNumber,

@@ -11,5 +11,7 @@ class AuthRepository {
     }
   }
 
+  Future<bool> verifyOtp(String email, String otp) => _provider.verifyOtp(email, otp);
+
   Future<void> signOut() => AuthenticationProvider.signOut();
 }

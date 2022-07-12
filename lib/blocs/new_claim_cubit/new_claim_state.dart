@@ -1,4 +1,4 @@
-part of 'new__claim_cubit.dart';
+part of 'new_claim_cubit.dart';
 
 @immutable
 abstract class NewClaimState {}

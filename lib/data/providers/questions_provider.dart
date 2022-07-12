@@ -13,7 +13,7 @@ class MeetQuestionsProvider extends AppServerProvider {
     );
     if (_response.statusCode == successCode) {
       Map<String, dynamic> _rData = _response.data!;
-      List _rQuestions = _rData["allpost"];
+      List _rQuestions = _rData["allpost"] ?? [];
       List<Question> _modelQuestions = [];
       for (int i = 0; i < _rQuestions.length; i++) {
         _rQuestions[i]['id'] = i.toString();

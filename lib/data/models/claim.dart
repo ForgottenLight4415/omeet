@@ -272,8 +272,6 @@ class Claim {
       'Date of Loss',
       'Previous Type of Claim',
       'Auto Manual Trigger',
-      'Manager Name',
-      'Surveyor Name',
       'Lot no',
     ];
   }
@@ -313,8 +311,6 @@ class Claim {
       'Date_of_Loss',
       'Previous_Type_of_Claim',
       'Auto_Manual_Trigger',
-      'Manager_Name',
-      'Surveyor_Name',
       'Lot_no',
     ];
   }
