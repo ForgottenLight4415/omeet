@@ -1,5 +1,5 @@
-import 'package:rc_clone/data/models/question.dart';
-import 'package:rc_clone/data/providers/questions_provider.dart';
+import '../models/question.dart';
+import '../providers/questions_provider.dart';
 
 class MeetQuestionsRepository {
   final MeetQuestionsProvider _provider = MeetQuestionsProvider();

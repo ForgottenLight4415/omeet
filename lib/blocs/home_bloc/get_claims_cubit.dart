@@ -2,10 +2,10 @@ import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:rc_clone/data/models/claim.dart';
-import 'package:rc_clone/data/providers/app_server_provider.dart';
-import 'package:rc_clone/data/repositories/claim_repo.dart';
 
+import '../../data/models/claim.dart';
+import '../../data/providers/app_server_provider.dart';
+import '../../data/repositories/claim_repo.dart';
 import '../../utilities/check_connection.dart';
 
 part 'get_claims_state.dart';

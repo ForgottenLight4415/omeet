@@ -2,8 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_sound_lite/flutter_sound.dart';
+import 'package:omeet_motor/utilities/upload_dialog.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:rc_clone/utilities/upload_dialog.dart';
+import 'package:wakelock/wakelock.dart';
 
 import '../data/models/claim.dart';
 import '../utilities/app_constants.dart';
@@ -73,9 +74,11 @@ class SoundRecorder {
 
   Future<void> toggleRecording(BuildContext context, double latitude, double longitude) async {
     if (_audioRecorder!.isStopped) {
+      Wakelock.enable();
       await _record();
     } else {
       await _stop(context, latitude, longitude);
+      Wakelock.disable();
     }
   }
 }

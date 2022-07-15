@@ -2,9 +2,10 @@ import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:rc_clone/data/models/document.dart';
-import 'package:rc_clone/data/providers/app_server_provider.dart';
-import 'package:rc_clone/data/repositories/meet_documents_repo.dart';
+
+import '../../../data/providers/app_server_provider.dart';
+import '../../../data/repositories/meet_documents_repo.dart';
+import '../../../data/models/document.dart';
 
 part 'get_document_state.dart';
 

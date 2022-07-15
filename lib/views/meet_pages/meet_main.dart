@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:rc_clone/data/models/claim.dart';
-import 'package:rc_clone/views/meet_pages/details_section.dart';
-import 'package:rc_clone/views/meet_pages/documents_section.dart';
-import 'package:rc_clone/views/meet_pages/questions_section.dart';
-import 'package:rc_clone/views/meet_pages/meet_section.dart';
-import 'package:rc_clone/widgets/buttons.dart';
+import 'package:omeet_motor/views/meet_pages/questions_section.dart';
 
+import '../../data/models/claim.dart';
+import '../../widgets/buttons.dart';
 import 'conclusion_page.dart';
+import 'details_section.dart';
+import 'documents_section.dart';
+import 'meet_section.dart';
 
 class MeetingMainPage extends StatefulWidget {
   final Claim claim;

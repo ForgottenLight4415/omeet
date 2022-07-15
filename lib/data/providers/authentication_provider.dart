@@ -1,6 +1,7 @@
-import 'package:rc_clone/data/providers/app_server_provider.dart';
-import 'package:rc_clone/utilities/app_constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../utilities/app_constants.dart';
+import 'app_server_provider.dart';
 
 class AuthenticationProvider extends AppServerProvider {
   Future<bool> signIn(String email, String password) async {

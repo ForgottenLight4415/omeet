@@ -3,11 +3,12 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
-import 'package:rc_clone/data/models/claim.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:rc_clone/utilities/show_snackbars.dart';
-import 'package:rc_clone/utilities/sound_recorder.dart';
-import 'package:rc_clone/widgets/buttons.dart';
+
+import '../../data/models/claim.dart';
+import '../../utilities/show_snackbars.dart';
+import '../../utilities/sound_recorder.dart';
+import '../../widgets/buttons.dart';
 
 class AudioRecordArguments {
   final Claim claim;

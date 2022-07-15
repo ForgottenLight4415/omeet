@@ -1,9 +1,8 @@
 import 'dart:io';
 
-import 'package:rc_clone/data/databases/database.dart';
-
 import 'package:http/http.dart';
 
+import '../databases/database.dart';
 import '../providers/app_server_provider.dart';
 import '../../utilities/app_constants.dart';
 

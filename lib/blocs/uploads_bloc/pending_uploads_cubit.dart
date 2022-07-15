@@ -1,9 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:rc_clone/data/repositories/data_upload_repo.dart';
-
 import '../../data/databases/database.dart';
 import '../../data/providers/app_server_provider.dart';
+import '../../data/repositories/data_upload_repo.dart';
 
 part 'pending_uploads_state.dart';
 

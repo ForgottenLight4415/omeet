@@ -1,4 +1,4 @@
-import 'package:rc_clone/data/providers/call_provider.dart';
+import '../providers/call_provider.dart';
 
 class CallRepository {
   final CallProvider _callProvider = CallProvider();

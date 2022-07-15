@@ -2,7 +2,8 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:rc_clone/data/models/question.dart';
+
+import '../../../data/models/question.dart';
 
 part 'modify_question_event.dart';
 part 'modify_question_state.dart';

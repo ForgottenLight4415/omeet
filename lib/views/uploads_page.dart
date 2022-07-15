@@ -2,11 +2,11 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rc_clone/blocs/uploads_bloc/pending_uploads_cubit.dart';
-import 'package:rc_clone/data/repositories/data_upload_repo.dart';
-import 'package:rc_clone/widgets/buttons.dart';
-import 'package:rc_clone/widgets/error_widget.dart';
 
+import '../blocs/uploads_bloc/pending_uploads_cubit.dart';
+import '../data/repositories/data_upload_repo.dart';
+import '../widgets/buttons.dart';
+import '../widgets/error_widget.dart';
 import '../widgets/loading_widget.dart';
 
 class UploadsPage extends StatefulWidget {

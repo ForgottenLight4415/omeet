@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rc_clone/blocs/auth_bloc/auth_cubit.dart';
-import 'package:rc_clone/utilities/app_constants.dart';
-import 'package:rc_clone/utilities/check_connection.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:rc_clone/widgets/input_fields.dart';
-import 'package:rc_clone/widgets/loading_widget.dart';
+
+import '../blocs/auth_bloc/auth_cubit.dart';
+import '../utilities/app_constants.dart';
+import '../utilities/check_connection.dart';
+import '../widgets/input_fields.dart';
+import '../widgets/loading_widget.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({Key? key}) : super(key: key);

@@ -1,5 +1,5 @@
-import 'package:rc_clone/data/models/claim.dart';
-import 'package:rc_clone/data/providers/claim_provider.dart';
+import '../models/claim.dart';
+import '../providers/claim_provider.dart';
 
 class ClaimRepository {
   List<Claim> _claims = [];

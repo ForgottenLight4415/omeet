@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rc_clone/utilities/screen_capture.dart';
-import 'package:rc_clone/utilities/show_snackbars.dart';
-import 'package:rc_clone/widgets/snack_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:omeet_motor/widgets/snack_bar.dart';
 
 import '../data/repositories/call_repo.dart';
+import '../utilities/screen_capture.dart';
+import '../utilities/show_snackbars.dart';
 import 'input_fields.dart';
 import 'scaling_tile.dart';
 import 'phone_list_tile.dart';

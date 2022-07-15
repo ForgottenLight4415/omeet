@@ -1,7 +1,8 @@
 import 'dart:developer';
 
 import 'package:omeet_screen_capture/omeet_screen_capture.dart';
-import 'package:rc_clone/data/providers/app_server_provider.dart';
+
+import '../data/providers/app_server_provider.dart';
 
 class ScreenCapture {
   OmeetScreenCapture? _omeetScreenCapture;

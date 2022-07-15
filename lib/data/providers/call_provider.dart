@@ -1,9 +1,10 @@
 import 'dart:convert';
 
 import 'package:http/http.dart';
-import 'package:rc_clone/data/providers/app_server_provider.dart';
-import 'package:rc_clone/utilities/app_constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../utilities/app_constants.dart';
+import 'app_server_provider.dart';
 
 class CallProvider extends AppServerProvider {
   Future<bool> callClient({required String claimNumber, required String phoneNumber, required String customerName}) async {

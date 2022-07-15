@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:rc_clone/blocs/meet_page_bloc/questions_bloc/questions_bloc.dart';
-import 'package:rc_clone/blocs/meet_page_bloc/submit_question_cubit/submit_question_cubit.dart';
-import 'package:rc_clone/utilities/show_snackbars.dart';
-import 'package:rc_clone/widgets/question_card.dart';
+
+import '../../blocs/meet_page_bloc/questions_bloc/questions_bloc.dart';
+import '../../blocs/meet_page_bloc/submit_question_cubit/submit_question_cubit.dart';
+import '../../utilities/show_snackbars.dart';
+import '../../widgets/question_card.dart';
 
 class QuestionsPage extends StatefulWidget {
   final String claimNumber;

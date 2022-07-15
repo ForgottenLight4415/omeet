@@ -5,13 +5,14 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:location/location.dart';
-import 'package:rc_clone/utilities/app_constants.dart';
-import 'package:rc_clone/utilities/upload_dialog.dart';
-import 'package:rc_clone/widgets/snack_bar.dart';
+import 'package:wakelock/wakelock.dart';
 
 import '../../data/repositories/data_upload_repo.dart';
+import '../../utilities/app_constants.dart';
 import '../../utilities/camera_utility.dart';
+import '../../utilities/upload_dialog.dart';
 import '../../widgets/buttons.dart';
+import '../../widgets/snack_bar.dart';
 
 class VideoRecordPage extends StatefulWidget {
   final CameraCaptureArguments arguments;
@@ -396,12 +397,12 @@ class _VideoRecordPageState extends State<VideoRecordPage> with WidgetsBindingOb
         ),
         IconButton(
           icon:
-              cameraController != null && cameraController.value.isRecordingPaused ? const Icon(Icons.play_arrow) : const Icon(Icons.pause),
+          cameraController != null && cameraController.value.isRecordingPaused ? const Icon(Icons.play_arrow) : const Icon(Icons.pause),
           color: Colors.red,
           onPressed: cameraController != null && cameraController.value.isInitialized && cameraController.value.isRecordingVideo
               ? (cameraController.value.isRecordingPaused)
-                  ? onResumeButtonPressed
-                  : onPauseButtonPressed
+              ? onResumeButtonPressed
+              : onPauseButtonPressed
               : null,
         ),
         IconButton(
@@ -513,26 +514,26 @@ class _VideoRecordPageState extends State<VideoRecordPage> with WidgetsBindingOb
           showSnackBar(context, 'You have denied camera access.', type: SnackBarType.error);
           break;
         case 'CameraAccessDeniedWithoutPrompt':
-          // iOS only
+        // iOS only
           showSnackBar(context, 'Please go to Settings app to enable camera access.', type: SnackBarType.error);
           break;
         case 'CameraAccessRestricted':
-          // iOS only
+        // iOS only
           showSnackBar(context, 'Camera access is restricted.', type: SnackBarType.error);
           break;
         case 'AudioAccessDenied':
           showSnackBar(context, 'You have denied audio access.', type: SnackBarType.error);
           break;
         case 'AudioAccessDeniedWithoutPrompt':
-          // iOS only
+        // iOS only
           showSnackBar(context, 'Please go to Settings app to enable audio access.', type: SnackBarType.error);
           break;
         case 'AudioAccessRestricted':
-          // iOS only
+        // iOS only
           showSnackBar(context, 'Audio access is restricted.', type: SnackBarType.error);
           break;
         case 'cameraPermission':
-          // Android & web only
+        // Android & web only
           showSnackBar(context, 'Unknown permission error.', type: SnackBarType.error);
           break;
         default:
@@ -620,6 +621,7 @@ class _VideoRecordPageState extends State<VideoRecordPage> with WidgetsBindingOb
 
   void onStopButtonPressed() {
     stopVideoRecording().then((XFile? file) async {
+      Wakelock.disable();
       if (mounted) {
         setState(() {});
       }
@@ -673,6 +675,7 @@ class _VideoRecordPageState extends State<VideoRecordPage> with WidgetsBindingOb
   }
 
   Future<void> startVideoRecording() async {
+    Wakelock.enable();
     final CameraController? cameraController = controller;
 
     if (cameraController == null || !cameraController.value.isInitialized) {

@@ -3,10 +3,11 @@ import 'dart:io';
 
 import 'package:ed_screen_recorder/ed_screen_recorder.dart';
 import 'package:flutter/material.dart';
+import 'package:omeet_motor/utilities/upload_dialog.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:rc_clone/data/repositories/data_upload_repo.dart';
-import 'package:rc_clone/utilities/app_constants.dart';
-import 'package:rc_clone/utilities/upload_dialog.dart';
+
+import '../data/repositories/data_upload_repo.dart';
+import 'app_constants.dart';
 
 class ScreenRecorder {
   EdScreenRecorder? _edScreenRecorder;

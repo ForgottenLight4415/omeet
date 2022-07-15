@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:rc_clone/data/repositories/auth_repo.dart';
-import 'package:rc_clone/routes/routes.dart';
-import 'package:rc_clone/themes/app_theme.dart';
+import 'package:omeet_motor/routes/routes.dart';
+import 'package:omeet_motor/themes/app_theme.dart';
+
+import 'data/repositories/auth_repo.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

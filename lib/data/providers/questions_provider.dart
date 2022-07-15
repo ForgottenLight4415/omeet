@@ -1,6 +1,6 @@
-import 'package:rc_clone/data/models/question.dart';
-import 'package:rc_clone/data/providers/app_server_provider.dart';
-import 'package:rc_clone/utilities/app_constants.dart';
+import '../../utilities/app_constants.dart';
+import '../models/question.dart';
+import 'app_server_provider.dart';
 
 class MeetQuestionsProvider extends AppServerProvider {
   Future<List<Question>> getQuestions(String claimNumber) async {

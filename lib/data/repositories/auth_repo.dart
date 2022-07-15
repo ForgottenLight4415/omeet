@@ -1,4 +1,4 @@
-import 'package:rc_clone/data/providers/authentication_provider.dart';
+import '../providers/authentication_provider.dart';
 
 class AuthRepository {
   final AuthenticationProvider _provider = AuthenticationProvider();

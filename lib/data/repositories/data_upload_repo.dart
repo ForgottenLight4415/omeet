@@ -1,6 +1,7 @@
 import 'dart:io';
-import 'package:rc_clone/data/databases/database.dart';
-import 'package:rc_clone/data/providers/data_upload_provider.dart';
+
+import '../databases/database.dart';
+import '../providers/data_upload_provider.dart';
 
 class DataUploadRepository {
   final DataUploadProvider _provider = DataUploadProvider();

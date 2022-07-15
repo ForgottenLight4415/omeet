@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rc_clone/blocs/meet_page_bloc/document_cubit/get_document_cubit.dart';
-import 'package:rc_clone/widgets/document_card.dart';
-import 'package:rc_clone/widgets/error_widget.dart';
-import 'package:rc_clone/widgets/loading_widget.dart';
+
+import '../../blocs/meet_page_bloc/document_cubit/get_document_cubit.dart';
+import '../../widgets/document_card.dart';
+import '../../widgets/error_widget.dart';
+import '../../widgets/loading_widget.dart';
 
 class DocumentsView extends StatefulWidget {
   final String claimNumber;

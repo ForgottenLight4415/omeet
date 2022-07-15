@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rc_clone/blocs/otp_bloc/otp_cubit.dart';
-import 'package:rc_clone/utilities/show_snackbars.dart';
-import 'package:rc_clone/utilities/upload_dialog.dart';
-import 'package:rc_clone/widgets/input_fields.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../blocs/otp_bloc/otp_cubit.dart';
+import '../utilities/show_snackbars.dart';
+import '../utilities/upload_dialog.dart';
+import '../widgets/input_fields.dart';
 
 class OtpPage extends StatefulWidget {
   final String email;

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:rc_clone/utilities/app_constants.dart';
 import 'package:simple_connection_checker/simple_connection_checker.dart';
+
+import 'app_constants.dart';
 
 Future<bool> checkConnection(BuildContext context) async {
   if (!await SimpleConnectionChecker.isConnectedToInternet()) {

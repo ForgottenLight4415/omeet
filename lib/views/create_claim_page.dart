@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rc_clone/blocs/new_claim_cubit/new_claim_cubit.dart';
-import 'package:rc_clone/data/models/claim.dart';
-import 'package:rc_clone/utilities/show_snackbars.dart';
-import 'package:rc_clone/utilities/upload_dialog.dart';
-import 'package:rc_clone/widgets/buttons.dart';
-import 'package:rc_clone/widgets/input_fields.dart';
+
+import '../blocs/new_claim_cubit/new_claim_cubit.dart';
+import '../data/models/claim.dart';
+import '../utilities/show_snackbars.dart';
+import '../utilities/upload_dialog.dart';
+import '../widgets/buttons.dart';
+import '../widgets/input_fields.dart';
 
 class NewClaimPage extends StatefulWidget {
   const NewClaimPage({Key? key}) : super(key: key);

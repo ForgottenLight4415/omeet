@@ -3,10 +3,11 @@ import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:rc_clone/data/models/claim.dart';
-import 'package:rc_clone/data/providers/app_server_provider.dart';
-import 'package:rc_clone/data/repositories/claim_repo.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../data/models/claim.dart';
+import '../../data/providers/app_server_provider.dart';
+import '../../data/repositories/claim_repo.dart';
 
 part 'new_claim_state.dart';
 

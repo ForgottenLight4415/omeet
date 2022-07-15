@@ -2,10 +2,10 @@ import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:rc_clone/data/providers/app_server_provider.dart';
-import 'package:rc_clone/data/repositories/meet_questions_repo.dart';
 
 import '../../../data/models/question.dart';
+import '../../../data/providers/app_server_provider.dart';
+import '../../../data/repositories/meet_questions_repo.dart';
 
 part 'submit_question_state.dart';
 

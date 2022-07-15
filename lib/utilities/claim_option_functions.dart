@@ -3,13 +3,13 @@ import 'dart:developer';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
-import 'package:rc_clone/utilities/location_service.dart';
-import 'package:rc_clone/utilities/screen_capture.dart';
-import 'package:rc_clone/utilities/screen_recorder.dart';
+import 'package:omeet_motor/utilities/screen_capture.dart';
+import 'package:omeet_motor/utilities/screen_recorder.dart';
 
 import '../data/models/claim.dart';
 import 'app_permission_manager.dart';
 import 'camera_utility.dart';
+import 'location_service.dart';
 import 'show_snackbars.dart';
 import '../views/recorder_pages/audio_record.dart';
 

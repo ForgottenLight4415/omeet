@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:rc_clone/data/models/claim.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:rc_clone/data/providers/claim_provider.dart';
-import 'package:rc_clone/utilities/show_snackbars.dart';
 
+import '../../data/models/claim.dart';
+import '../../data/providers/claim_provider.dart';
+import '../../utilities/show_snackbars.dart';
 import '../../widgets/input_fields.dart';
 
 class ConclusionPage extends StatefulWidget {

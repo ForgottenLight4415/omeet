@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:rc_clone/utilities/app_constants.dart';
-import 'package:rc_clone/utilities/screen_capture.dart';
 
 import '../blocs/home_bloc/get_claims_cubit.dart';
 import '../data/repositories/auth_repo.dart';
+import '../utilities/app_constants.dart';
+import '../utilities/screen_capture.dart';
 import '../utilities/screen_recorder.dart';
 import '../widgets/input_fields.dart';
 import '../widgets/loading_widget.dart';

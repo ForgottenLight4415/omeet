@@ -2,8 +2,9 @@ import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:rc_clone/data/providers/app_server_provider.dart';
-import 'package:rc_clone/data/repositories/call_repo.dart';
+
+import '../../data/providers/app_server_provider.dart';
+import '../../data/repositories/call_repo.dart';
 
 part 'call_state.dart';
 

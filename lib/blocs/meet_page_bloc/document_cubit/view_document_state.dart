@@ -9,8 +9,9 @@ class ViewDocumentLoading extends ViewDocumentState {}
 
 class ViewDocumentReady extends ViewDocumentState {
   final String docUrl;
+  final DocType docType;
 
-  ViewDocumentReady(this.docUrl);
+  ViewDocumentReady(this.docUrl, this.docType);
 }
 
 class ViewDocumentFailed extends ViewDocumentState {
