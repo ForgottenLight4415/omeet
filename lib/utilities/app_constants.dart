@@ -6,13 +6,6 @@ class AppStrings {
 
   static const String sendMessageBaseUrl = "sms.gooadvert.com";
   static const String sendMessageUrl = "app/smsapi/index.php";
-  static const String messageKey = "562A39B5CE0B91";
-  static const String messageEntity = "1501693730000042530";
-  static const String messageTempId = "1507165743675014713";
-  static const String messageRouteId = "636";
-  static const String messageType = "text";
-  static const String messageSenderId = "GODJNO";
-  static const String messageMeetUrl = "https://omeet.in/BAGIC_Motor_Claim_Investigation/OMEET/index.php?id=";
 
   static const String loginUrl = "api/loginm.php";
   static const String verifyOtp = "api/verify_otp.php";
@@ -24,7 +17,7 @@ class AppStrings {
 
   // DATA UPLOAD
   static const String uploadVideoUrl = "admin/meet/video_meet/s3upload/upload.php";
-  static const String uploadImageUrl = "userimages/s3upload/upload.php";
+  static const String uploadImageUrl = "documents/s3jaya/mobupload.php";
 
   // VOICE CALL
   static const String callToken = "79b12042acc016a955281aed7bfa09a5";

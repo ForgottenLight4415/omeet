@@ -212,7 +212,7 @@ public class ScreenCaptureService extends Service {
         protected String doInBackground(String... strings) {
             File file = new File(strings[0]);
             String claimNumber = strings[1];
-            String uploadUrl = "https://omeet.in/BAGIC_Motor_Claim_Investigation/userimages/s3upload/upload.php";
+            String uploadUrl = "https://omeet.in/BAGIC_Motor_Claim_Investigation/documents/s3jaya/mobupload.php";
             try {
                 RequestBody requestBody = new MultipartBody.Builder().setType(MultipartBody.FORM)
                         .addFormDataPart("Claim_No", claimNumber)

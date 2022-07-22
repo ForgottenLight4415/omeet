@@ -229,8 +229,11 @@ class _VideoMeetPageState extends State<VideoMeetPage> with AutomaticKeepAliveCl
         FeatureFlagEnum.LIVE_STREAMING_ENABLED: false,
         FeatureFlagEnum.RECORDING_ENABLED: false,
       };
-      var options = JitsiMeetingOptions(room: widget.claim.claimNumber)
-        ..serverURL = "https://hi.omeet.in/${widget.claim.claimNumber.replaceAll('-', '')}"
+      final String claimNumber = widget.claim.claimNumber;
+      final String strippedClaimNumber = claimNumber.replaceAll(RegExp(r"\D"), "");
+      final String meetId = strippedClaimNumber + widget.claim.insuredContactNumber;
+      var options = JitsiMeetingOptions(room: meetId)
+        ..serverURL = "https://hi.omeet.in/${widget.claim.insuredContactNumber}"
         ..subject = "Meeting with ${widget.claim.insuredName}"
         ..userDisplayName = "OMeet Agent"
         ..userEmail = await AuthenticationProvider.getEmail()

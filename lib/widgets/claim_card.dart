@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:omeet_motor/widgets/snack_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:omeet_motor/widgets/snack_bar.dart';
 
 import '../data/repositories/call_repo.dart';
 import '../utilities/screen_capture.dart';
 import '../utilities/show_snackbars.dart';
+import '../utilities/video_record_service.dart';
 import 'input_fields.dart';
 import 'scaling_tile.dart';
 import 'phone_list_tile.dart';
@@ -61,10 +62,10 @@ class _ClaimCardState extends State<ClaimCard> {
                 widget.claim.claimNumber,
                 softWrap: false,
                 style: Theme.of(context).textTheme.headline3!.copyWith(
-                      fontWeight: FontWeight.w700,
-                      color: Theme.of(context).primaryColor,
-                      overflow: TextOverflow.fade,
-                    ),
+                  fontWeight: FontWeight.w700,
+                  color: Theme.of(context).primaryColor,
+                  overflow: TextOverflow.fade,
+                ),
               ),
               SizedBox(height: 10.h),
               Column(
@@ -85,9 +86,9 @@ class _ClaimCardState extends State<ClaimCard> {
                   CardDetailText(
                     title: AppStrings.phoneNumberAlt,
                     content:
-                        widget.claim.insuredAltContactNumber != AppStrings.blank
-                            ? widget.claim.insuredAltContactNumber
-                            : AppStrings.unavailable,
+                    widget.claim.insuredAltContactNumber != AppStrings.blank
+                        ? widget.claim.insuredAltContactNumber
+                        : AppStrings.unavailable,
                   ),
                   SizedBox(height: 15.h),
                   Row(
@@ -157,10 +158,14 @@ class _ClaimCardState extends State<ClaimCard> {
       ),
     );
     if (_controller.text.isNotEmpty || _controller.text.length != 10) {
-      await CallRepository().sendMessage(
+      if (await CallRepository().sendMessage(
         claimNumber: widget.claim.claimNumber,
         phoneNumber: _controller.text,
-      );
+      )) {
+        showInfoSnackBar(context, "Message sent", color: Colors.green);
+      } else {
+        showInfoSnackBar(context, "Failed", color: Colors.red);
+      }
     } else {
       showInfoSnackBar(context, "Enter a valid phone number", color: Colors.red);
     }
@@ -260,6 +265,7 @@ class _ClaimCardState extends State<ClaimCard> {
               faIcon: FontAwesomeIcons.fileAlt,
               label: "Documents",
               onPressed: () {
+                Navigator.pop(modalContext);
                 Navigator.pushNamed(
                   context,
                   '/documents',
@@ -299,9 +305,11 @@ class _ClaimCardState extends State<ClaimCard> {
             ClaimPageTiles(
               faIcon: FontAwesomeIcons.film,
               label: AppStrings.recordVideo,
-              onPressed: () {
+              onPressed: () async {
                 Navigator.pop(modalContext);
-                recordVideo(context, widget.claim);
+                await recordVideo(context, widget.claim).then((_) {
+                  _setCardColor();
+                });
               },
             ),
             ClaimPageTiles(
@@ -361,6 +369,11 @@ class _ClaimCardState extends State<ClaimCard> {
       });
     } else if (_screenshotClaim != null &&
         _screenshotClaim == widget.claim.claimNumber) {
+      setState(() {
+        _cardColor = Colors.red.shade100;
+      });
+    } else if (VideoRecorderParams.claimNumber != null
+        && VideoRecorderParams.claimNumber == widget.claim.claimNumber) {
       setState(() {
         _cardColor = Colors.red.shade100;
       });

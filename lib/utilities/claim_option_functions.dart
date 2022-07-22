@@ -123,12 +123,12 @@ Future<void> recordVideo(BuildContext context, Claim claim) async {
     List<CameraDescription>? _cameras;
     try {
       _cameras = await availableCameras();
-      Navigator.pushNamed(
+      ScaffoldMessenger.of(context).removeCurrentSnackBar();
+      await Navigator.pushNamed(
         context,
         '/record/video',
         arguments: CameraCaptureArguments(_cameras, locationData, claim),
       );
-      ScaffoldMessenger.of(context).removeCurrentSnackBar();
     } on CameraException catch (e) {
       showInfoSnackBar(context, "Failed to determine available cameras. (${e.description})", color: Colors.red);
     }
