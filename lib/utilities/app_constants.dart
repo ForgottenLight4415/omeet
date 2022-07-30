@@ -17,7 +17,7 @@ class AppStrings {
 
   // DATA UPLOAD
   static const String uploadVideoUrl = "admin/meet/video_meet/s3upload/upload.php";
-  static const String uploadImageUrl = "documents/s3jaya/mobupload.php";
+  static const String uploadDocUrl = "documents/s3jaya/mobupload.php";
 
   // VOICE CALL
   static const String callToken = "79b12042acc016a955281aed7bfa09a5";

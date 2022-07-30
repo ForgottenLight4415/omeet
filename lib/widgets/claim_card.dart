@@ -320,19 +320,19 @@ class _ClaimCardState extends State<ClaimCard> {
                 videoCall(context, widget.claim);
               },
             ),
-            ClaimPageTiles(
-              faIcon: FontAwesomeIcons.recordVinyl,
-              label: _getScreenRecordText(),
-              onPressed: () async {
-                Navigator.pop(modalContext);
-                await handleScreenRecordingService(
-                  context,
-                  widget.screenRecorder,
-                  widget.claim.claimNumber,
-                );
-                _setCardColor();
-              },
-            ),
+            // ClaimPageTiles(
+            //   faIcon: FontAwesomeIcons.recordVinyl,
+            //   label: _getScreenRecordText(),
+            //   onPressed: () async {
+            //     Navigator.pop(modalContext);
+            //     await handleScreenRecordingService(
+            //       context,
+            //       widget.screenRecorder,
+            //       widget.claim.claimNumber,
+            //     );
+            //     _setCardColor();
+            //   },
+            // ),
           ],
         ),
       ),

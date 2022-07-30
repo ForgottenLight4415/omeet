@@ -535,7 +535,7 @@ class _CaptureImagePageState extends State<CaptureImagePage> with WidgetsBinding
             latitude: _locationData.latitude ?? 0,
             longitude: _locationData.longitude ?? 0,
             file: _imageFile,
-            isImage: true,
+            isDoc: true,
           );
           if (_result) {
             showSnackBar(context, AppStrings.fileUploaded, type: SnackBarType.success);
