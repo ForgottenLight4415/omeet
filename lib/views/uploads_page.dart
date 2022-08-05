@@ -5,6 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../blocs/uploads_bloc/pending_uploads_cubit.dart';
 import '../data/repositories/data_upload_repo.dart';
+import '../utilities/app_constants.dart';
+import '../utilities/show_snackbars.dart';
 import '../widgets/buttons.dart';
 import '../widgets/error_widget.dart';
 import '../widgets/loading_widget.dart';
@@ -49,13 +51,35 @@ class _UploadsPageState extends State<UploadsPage> {
               ),
               onPressed: () async {
                 _showLoading(context);
+                int i = 1;
                 for (var value in state.uploads) {
-                  await DataUploadRepository().uploadData(
-                    claimNumber: value.claimNo,
-                    latitude: value.latitude,
-                    longitude: value.longitude,
-                    file: File(value.file),
-                  );
+                  try {
+                    File _file = File(value.file);
+                    bool _result = await DataUploadRepository().uploadData(
+                      claimNumber: value.claimNo,
+                      latitude: value.latitude,
+                      longitude: value.longitude,
+                      file: _file,
+                    );
+                    if (_result) {
+                      showInfoSnackBar(
+                        context,
+                        AppStrings.fileUploaded + "($i/${state.uploads.length})",
+                        color: Colors.green,
+                      );
+
+                      _file.delete();
+                    } else {
+                      throw Exception("An unknown error occurred while uploading the file.");
+                    }
+                  } on Exception catch (e) {
+                    showInfoSnackBar(
+                      context,
+                      AppStrings.fileUploadFailed + "(${e.toString()})",
+                      color: Colors.red,
+                    );
+                    break;
+                  }
                 }
                 Navigator.pop(context);
                 BlocProvider.of<PendingUploadsCubit>(context)
