@@ -15,6 +15,7 @@ class AuthenticationProvider extends AppServerProvider {
     );
     if (_response.statusCode == successCode) {
       final Map<String, dynamic> _rData = _response.data!;
+      _setLoginStatus(await AuthenticationProvider.isLoggedIn(), phone: _rData["phone_no"]);
       return _rData["code"] == successCode;
     } else {
       throw ServerException(
@@ -58,9 +59,14 @@ class AuthenticationProvider extends AppServerProvider {
     return _pref.getString("email") ?? "";
   }
 
-  static Future<bool> _setLoginStatus(bool status, {String? email}) async {
+  static Future<bool> _setLoginStatus(bool status, {String? email, String? phone}) async {
     final SharedPreferences _pref = await SharedPreferences.getInstance();
-    _pref.setString("email", email ?? "");
+    if (email != null) {
+      _pref.setString("email", email);
+    }
+    if (phone != null) {
+      _pref.setString("phone", phone);
+    }
     _pref.setBool("isLoggedIn", status);
     return status;
   }

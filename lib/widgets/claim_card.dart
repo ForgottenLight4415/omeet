@@ -109,7 +109,7 @@ class _ClaimCardState extends State<ClaimCard> {
                         child: const FaIcon(FontAwesomeIcons.video),
                       ),
                       ElevatedButton(
-                        onPressed: () => _sendMessageModal(context),
+                        onPressed: () => _sendMessageModal(context, widget.claim.insuredContactNumber),
                         child: const Icon(Icons.mail),
                       ),
                       ElevatedButton(
@@ -127,9 +127,9 @@ class _ClaimCardState extends State<ClaimCard> {
     );
   }
 
-  Future<void> _sendMessageModal(BuildContext context) async {
-    final TextEditingController _controller = TextEditingController();
-    await showModalBottomSheet(
+  Future<void> _sendMessageModal(BuildContext context, String? phoneNumber) async {
+    final TextEditingController _controller = TextEditingController(text: phoneNumber ?? "");
+    bool? _result = await showModalBottomSheet<bool?>(
       context: context,
       constraints: BoxConstraints(maxHeight: 200.h),
       builder: (context) => Padding(
@@ -147,7 +147,7 @@ class _ClaimCardState extends State<ClaimCard> {
               alignment: Alignment.centerRight,
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.pop(context);
+                  Navigator.pop(context, true);
                   showInfoSnackBar(context, "Sending message", color: Colors.orange);
                 },
                 child: const Text("SEND"),
@@ -157,7 +157,9 @@ class _ClaimCardState extends State<ClaimCard> {
         ),
       ),
     );
-    if (_controller.text.isNotEmpty || _controller.text.length != 10) {
+    if (_result == null) {
+      return;
+    } else if (_controller.text.isNotEmpty || _controller.text.length != 10) {
       if (await CallRepository().sendMessage(
         claimNumber: widget.claim.claimNumber,
         phoneNumber: _controller.text,

@@ -1,23 +1,30 @@
-import 'dart:convert';
-
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../utilities/app_constants.dart';
 import 'app_server_provider.dart';
 
 class CallProvider extends AppServerProvider {
   Future<bool> callClient({required String claimNumber, required String phoneNumber, required String customerName}) async {
     final SharedPreferences _pref = await SharedPreferences.getInstance();
     final Map<String, dynamic> _data = <String, dynamic>{
-      "agenTptId": _pref.getString("email"),
-      "customerNumber": phoneNumber,
-      "insertLead": "true",
-      "customerInfo": jsonEncode(<String, String>{
-        "c_resourceId": claimNumber,
-        "customerName": customerName,
-      }),
-      "tokenId": AppStrings.callToken,
+      "type": "callAndConnect",
+      "call1" : {
+        "type" : "phone",
+        "number" : _pref.getString("phone"),
+        "callerId" : "4825239"
+      },
+      "call2" : {
+        "type" : "phone",
+        "number" : phoneNumber,
+        "callerId" : "4825239"
+      },
+      "recordCall": true,
+      "stereo" : true,
+      "callbackUrl": "http://localhost:9898/events",
+      "extraParams": {
+        "cmnumber" : claimNumber,
+        "servicetype":"BAGIC_MCI"
+      }
     };
     return await callRequest(_data);
   }

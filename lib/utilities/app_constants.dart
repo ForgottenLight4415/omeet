@@ -2,7 +2,7 @@ class AppStrings {
   static const String baseUrl = 'omeet.in';
   static const String subDirectory = 'BAGIC_Motor_Claim_Investigation/';
   static const String bridgeCallBaseUrl = "godjn.slashrtc.in";
-  static const String bridgeCallBaseUrlNew = "cpaas-api-167-2.slashrtc.in";
+  static const String bridgeCallBaseUrlNew = "dashboard.hellotubelight.com";
 
   static const String sendMessageBaseUrl = "sms.gooadvert.com";
   static const String sendMessageUrl = "app/smsapi/index.php";
@@ -22,7 +22,10 @@ class AppStrings {
   // VOICE CALL
   static const String callToken = "79b12042acc016a955281aed7bfa09a5";
   static const String voiceCallUrl = "slashRtc/callingApis/clicktoDial";
-  static const String voiceCallUrlNew = "api/6cf11bb0-987c-11ec-824f-5bbca732c8cd/callAndConnect";
+
+  //  VOICE CALL NEW
+  static const String callTokenNew = "5493e3de-3b6d-4b08-b20d-089fe49413ad";
+  static const String voiceCallUrlNew = "tenant/v1/cpaas/calls";
 
   // MEET DOCUMENTS SECTION
   static const String getDocumentsUrl = "api/documents.php";
