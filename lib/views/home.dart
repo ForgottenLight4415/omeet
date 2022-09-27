@@ -7,6 +7,7 @@ import '../data/repositories/auth_repo.dart';
 import '../utilities/app_constants.dart';
 import '../utilities/screen_capture.dart';
 import '../utilities/screen_recorder.dart';
+import '../utilities/video_record_config.dart';
 import '../widgets/input_fields.dart';
 import '../widgets/loading_widget.dart';
 import '../widgets/error_widget.dart';
@@ -25,6 +26,7 @@ class _HomePageState extends State<HomePage> {
   String? _searchQuery;
   ScreenRecorder? _screenRecorder;
   ScreenCapture? _screenCapture;
+  VideoRecorderConfig? _videoRecorderConfig;
 
   @override
   void initState() {
@@ -36,6 +38,7 @@ class _HomePageState extends State<HomePage> {
     });
     _screenRecorder = ScreenRecorder();
     _screenCapture = ScreenCapture();
+    _videoRecorderConfig = VideoRecorderConfig();
   }
 
   @override
@@ -119,6 +122,7 @@ class _HomePageState extends State<HomePage> {
                       claim: state.claims[index],
                       screenRecorder: _screenRecorder!,
                       screenCapture: _screenCapture!,
+                      videoRecorderConfig: _videoRecorderConfig!,
                     ),
                   ),
                 );

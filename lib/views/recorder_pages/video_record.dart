@@ -9,36 +9,44 @@ import 'package:wakelock/wakelock.dart';
 
 import '../../data/repositories/data_upload_repo.dart';
 import '../../utilities/app_constants.dart';
-import '../../utilities/camera_utility.dart';
 import '../../utilities/upload_dialog.dart';
-import '../../utilities/video_record_service.dart';
+import '../../utilities/video_record_config.dart';
 import '../../widgets/buttons.dart';
 import '../../widgets/snack_bar.dart';
 
-class VideoRecordPage extends StatefulWidget {
-  final CameraCaptureArguments arguments;
+class VideoPageConfig {
+  final VideoRecorderConfig config;
+  final String? claimNumber;
 
-  const VideoRecordPage({Key? key, required this.arguments}) : super(key: key);
+  const VideoPageConfig(this.config, this.claimNumber);
+}
+
+class VideoRecordPage extends StatefulWidget {
+  final VideoPageConfig config;
+
+  const VideoRecordPage({Key? key, required this.config}) : super(key: key);
 
   @override
   State<VideoRecordPage> createState() => _VideoRecordPageState();
 }
 
 class _VideoRecordPageState extends State<VideoRecordPage> with WidgetsBindingObserver, TickerProviderStateMixin {
+  late final VideoRecorderConfig args;
 
   @override
   void initState() {
     super.initState();
+    args = widget.config.config;
     _ambiguate(WidgetsBinding.instance)?.addObserver(this);
   }
 
   @override
   void dispose() {
     _ambiguate(WidgetsBinding.instance)?.removeObserver(this);
-    final CameraController? _controller = VideoRecorderParams.controller;
+    final CameraController? _controller = args.controller;
     if (_controller != null && !_controller.value.isRecordingVideo) {
       _controller.dispose();
-      VideoRecorderParams.controller = null;
+      args.changeCameraController(null);
     }
     super.dispose();
   }
@@ -47,7 +55,7 @@ class _VideoRecordPageState extends State<VideoRecordPage> with WidgetsBindingOb
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     log("Lifecycle state changed: $state");
-    final CameraController? cameraController = VideoRecorderParams.controller;
+    final CameraController? cameraController = args.controller;
 
     // App state changed before we got the chance to initialize.
     if (cameraController == null || !cameraController.value.isInitialized) {
@@ -72,6 +80,11 @@ class _VideoRecordPageState extends State<VideoRecordPage> with WidgetsBindingOb
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
+          Text(
+            args.claimNumber != null
+                ? "Recording in progress for claim number ${args.claimNumber}"
+                : "Start recording for ${widget.config.claimNumber}",
+          ),
           _captureControlRowWidget(),
           Padding(
             padding: const EdgeInsets.all(5.0),
@@ -89,7 +102,7 @@ class _VideoRecordPageState extends State<VideoRecordPage> with WidgetsBindingOb
 
   /// Display the control bar with buttons to take pictures and record videos.
   Widget _captureControlRowWidget() {
-    final CameraController? cameraController = VideoRecorderParams.controller;
+    final CameraController? cameraController = args.controller;
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -140,22 +153,22 @@ class _VideoRecordPageState extends State<VideoRecordPage> with WidgetsBindingOb
       }
       onNewCameraSelected(description);
     }
-    if (widget.arguments.cameras.isEmpty) {
+    if (args.cameraList!.isEmpty) {
       _ambiguate(SchedulerBinding.instance)?.addPostFrameCallback((_) async {
         showSnackBar(context, 'No camera found.', type: SnackBarType.error);
       });
       return const Text('None');
     } else {
-      for (final CameraDescription cameraDescription in widget.arguments.cameras) {
+      for (final CameraDescription? cameraDescription in args.cameraList!) {
         toggles.add(
           SizedBox(
             width: 90.0,
             child: RadioListTile<CameraDescription>(
-              title: Icon(getCameraLensIcon(cameraDescription.lensDirection)),
-              groupValue: VideoRecorderParams.controller?.description,
+              title: Icon(getCameraLensIcon(cameraDescription!.lensDirection)),
+              groupValue: args.controller?.description,
               value: cameraDescription,
-              onChanged: VideoRecorderParams.controller != null
-                  && VideoRecorderParams.controller!.value.isRecordingVideo
+              onChanged: args.controller != null
+                  && args.controller!.value.isRecordingVideo
                   ? null : onChanged,
             ),
           ),
@@ -169,25 +182,25 @@ class _VideoRecordPageState extends State<VideoRecordPage> with WidgetsBindingOb
 
 
   Future<void> onNewCameraSelected(CameraDescription cameraDescription) async {
-    final CameraController? oldController = VideoRecorderParams.controller;
+    final CameraController? oldController = args.controller;
     if (oldController != null) {
       // `controller` needs to be set to null before getting disposed,
       // to avoid a race condition when we use the controller that is being
       // disposed. This happens when camera permission dialog shows up,
       // which triggers `didChangeAppLifecycleState`, which disposes and
       // re-creates the controller.
-      VideoRecorderParams.controller = null;
+      args.changeCameraController(null);
       await oldController.dispose();
     }
 
     final CameraController cameraController = CameraController(
       cameraDescription,
       ResolutionPreset.medium,
-      enableAudio: VideoRecorderParams.enableAudio,
+      enableAudio: args.enableAudio,
       imageFormatGroup: ImageFormatGroup.jpeg,
     );
 
-    VideoRecorderParams.controller = cameraController;
+    args.changeCameraController(cameraController);
 
     // If the controller is updated then update the UI.
     cameraController.addListener(() {
@@ -255,9 +268,9 @@ class _VideoRecordPageState extends State<VideoRecordPage> with WidgetsBindingOb
         setState(() {});
       }
       if (file != null) {
-        VideoRecorderParams.videoFile = file;
-        File _videoFile = File(VideoRecorderParams.videoFile!.path);
-        LocationData _locationData = widget.arguments.locationData;
+        args.videoFile = file;
+        File _videoFile = File(args.videoFile!.path);
+        LocationData _locationData = args.locationData!;
         final DataUploadRepository _repository = DataUploadRepository();
         showSnackBar(
           context,
@@ -266,7 +279,7 @@ class _VideoRecordPageState extends State<VideoRecordPage> with WidgetsBindingOb
         );
         showProgressDialog(context);
         bool _result = await _repository.uploadData(
-          claimNumber: VideoRecorderParams.claimNumber ?? "NULL",
+          claimNumber: args.claimNumber ?? "NULL",
           latitude: _locationData.latitude ?? 0,
           longitude: _locationData.longitude ?? 0,
           file: _videoFile,
@@ -280,7 +293,7 @@ class _VideoRecordPageState extends State<VideoRecordPage> with WidgetsBindingOb
             type: SnackBarType.success,
           );
           _videoFile.delete();
-          VideoRecorderParams.videoFile = null;
+          args.videoFile = null;
         }
       }
     });
@@ -306,7 +319,7 @@ class _VideoRecordPageState extends State<VideoRecordPage> with WidgetsBindingOb
 
   Future<void> startVideoRecording() async {
     Wakelock.enable();
-    final CameraController? cameraController = VideoRecorderParams.controller;
+    final CameraController? cameraController = args.controller;
 
     if (cameraController == null || !cameraController.value.isInitialized) {
       showSnackBar(context, 'Error: select a camera first.');
@@ -319,28 +332,28 @@ class _VideoRecordPageState extends State<VideoRecordPage> with WidgetsBindingOb
     }
 
     try {
-      VideoRecorderParams.claimNumber = widget.arguments.claim.claimNumber;
+      args.setClaimNumber(widget.config.claimNumber);
       await cameraController.startVideoRecording();
     } on CameraException catch (e) {
-      VideoRecorderParams.claimNumber = null;
+      args.setClaimNumber(null);
       _showCameraException(e);
       return;
     }
   }
 
   Future<XFile?> stopVideoRecording() async {
-    final CameraController? cameraController = VideoRecorderParams.controller;
+    final CameraController? cameraController = args.controller;
 
     if (cameraController == null || !cameraController.value.isRecordingVideo) {
       return null;
     }
 
     try {
-      VideoRecorderParams.claimNumber = null;
+      args.claimNumber = null;
       return cameraController.stopVideoRecording();
     } on CameraException catch (e) {
       if (cameraController.value.isRecordingVideo) {
-        VideoRecorderParams.claimNumber = widget.arguments.claim.claimNumber;
+        args.claimNumber = args.claimNumber;
       }
       _showCameraException(e);
       return null;
@@ -348,7 +361,7 @@ class _VideoRecordPageState extends State<VideoRecordPage> with WidgetsBindingOb
   }
 
   Future<void> pauseVideoRecording() async {
-    final CameraController? cameraController = VideoRecorderParams.controller;
+    final CameraController? cameraController = args.controller;
 
     if (cameraController == null || !cameraController.value.isRecordingVideo) {
       return;
@@ -363,7 +376,7 @@ class _VideoRecordPageState extends State<VideoRecordPage> with WidgetsBindingOb
   }
 
   Future<void> resumeVideoRecording() async {
-    final CameraController? cameraController = VideoRecorderParams.controller;
+    final CameraController? cameraController = args.controller;
 
     if (cameraController == null || !cameraController.value.isRecordingVideo) {
       return;

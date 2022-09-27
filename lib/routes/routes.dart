@@ -41,9 +41,9 @@ class RouteGenerator {
         final AudioRecordArguments _audioRecArguments = args as AudioRecordArguments;
         return _platformDependentRouting(AudioRecordPage(arguments: _audioRecArguments));
       case '/record/video':
-        final CameraCaptureArguments _videoRecArgs = args as CameraCaptureArguments;
+        final VideoPageConfig _videoRecArgs = args as VideoPageConfig;
         return _platformDependentRouting(
-          VideoRecordPage(arguments: _videoRecArgs),
+          VideoRecordPage(config: _videoRecArgs),
         );
       case '/capture/image':
         final CameraCaptureArguments _captureImageArgs = args as CameraCaptureArguments;

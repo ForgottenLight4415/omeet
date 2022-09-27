@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 import 'package:omeet_motor/utilities/screen_capture.dart';
 import 'package:omeet_motor/utilities/screen_recorder.dart';
+import 'package:omeet_motor/utilities/video_record_config.dart';
 
 import '../data/models/claim.dart';
+import '../views/recorder_pages/video_record.dart';
 import 'app_permission_manager.dart';
 import 'camera_utility.dart';
 import 'location_service.dart';
@@ -112,7 +114,7 @@ Future<void> recordAudio(BuildContext context, Claim claim) async {
   }
 }
 
-Future<void> recordVideo(BuildContext context, Claim claim) async {
+Future<void> recordVideo(BuildContext context, Claim claim, VideoRecorderConfig videoRecorderConfig) async {
   showInfoSnackBar(context, "Checking permissions...");
   LocationData? locationData = await _getLocationData(context);
   bool cameraStatus = await cameraPermission();
@@ -123,11 +125,13 @@ Future<void> recordVideo(BuildContext context, Claim claim) async {
     List<CameraDescription>? _cameras;
     try {
       _cameras = await availableCameras();
+      videoRecorderConfig.setCameraList(_cameras);
+      videoRecorderConfig.setLocation(locationData);
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
       await Navigator.pushNamed(
         context,
         '/record/video',
-        arguments: CameraCaptureArguments(_cameras, locationData, claim),
+        arguments: VideoPageConfig(videoRecorderConfig, claim.claimNumber),
       );
     } on CameraException catch (e) {
       showInfoSnackBar(context, "Failed to determine available cameras. (${e.description})", color: Colors.red);

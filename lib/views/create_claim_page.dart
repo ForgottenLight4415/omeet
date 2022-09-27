@@ -129,6 +129,9 @@ class _NewClaimPageState extends State<NewClaimPage> {
           DropdownMenuItem<String>(child: Text("Select claim type"), value: "Select claim type",),
           DropdownMenuItem<String>(child: Text("Own Damage"), value: "Own Damage",),
           DropdownMenuItem<String>(child: Text("Motor Theft"), value: "Motor Theft",),
+          DropdownMenuItem<String>(child: Text("Third party"), value: "Motor Theft",),
+          DropdownMenuItem<String>(child: Text("AIR"), value: "Motor Theft",),
+          DropdownMenuItem<String>(child: Text("CCTNS"), value: "Motor Theft",),
         ],
         onChanged: (value) {
           setState(() {
