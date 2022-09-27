@@ -1,12 +1,15 @@
 import 'dart:developer';
 import 'dart:io';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:location/location.dart';
+import 'package:omeet_motor/views/meet_pages/details.dart';
 import 'package:wakelock/wakelock.dart';
 
+import '../../data/models/claim.dart';
 import '../../data/repositories/data_upload_repo.dart';
 import '../../utilities/app_constants.dart';
 import '../../utilities/upload_dialog.dart';
@@ -17,8 +20,9 @@ import '../../widgets/snack_bar.dart';
 class VideoPageConfig {
   final VideoRecorderConfig config;
   final String? claimNumber;
+  final Claim? claim;
 
-  const VideoPageConfig(this.config, this.claimNumber);
+  const VideoPageConfig(this.config, this.claimNumber, this.claim);
 }
 
 class VideoRecordPage extends StatefulWidget {
@@ -77,26 +81,33 @@ class _VideoRecordPageState extends State<VideoRecordPage> with WidgetsBindingOb
         leading: const AppBackButton(),
         title: const Text('Record video'),
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Text(
-            args.claimNumber != null
-                ? "Recording in progress for claim number ${args.claimNumber}"
-                : "Start recording for ${widget.config.claimNumber}",
-          ),
-          _captureControlRowWidget(),
-          Padding(
-            padding: const EdgeInsets.all(5.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                _cameraTogglesRowWidget(),
-              ],
+      bottomNavigationBar: SizedBox(
+        height: 200.h,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              args.claimNumber != null
+                  ? "Recording in progress for claim number\n${args.claimNumber}"
+                  : "Start recording for\n${widget.config.claimNumber}",
+              textAlign: TextAlign.center,
             ),
-          ),
-        ],
+            _captureControlRowWidget(),
+            Padding(
+              padding: const EdgeInsets.all(5.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  _cameraTogglesRowWidget(),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
+      body: SingleChildScrollView(
+        child: ClaimDetails(claim: widget.config.claim!),
+      )
     );
   }
 

@@ -131,7 +131,7 @@ Future<void> recordVideo(BuildContext context, Claim claim, VideoRecorderConfig 
       await Navigator.pushNamed(
         context,
         '/record/video',
-        arguments: VideoPageConfig(videoRecorderConfig, claim.claimNumber),
+        arguments: VideoPageConfig(videoRecorderConfig, claim.claimNumber, claim),
       );
     } on CameraException catch (e) {
       showInfoSnackBar(context, "Failed to determine available cameras. (${e.description})", color: Colors.red);

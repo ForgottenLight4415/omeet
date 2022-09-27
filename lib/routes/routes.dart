@@ -11,6 +11,7 @@ import '../views/documents_page.dart';
 import '../views/login.dart';
 import '../views/home.dart';
 import '../views/invalid_route.dart';
+import '../views/meet_pages/details_page.dart';
 import '../views/meet_pages/meet_main.dart';
 import '../views/otp_page.dart';
 import '../views/recorder_pages/audio_record.dart';
@@ -49,6 +50,11 @@ class RouteGenerator {
         final CameraCaptureArguments _captureImageArgs = args as CameraCaptureArguments;
         return _platformDependentRouting(
           CaptureImagePage(arguments: _captureImageArgs),
+        );
+      case '/claim/details':
+        final Claim _claim = args as Claim;
+        return _platformDependentRouting(
+          DetailsPage(claim: _claim),
         );
 
       case '/uploads':

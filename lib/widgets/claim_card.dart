@@ -328,6 +328,10 @@ class _ClaimCardState extends State<ClaimCard> {
                 videoCall(context, widget.claim);
               },
             ),
+            ClaimPageTiles(faIcon: FontAwesomeIcons.info, label: "Details", onPressed: () {
+              Navigator.pop(modalContext);
+              Navigator.pushNamed(context, '/claim/details', arguments: widget.claim);
+            })
             // ClaimPageTiles(
             //   faIcon: FontAwesomeIcons.recordVinyl,
             //   label: _getScreenRecordText(),

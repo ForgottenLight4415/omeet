@@ -52,6 +52,21 @@ class Claim {
   final String kycStatusProof;
   final String faceMatch;
 
+  final String policeStation;
+  final String firNo;
+  final String firDate;
+  final String firMonth;
+  final String firQuarter;
+  final String firDelay;
+  final String firDelayBucket;
+  final String accidentDateAsPerFir;
+  final String vehicle1Accused;
+  final String engine1Accused;
+  final String chassis1Accused;
+  final String vehicle1AccusedAccidentId;
+  final String rid;
+  final String red;
+
   Claim.fromJson(Map<String, dynamic> decodedJson)
       : claimID = decodedJson['id'] != null ? int.parse(decodedJson["id"]) : 0,
         //  CUSTOMER INFO
@@ -123,7 +138,22 @@ class Claim {
         tat = _cleanOrConvert(decodedJson["TAT"]),
         kycStatus = _cleanOrConvert(decodedJson["KYC_Status"]),
         kycStatusProof = _cleanOrConvert(decodedJson["KYC_Status_Proof"]),
-        faceMatch = _cleanOrConvert(decodedJson["Face_Match"]);
+        faceMatch = _cleanOrConvert(decodedJson["Face_Match"]),
+
+        policeStation = _cleanOrConvert(decodedJson["Police_Station"]),
+        firNo = _cleanOrConvert(decodedJson["FIR_No"]),
+        firDate = _cleanOrConvert(decodedJson["FIR_Date"]),
+        firMonth = _cleanOrConvert(decodedJson["FIR_Month"]),
+        firQuarter = _cleanOrConvert(decodedJson["FIR_Quarter"]),
+        firDelay = _cleanOrConvert(decodedJson["FIR_Delay"]),
+        firDelayBucket = _cleanOrConvert(decodedJson["FIR_Delay_Bucket"]),
+        accidentDateAsPerFir = _cleanOrConvert(decodedJson["Accident_date_as_per_FIR"]),
+        vehicle1Accused = _cleanOrConvert(decodedJson["Vehicle_1_Accused"]),
+        engine1Accused = _cleanOrConvert(decodedJson["Engine_1_Accused"]),
+        chassis1Accused = _cleanOrConvert(decodedJson["Chassis_1_Accused"]),
+        vehicle1AccusedAccidentId = _cleanOrConvert(decodedJson["Vehicle_1_Accused_Accident_ID"]),
+        rid = _cleanOrConvert(decodedJson["RID"]),
+        red = _cleanOrConvert(decodedJson["RED"]);
 
   Map<String, Map<String, dynamic>> toMap() {
     return <String, Map<String, dynamic>>{
@@ -155,6 +185,20 @@ class Claim {
         'Date of loss': dateOfLoss,
         'Date of intimation': dateOfIntimation,
         'Invoice referral date': invReferralDate,
+        'Police station' : policeStation,
+        'FIR No.' : firNo,
+        'FIR Date' : firDate,
+        'Month' : firMonth,
+        'Quarter' : firQuarter,
+        'FIR Delay' : firDelay,
+        'FIR Delay Bucket' : firDelayBucket,
+        'Accident date (as per FIR)' : accidentDateAsPerFir,
+        'Vehicle 1 (Accused)' : vehicle1Accused,
+        'Engine 1 (Accused)' : engine1Accused,
+        'Chassis 1 (Accused)' : chassis1Accused,
+        'Vehicle 1 (Accused) Accident ID' : vehicle1AccusedAccidentId,
+        'RID' : rid,
+        'RED' : red,
         'Loss location': _createAddress(lossLocationCity, lossLocationState),
         'Location code': locationCode
       }
@@ -199,6 +243,21 @@ class Claim {
       'Manager_Name': managerName,
       'Surveyor_Name': surveyorName,
       'Lot_no': lotNo,
+
+      'Police_Station' : policeStation,
+      'FIR_No' : firNo,
+      'FIR_Date' : firDate,
+      'FIR_Month' : firMonth,
+      'FIR_Quarter' : firQuarter,
+      'FIR_Delay' : firDelay,
+      'FIR_Delay_Bucket' : firDelayBucket,
+      'Accident_date_as_per_FIR' : accidentDateAsPerFir,
+      'Vehicle_1_Accused' : vehicle1Accused,
+      'Engine_1_Accused' : engine1Accused,
+      'Chassis_1_Accused' : chassis1Accused,
+      'Vehicle_1_Accused_Accident_ID' : vehicle1AccusedAccidentId,
+      'RID' : rid,
+      'RED' : red,
     };
   }
 
@@ -243,6 +302,22 @@ class Claim {
       'Date of theft',
       'Date of Intimation',
       'Inv Referral Date',
+
+      'Police station',
+      'FIR No.',
+      'FIR Date',
+      'Month',
+      'Quarter',
+      'FIR Delay',
+      'FIR Delay Bucket',
+      'Accident date (as per FIR)',
+      'Vehicle 1 (Accused)',
+      'Engine 1 (Accused)',
+      'Chassis 1 (Accused)',
+      'Vehicle 1 (Accused) Accident ID',
+      'RID',
+      'RED',
+
       'Product Type',
       'Location Code',
       'Claim No',
@@ -282,6 +357,22 @@ class Claim {
       'Date_of_Theft',
       'Date_of_Intimation',
       'Inv_Referral_Date',
+
+      'Police_Station',
+      'FIR_No',
+      'FIR_Date',
+      'FIR_Month',
+      'FIR_Quarter',
+      'FIR_Delay',
+      'FIR_Delay_Bucket',
+      'Accident_date_as_per_FIR',
+      'Vehicle_1_Accused',
+      'Engine_1_Accused',
+      'Chassis_1_Accused',
+      'Vehicle_1_Accused_Accident_ID',
+      'RID',
+      'RED',
+
       'Product_Type',
       'Location_Code',
       'Claim_No',
