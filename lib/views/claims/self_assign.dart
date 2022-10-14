@@ -1,32 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:omeet_motor/widgets/buttons.dart';
 
-import '../blocs/home_bloc/get_claims_cubit.dart';
-import '../data/repositories/auth_repo.dart';
-import '../utilities/app_constants.dart';
-import '../utilities/screen_capture.dart';
-import '../utilities/screen_recorder.dart';
-import '../utilities/video_record_config.dart';
-import '../widgets/input_fields.dart';
-import '../widgets/loading_widget.dart';
-import '../widgets/error_widget.dart';
-import '../widgets/claim_card.dart';
+import '../../blocs/home_bloc/get_claims_cubit.dart';
+import '../../utilities/app_constants.dart';
+import '../../widgets/input_fields.dart';
+import '../../widgets/loading_widget.dart';
+import '../../widgets/error_widget.dart';
+import '../../widgets/claim_card.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+class SelfAssignClaimsPage extends StatefulWidget {
+  const SelfAssignClaimsPage({Key? key}) : super(key: key);
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<SelfAssignClaimsPage> createState() => _SelfAssignClaimsPageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _SelfAssignClaimsPageState extends State<SelfAssignClaimsPage> {
   final GetClaimsCubit _claimsCubit = GetClaimsCubit();
   TextEditingController? _searchController;
   String? _searchQuery;
-  ScreenRecorder? _screenRecorder;
-  ScreenCapture? _screenCapture;
-  VideoRecorderConfig? _videoRecorderConfig;
 
   @override
   void initState() {
@@ -36,9 +30,6 @@ class _HomePageState extends State<HomePage> {
       _searchQuery = _searchController!.text;
       _claimsCubit.searchClaims(_searchQuery);
     });
-    _screenRecorder = ScreenRecorder();
-    _screenCapture = ScreenCapture();
-    _videoRecorderConfig = VideoRecorderConfig();
   }
 
   @override
@@ -62,29 +53,15 @@ class _HomePageState extends State<HomePage> {
               expandedHeight: 145.h,
               backgroundColor: Colors.white,
               foregroundColor: Colors.black87,
-              actions: [
-                IconButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/uploads');
-                  },
-                  icon: const Icon(Icons.upload),
-                ),
-                IconButton(
-                  onPressed: () async {
-                    await AuthRepository().signOut();
-                    Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
-                  },
-                  icon: const Icon(Icons.logout),
-                ),
-              ],
+              leading: const AppBackButton(),
               title: Text(
-                'Claims',
+                'Assign claim',
                 style: Theme.of(context).textTheme.headline3!.copyWith(
-                  color: Colors.black87,
-                  fontWeight: FontWeight.w700,
-                ),
+                      color: Colors.black87,
+                      fontWeight: FontWeight.w700,
+                    ),
               ),
-              centerTitle: false,
+              centerTitle: true,
               flexibleSpace: FlexibleSpaceBar(
                 background: Align(
                   alignment: Alignment.bottomCenter,
@@ -101,7 +78,11 @@ class _HomePageState extends State<HomePage> {
           ];
         },
         body: BlocProvider<GetClaimsCubit>(
-          create: (context) => _claimsCubit..getClaims(context),
+          create: (context) => _claimsCubit
+            ..getClaims(
+              context,
+              department: true,
+            ),
           child: BlocBuilder<GetClaimsCubit, GetClaimsState>(
             builder: (context, state) {
               if (state is GetClaimsSuccess) {
@@ -120,9 +101,7 @@ class _HomePageState extends State<HomePage> {
                     itemCount: state.claims.length,
                     itemBuilder: (context, index) => ClaimCard(
                       claim: state.claims[index],
-                      screenRecorder: _screenRecorder!,
-                      screenCapture: _screenCapture!,
-                      videoRecorderConfig: _videoRecorderConfig!,
+                      isEditable: false,
                     ),
                   ),
                 );
@@ -139,12 +118,6 @@ class _HomePageState extends State<HomePage> {
             },
           ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.add),
-        onPressed: () {
-          Navigator.pushNamed(context, '/new/claim');
-        },
       ),
     );
   }

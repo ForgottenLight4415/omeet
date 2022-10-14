@@ -1,23 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:omeet_motor/views/auth/verification_page.dart';
+import 'package:omeet_motor/views/claims/assigned_claims.dart';
 
-import '../blocs/auth_bloc/auth_cubit.dart';
-import '../utilities/app_constants.dart';
-import '../utilities/check_connection.dart';
-import '../widgets/input_fields.dart';
-import '../widgets/loading_widget.dart';
+import '../../blocs/auth_bloc/auth_cubit.dart';
+import '../../utilities/app_constants.dart';
+import '../../utilities/check_connection.dart';
+import '../../widgets/input_fields.dart';
+import '../../widgets/loading_widget.dart';
 
 class SignInPage extends StatefulWidget {
-  const SignInPage({Key? key}) : super(key: key);
+  final RecorderObjects objects;
+
+  const SignInPage({Key? key, required this.objects}) : super(key: key);
 
   @override
   State<SignInPage> createState() => _SignInPageState();
 }
 
 class _SignInPageState extends State<SignInPage> {
-  TextEditingController? _emailController;
-  TextEditingController? _passwordController;
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
   CrossFadeState _crossFadeState = CrossFadeState.showFirst;
   AuthCubit? _authCubit;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -26,15 +31,13 @@ class _SignInPageState extends State<SignInPage> {
   void initState() {
     super.initState();
     _authCubit = AuthCubit();
-    _emailController = TextEditingController();
-    _passwordController = TextEditingController();
   }
 
   @override
   void dispose() {
     _authCubit!.close();
-    _emailController!.dispose();
-    _passwordController!.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
     super.dispose();
   }
 
@@ -44,11 +47,12 @@ class _SignInPageState extends State<SignInPage> {
       data: Theme.of(context).copyWith(
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: Theme.of(context).elevatedButtonTheme.style!.copyWith(
-            padding: MaterialStateProperty.resolveWith(
-                  (states) => EdgeInsets.symmetric(horizontal: 70.w, vertical: 16.h),
-            ),
-            elevation: MaterialStateProperty.resolveWith((states) => 5.0),
-          ),
+                padding: MaterialStateProperty.resolveWith(
+                  (states) =>
+                      EdgeInsets.symmetric(horizontal: 70.w, vertical: 16.h),
+                ),
+                elevation: MaterialStateProperty.resolveWith((states) => 5.0),
+              ),
         ),
       ),
       child: Scaffold(
@@ -65,30 +69,32 @@ class _SignInPageState extends State<SignInPage> {
                     Expanded(
                       child: SingleChildScrollView(
                         child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
                             // LOGO
                             Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 45.0),
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 45.0),
                               child: Image.asset(
                                 "images/logo.png",
                                 height: 170.w,
                                 width: 170.w,
                               ),
                             ),
-                            // LOGIN Text
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                "Login",
-                                style: TextStyle(
-                                  fontSize: 50.sp,
-                                  fontFamily: 'Nunito',
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
+                            Text(
+                              AppStrings.appName,
+                              textAlign: TextAlign.center,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline3!
+                                  .copyWith(
+                                    color: Colors.black87,
+                                    fontWeight: FontWeight.w500,
+                                  ),
                             ),
-                            // LOGIN SUB Text
+                            // LOGIN Text
+                            SizedBox(height: 20.h),
                             Align(
                               alignment: Alignment.centerLeft,
                               child: Text(
@@ -101,7 +107,7 @@ class _SignInPageState extends State<SignInPage> {
                                 ),
                               ),
                             ),
-                            const SizedBox(height: 25.0),
+                            const SizedBox(height: 12.0),
                             CustomTextFormField(
                               textEditingController: _emailController,
                               keyboardType: TextInputType.emailAddress,
@@ -142,7 +148,8 @@ class _SignInPageState extends State<SignInPage> {
             secondChild: const LoadingWidget(
               label: AppStrings.signingIn,
             ),
-            layoutBuilder: (topChild, topChildKey, bottomChild, bottomChildKey) {
+            layoutBuilder:
+                (topChild, topChildKey, bottomChild, bottomChildKey) {
               return Stack(
                 clipBehavior: Clip.none,
                 // Align the non-positioned child to center.
@@ -172,8 +179,8 @@ class _SignInPageState extends State<SignInPage> {
     if (_formKey.currentState!.validate()) {
       if (await checkConnection(context)) {
         _authCubit!.signIn(
-          _emailController!.text,
-          _passwordController!.text,
+          _emailController.text,
+          _passwordController.text,
         );
       } else {
         return;
@@ -200,9 +207,16 @@ class _SignInPageState extends State<SignInPage> {
 
   void _authListener(BuildContext context, AuthState state) {
     if (state is AuthSuccess) {
-      Navigator.pushNamed(context, '/otp', arguments: _emailController?.text);
-      _emailController?.clear();
-      _passwordController?.clear();
+      Navigator.pushNamed(
+        context,
+        '/otp',
+        arguments: VerificationPageArguments(
+          _emailController.text,
+          widget.objects,
+        ),
+      );
+      _emailController.clear();
+      _passwordController.clear();
       setState(() {
         _crossFadeState = CrossFadeState.showFirst;
       });

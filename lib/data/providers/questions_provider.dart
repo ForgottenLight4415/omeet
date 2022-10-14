@@ -1,4 +1,5 @@
-import '../../utilities/app_constants.dart';
+import 'package:omeet_motor/utilities/api_urls.dart';
+
 import '../models/question.dart';
 import 'app_server_provider.dart';
 
@@ -8,24 +9,17 @@ class MeetQuestionsProvider extends AppServerProvider {
       "Claim_No": claimNumber,
     };
     final DecodedResponse _response = await postRequest(
-      path: AppStrings.getQuestionsUrl,
+      path: ApiUrl.getQuestionsUrl,
       data: _data,
     );
-    if (_response.statusCode == successCode) {
-      Map<String, dynamic> _rData = _response.data!;
-      List _rQuestions = _rData["allpost"] ?? [];
-      List<Question> _modelQuestions = [];
-      for (int i = 0; i < _rQuestions.length; i++) {
-        _rQuestions[i]['id'] = i.toString();
-        _modelQuestions.add(Question.fromJson(_rQuestions[i]));
-      }
-      return _modelQuestions;
-    } else {
-      throw ServerException(
-        code: _response.statusCode,
-        cause: _response.reasonPhrase ?? AppStrings.unknown,
-      );
+    Map<String, dynamic> _rData = _response.data!;
+    List _rQuestions = _rData["allpost"] ?? [];
+    List<Question> _modelQuestions = [];
+    for (int i = 0; i < _rQuestions.length; i++) {
+      _rQuestions[i]['id'] = i.toString();
+      _modelQuestions.add(Question.fromJson(_rQuestions[i]));
     }
+    return _modelQuestions;
   }
 
   Future<bool> submitQuestions(String claimNumber, List<Question> questions) async {
@@ -34,17 +28,10 @@ class MeetQuestionsProvider extends AppServerProvider {
       _questions.add(question.toJson());
     }
     final Map<String, dynamic> _data = <String, dynamic>{"claim": claimNumber, "qa": _questions};
-    final DecodedResponse _response = await postRequest(
-      path: AppStrings.submitAnswersUrl,
+    await postRequest(
+      path: ApiUrl.submitAnswersUrl,
       data: _data,
     );
-    if (_response.statusCode == successCode) {
-      return true;
-    } else {
-      throw ServerException(
-        code: _response.statusCode,
-        cause: _response.reasonPhrase ?? AppStrings.unknown,
-      );
-    }
+    return true;
   }
 }

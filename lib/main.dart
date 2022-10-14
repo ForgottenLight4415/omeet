@@ -3,6 +3,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:omeet_motor/routes/routes.dart';
 import 'package:omeet_motor/themes/app_theme.dart';
+import 'package:omeet_motor/utilities/screen_capture.dart';
+import 'package:omeet_motor/utilities/screen_recorder.dart';
+import 'package:omeet_motor/utilities/video_record_config.dart';
+import 'package:omeet_motor/views/claims/assigned_claims.dart';
 
 import 'data/repositories/auth_repo.dart';
 
@@ -12,10 +16,25 @@ void main() async {
   runApp(OMeetApp(isSignedIn: _isSignedIn));
 }
 
-class OMeetApp extends StatelessWidget {
+class OMeetApp extends StatefulWidget {
   final bool isSignedIn;
 
   const OMeetApp({Key? key, required this.isSignedIn}) : super(key: key);
+
+  @override
+  State<OMeetApp> createState() => _OMeetAppState();
+}
+
+class _OMeetAppState extends State<OMeetApp> {
+  ScreenRecorder? _screenRecorder;
+  ScreenCapture? _screenCapture;
+  VideoRecorderConfig? _videoRecorderConfig;
+
+  void _initMediaRecorders() {
+    _screenRecorder = ScreenRecorder();
+    _screenCapture = ScreenCapture();
+    _videoRecorderConfig = VideoRecorderConfig();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,13 +57,32 @@ class OMeetApp extends StatelessWidget {
         },
         onGenerateRoute: RouteGenerator.generateRoute,
         onGenerateInitialRoutes: (_) {
-          if (isSignedIn) {
+          _initMediaRecorders();
+          if (widget.isSignedIn) {
             return [
-              RouteGenerator.generateRoute(const RouteSettings(name: '/')),
+              RouteGenerator.generateRoute(
+                  RouteSettings(
+                    name: '/landing',
+                    arguments: RecorderObjects(
+                      _screenCapture!,
+                      _screenRecorder!,
+                      _videoRecorderConfig!,
+                    ),
+                  ),
+              ),
             ];
           } else {
             return [
-              RouteGenerator.generateRoute(const RouteSettings(name: '/login')),
+              RouteGenerator.generateRoute(
+                RouteSettings(
+                  name: '/login',
+                  arguments: RecorderObjects(
+                    _screenCapture!,
+                    _screenRecorder!,
+                    _videoRecorderConfig!,
+                  ),
+                ),
+              ),
             ];
           }
         },

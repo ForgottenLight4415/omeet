@@ -142,8 +142,8 @@ class _AudioRecordPageState extends State<AudioRecordPage> {
         log("Recorder state changed");
       },
       style: ElevatedButton.styleFrom(
-        primary: _primary,
-        onPrimary: Colors.white,
+        backgroundColor: _primary,
+        foregroundColor: Colors.white,
       ),
       icon: Icon(_icon),
       label: Text(_text),

@@ -256,10 +256,10 @@ class _CaptureImagePageState extends State<CaptureImagePage> with WidgetsBinding
 
   Widget _exposureModeControlRowWidget() {
     final ButtonStyle styleAuto = TextButton.styleFrom(
-      primary: controller?.value.exposureMode == ExposureMode.auto ? Colors.orange : Colors.red,
+      foregroundColor: controller?.value.exposureMode == ExposureMode.auto ? Colors.orange : Colors.red,
     );
     final ButtonStyle styleLocked = TextButton.styleFrom(
-      primary: controller?.value.exposureMode == ExposureMode.locked ? Colors.orange : Colors.red,
+      foregroundColor: controller?.value.exposureMode == ExposureMode.locked ? Colors.orange : Colors.red,
     );
 
     return SizeTransition(
@@ -326,10 +326,10 @@ class _CaptureImagePageState extends State<CaptureImagePage> with WidgetsBinding
 
   Widget _focusModeControlRowWidget() {
     final ButtonStyle styleAuto = TextButton.styleFrom(
-      primary: controller?.value.focusMode == FocusMode.auto ? Colors.orange : Colors.red,
+      foregroundColor: controller?.value.focusMode == FocusMode.auto ? Colors.orange : Colors.red,
     );
     final ButtonStyle styleLocked = TextButton.styleFrom(
-      primary: controller?.value.focusMode == FocusMode.locked ? Colors.orange : Colors.red,
+      foregroundColor: controller?.value.focusMode == FocusMode.locked ? Colors.orange : Colors.red,
     );
 
     return SizeTransition(

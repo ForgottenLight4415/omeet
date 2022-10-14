@@ -22,7 +22,7 @@ class OtpCubit extends Cubit<OtpState> {
       }
     } on SocketException {
       emit(OtpFailed(1000, "Failed to connect the server."));
-    } on ServerException catch (a) {
+    } on AppException catch (a) {
       emit(OtpFailed(a.code, a.cause));
     } catch (e) {
       emit(OtpFailed(2000, e.toString()));

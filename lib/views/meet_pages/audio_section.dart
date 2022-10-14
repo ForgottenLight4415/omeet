@@ -7,17 +7,17 @@ import '../../widgets/document_card.dart';
 import '../../widgets/error_widget.dart';
 import '../../widgets/loading_widget.dart';
 
-class DocumentsView extends StatefulWidget {
+class AudioView extends StatefulWidget {
   final String claimNumber;
 
-  const DocumentsView({Key? key, required this.claimNumber}) : super(key: key);
+  const AudioView({Key? key, required this.claimNumber}) : super(key: key);
 
   @override
-  State<DocumentsView> createState() => _DocumentsViewState();
+  State<AudioView> createState() => _AudioViewState();
 }
 
-class _DocumentsViewState extends State<DocumentsView>
-    with AutomaticKeepAliveClientMixin<DocumentsView> {
+class _AudioViewState extends State<AudioView>
+    with AutomaticKeepAliveClientMixin<AudioView> {
   @override
   bool get wantKeepAlive {
     return true;
@@ -28,17 +28,14 @@ class _DocumentsViewState extends State<DocumentsView>
     super.build(context);
     return BlocProvider<GetDocumentCubit>(
       create: (context) => GetDocumentCubit()
-        ..getDocuments(
-          widget.claimNumber,
-          DocumentType.file,
-        ),
+        ..getDocuments(widget.claimNumber, DocumentType.audio),
       child: BlocBuilder<GetDocumentCubit, GetDocumentState>(
         builder: (context, state) {
           if (state is GetDocumentReady) {
             if (state.documents.isEmpty) {
               return const InformationWidget(
                 svgImage: 'images/no-data.svg',
-                label: "No documents",
+                label: "No audio recordings",
               );
             }
             return Padding(
@@ -48,7 +45,7 @@ class _DocumentsViewState extends State<DocumentsView>
                 physics: const BouncingScrollPhysics(),
                 itemBuilder: (context, index) => DocumentCard(
                   document: state.documents[index],
-                  type: DocumentType.file,
+                  type: DocumentType.audio,
                 ),
               ),
             );
@@ -56,13 +53,15 @@ class _DocumentsViewState extends State<DocumentsView>
             return CustomErrorWidget(
               errorText: "Exception: ${state.cause} (${state.code})",
               action: () {
-                BlocProvider.of<GetDocumentCubit>(context)
-                    .getDocuments(widget.claimNumber, DocumentType.file);
+                BlocProvider.of<GetDocumentCubit>(context).getDocuments(
+                  widget.claimNumber,
+                  DocumentType.audio,
+                );
               },
             );
           } else {
             return const LoadingWidget(
-              label: "Fetching documents",
+              label: "Fetching audio recordings",
             );
           }
         },

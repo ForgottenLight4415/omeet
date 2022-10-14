@@ -24,7 +24,7 @@ class ScreenCapture {
       }
       return false;
     } else {
-      throw const ServerException(code: 1000, cause: "Service not initialized");
+      throw const AppException(code: 1000, cause: "Service not initialized");
     }
   }
 
@@ -39,7 +39,7 @@ class ScreenCapture {
       }
       return false;
     } else {
-      throw const ServerException(code: 1000, cause: "Service not initialized");
+      throw const AppException(code: 1000, cause: "Service not initialized");
     }
   }
 

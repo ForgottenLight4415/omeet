@@ -21,7 +21,7 @@ class MessageCubit extends Cubit<MessageState> {
       }
     } on SocketException {
       emit(SendingFailed(1000, "Couldn't connect to server"));
-    } on ServerException catch (e) {
+    } on AppException catch (e) {
       emit(SendingFailed(e.code, e.cause));
     }
   }

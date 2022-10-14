@@ -28,7 +28,7 @@ class QuestionsBloc extends Bloc<QuestionsEvent, QuestionsState> {
       final List<Question> _questions = await _repository.getQuestions(event.claimNumber);
       _repository.setQuestions(_questions);
       emit(QuestionsReady(questions: _questions));
-    } on ServerException catch (a) {
+    } on AppException catch (a) {
       emit(QuestionsLoadingFailed(code: a.code, cause: a.cause));
     } on SocketException {
       emit(QuestionsLoadingFailed(code: 1000, cause: "Couldn't connect to server."));

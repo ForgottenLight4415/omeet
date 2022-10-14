@@ -8,7 +8,7 @@ class GetDocumentInitial extends GetDocumentState {}
 class GetDocumentLoading extends GetDocumentState {}
 
 class GetDocumentReady extends GetDocumentState {
-  final List<Document> documents;
+  final List documents;
 
   GetDocumentReady(this.documents);
 }

@@ -1,22 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:omeet_motor/views/claims/assigned_claims.dart';
 
-import '../blocs/otp_bloc/otp_cubit.dart';
-import '../utilities/show_snackbars.dart';
-import '../utilities/upload_dialog.dart';
-import '../widgets/input_fields.dart';
+import '../../blocs/otp_bloc/otp_cubit.dart';
+import '../../utilities/show_snackbars.dart';
+import '../../utilities/upload_dialog.dart';
+import '../../widgets/input_fields.dart';
 
-class OtpPage extends StatefulWidget {
+class VerificationPageArguments {
   final String email;
+  final RecorderObjects objects;
 
-  const OtpPage({Key? key, required this.email}) : super(key: key);
-
-  @override
-  State<OtpPage> createState() => _OtpPageState();
+  VerificationPageArguments(this.email, this.objects);
 }
 
-class _OtpPageState extends State<OtpPage> {
+class VerificationPage extends StatefulWidget {
+  final String emailAddress;
+  final RecorderObjects recorders;
+
+  const VerificationPage({
+    Key? key,
+    required this.emailAddress,
+    required this.recorders,
+  }) : super(key: key);
+
+  @override
+  State<VerificationPage> createState() => _VerificationPageState();
+}
+
+class _VerificationPageState extends State<VerificationPage> {
   final TextEditingController _controller = TextEditingController();
 
   @override
@@ -41,7 +54,11 @@ class _OtpPageState extends State<OtpPage> {
                       label: "Verifying", content: "Verifying OTP...");
                 } else if (state is OtpSuccess) {
                   Navigator.pushNamedAndRemoveUntil(
-                      context, '/', (route) => false);
+                    context,
+                    '/landing',
+                    (route) => false,
+                    arguments: widget.recorders,
+                  );
                 }
               },
               builder: (context, state) {
@@ -66,12 +83,12 @@ class _OtpPageState extends State<OtpPage> {
                       onPressed: () {
                         Navigator.pop(context);
                       },
-                      child: Text("Not ${widget.email}?"),
+                      child: Text("Not ${widget.emailAddress}?"),
                     ),
                     ElevatedButton(
                       onPressed: () {
-                        BlocProvider.of<OtpCubit>(context)
-                            .verifyOtp(widget.email, _controller.text);
+                        BlocProvider.of<OtpCubit>(context).verifyOtp(
+                            widget.emailAddress, _controller.text);
                       },
                       child: const Text("VERIFY"),
                     )

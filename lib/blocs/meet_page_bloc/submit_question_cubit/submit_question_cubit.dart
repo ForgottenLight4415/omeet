@@ -23,7 +23,7 @@ class SubmitQuestionCubit extends Cubit<SubmitQuestionState> {
       }
     } on SocketException {
       emit(SubmitQuestionFailed(1000, "Failed to connect to the server"));
-    } on ServerException catch (a) {
+    } on AppException catch (a) {
       emit(SubmitQuestionFailed(a.code, a.cause));
     } catch (e) {
       emit(SubmitQuestionFailed(2000, e.toString()));

@@ -27,7 +27,7 @@ class NewClaimCubit extends Cubit<NewClaimState> {
       emit(CreatedClaim());
     } on SocketException {
       emit(CreationFailed(500, "Failed to create new claim."));
-    } on ServerException catch (a) {
+    } on AppException catch (a) {
       emit(CreationFailed(a.code, a.cause));
     } on Exception catch (e) {
       emit(CreationFailed(1000, e.toString()));

@@ -2,6 +2,7 @@
     package="com.lightsoftware.omeet"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="28"/>
     <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
@@ -28,7 +29,7 @@
     </queries>
    <application
         tools:replace="android:label"
-        android:label="BAGIC Motor Claim Investigation"
+        android:label="Motor Virtual Calling Investigation"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

@@ -1,38 +1,5 @@
 class AppStrings {
-  static const String baseUrl = 'omeet.in';
-  static const String subDirectory = 'BAGIC_Motor_Claim_Investigation/';
-  static const String bridgeCallBaseUrl = "godjn.slashrtc.in";
-  static const String bridgeCallBaseUrlNew = "dashboard.hellotubelight.com";
-
-  static const String sendMessageBaseUrl = "sms.gooadvert.com";
-  static const String sendMessageUrl = "app/smsapi/index.php";
-
-  static const String loginUrl = "api/loginm.php";
-  static const String verifyOtp = "api/verify_otp.php";
-
-  // CLAIMS
-  static const String getClaimsUrl = "api/allclaims.php";
-  static const String newClaim = "api/addnewcase.php";
-  static const String claimConclusion = "api/conclusion.php";
-
-  // DATA UPLOAD
-  static const String uploadVideoUrl = "admin/meet/video_meet/s3upload/upload.php";
-  static const String uploadDocUrl = "documents/s3jaya/mobupload.php";
-
-  // VOICE CALL
-  static const String callToken = "79b12042acc016a955281aed7bfa09a5";
-  static const String voiceCallUrl = "slashRtc/callingApis/clicktoDial";
-
-  //  VOICE CALL NEW
-  static const String callTokenNew = "5493e3de-3b6d-4b08-b20d-089fe49413ad";
-  static const String voiceCallUrlNew = "tenant/v1/cpaas/calls";
-
-  // MEET DOCUMENTS SECTION
-  static const String getDocumentsUrl = "api/documents.php";
-
-  // MEET QUESTIONS SECTION
-  static const String getQuestionsUrl = "api/allquestions.php";
-  static const String submitAnswersUrl = "api/allquestionanswers.php";
+  static const String appName = "BAGIC\nMotor Claim Investigation";
 
   // ERRORS AND FILLERS
   static const String blank = "";

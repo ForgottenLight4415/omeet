@@ -14,17 +14,24 @@ class GetClaimsCubit extends Cubit<GetClaimsState> {
   final ClaimRepository _homeRepository = ClaimRepository();
   GetClaimsCubit() : super(GetClaimsInitial());
 
-  Future<void> getClaims(BuildContext context) async {
+  Future<void> getClaims(BuildContext context,
+      {bool department = false}) async {
     if (!await checkConnection(context)) {
       emit(GetClaimsFailed(1000, "No internet connection"));
       return;
     }
     emit(GetClaimsLoading());
     try {
-      emit(GetClaimsSuccess(await _homeRepository.getClaims()));
+      emit(
+        GetClaimsSuccess(
+          await _homeRepository.getClaims(
+            department: department,
+          ),
+        ),
+      );
     } on SocketException {
       emit(GetClaimsFailed(1000, "Failed to connect the server."));
-    } on ServerException catch (a) {
+    } on AppException catch (a) {
       emit(GetClaimsFailed(a.code, a.cause));
     } catch (e) {
       emit(GetClaimsFailed(2000, e.toString()));

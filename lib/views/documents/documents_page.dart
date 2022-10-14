@@ -3,16 +3,17 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
-import '../data/repositories/data_upload_repo.dart';
-import '../utilities/app_constants.dart';
-import '../utilities/upload_dialog.dart';
-import '../views/meet_pages/documents_section.dart';
-import '../widgets/buttons.dart';
-import '../widgets/snack_bar.dart';
+import '../../data/repositories/data_upload_repo.dart';
+import '../../utilities/app_constants.dart';
+import '../../utilities/upload_dialog.dart';
+import '../meet_pages/documents_section.dart';
+import '../../widgets/buttons.dart';
+import '../../widgets/snack_bar.dart';
 
 class DocumentsPage extends StatelessWidget {
   final String claimNumber;
-  const DocumentsPage({Key? key, required this.claimNumber}) : super(key: key);
+  final bool readOnly;
+  const DocumentsPage({Key? key, required this.claimNumber, this.readOnly = false}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +21,7 @@ class DocumentsPage extends StatelessWidget {
       appBar: AppBar(
         leading: const AppBackButton(),
         title: const Text("All documents"),
-        actions: [
+        actions: readOnly ? null : [
           IconButton(
             onPressed: () async {
               FilePickerResult? result = await FilePicker.platform.pickFiles();

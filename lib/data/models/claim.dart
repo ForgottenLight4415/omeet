@@ -1,4 +1,16 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:omeet_motor/utilities/show_snackbars.dart';
+import 'package:omeet_motor/utilities/upload_dialog.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../blocs/call_bloc/call_cubit.dart';
+import '../../blocs/home_bloc/assign_to_self_cubit/assign_self_cubit.dart';
 import '../../utilities/app_constants.dart';
+import '../../utilities/app_permission_manager.dart';
+import '../../widgets/input_fields.dart';
+import '../../widgets/phone_list_tile.dart';
+import '../repositories/call_repo.dart';
 
 class Claim {
   final int claimID;
@@ -139,7 +151,6 @@ class Claim {
         kycStatus = _cleanOrConvert(decodedJson["KYC_Status"]),
         kycStatusProof = _cleanOrConvert(decodedJson["KYC_Status_Proof"]),
         faceMatch = _cleanOrConvert(decodedJson["Face_Match"]),
-
         policeStation = _cleanOrConvert(decodedJson["Police_Station"]),
         firNo = _cleanOrConvert(decodedJson["FIR_No"]),
         firDate = _cleanOrConvert(decodedJson["FIR_Date"]),
@@ -147,11 +158,13 @@ class Claim {
         firQuarter = _cleanOrConvert(decodedJson["FIR_Quarter"]),
         firDelay = _cleanOrConvert(decodedJson["FIR_Delay"]),
         firDelayBucket = _cleanOrConvert(decodedJson["FIR_Delay_Bucket"]),
-        accidentDateAsPerFir = _cleanOrConvert(decodedJson["Accident_date_as_per_FIR"]),
+        accidentDateAsPerFir =
+            _cleanOrConvert(decodedJson["Accident_date_as_per_FIR"]),
         vehicle1Accused = _cleanOrConvert(decodedJson["Vehicle_1_Accused"]),
         engine1Accused = _cleanOrConvert(decodedJson["Engine_1_Accused"]),
         chassis1Accused = _cleanOrConvert(decodedJson["Chassis_1_Accused"]),
-        vehicle1AccusedAccidentId = _cleanOrConvert(decodedJson["Vehicle_1_Accused_Accident_ID"]),
+        vehicle1AccusedAccidentId =
+            _cleanOrConvert(decodedJson["Vehicle_1_Accused_Accident_ID"]),
         rid = _cleanOrConvert(decodedJson["RID"]),
         red = _cleanOrConvert(decodedJson["RED"]);
 
@@ -185,20 +198,20 @@ class Claim {
         'Date of loss': dateOfLoss,
         'Date of intimation': dateOfIntimation,
         'Invoice referral date': invReferralDate,
-        'Police station' : policeStation,
-        'FIR No.' : firNo,
-        'FIR Date' : firDate,
-        'Month' : firMonth,
-        'Quarter' : firQuarter,
-        'FIR Delay' : firDelay,
-        'FIR Delay Bucket' : firDelayBucket,
-        'Accident date (as per FIR)' : accidentDateAsPerFir,
-        'Vehicle 1 (Accused)' : vehicle1Accused,
-        'Engine 1 (Accused)' : engine1Accused,
-        'Chassis 1 (Accused)' : chassis1Accused,
-        'Vehicle 1 (Accused) Accident ID' : vehicle1AccusedAccidentId,
-        'RID' : rid,
-        'RED' : red,
+        'Police station': policeStation,
+        'FIR No.': firNo,
+        'FIR Date': firDate,
+        'Month': firMonth,
+        'Quarter': firQuarter,
+        'FIR Delay': firDelay,
+        'FIR Delay Bucket': firDelayBucket,
+        'Accident date (as per FIR)': accidentDateAsPerFir,
+        'Vehicle 1 (Accused)': vehicle1Accused,
+        'Engine 1 (Accused)': engine1Accused,
+        'Chassis 1 (Accused)': chassis1Accused,
+        'Vehicle 1 (Accused) Accident ID': vehicle1AccusedAccidentId,
+        'RID': rid,
+        'RED': red,
         'Loss location': _createAddress(lossLocationCity, lossLocationState),
         'Location code': locationCode
       }
@@ -243,21 +256,20 @@ class Claim {
       'Manager_Name': managerName,
       'Surveyor_Name': surveyorName,
       'Lot_no': lotNo,
-
-      'Police_Station' : policeStation,
-      'FIR_No' : firNo,
-      'FIR_Date' : firDate,
-      'FIR_Month' : firMonth,
-      'FIR_Quarter' : firQuarter,
-      'FIR_Delay' : firDelay,
-      'FIR_Delay_Bucket' : firDelayBucket,
-      'Accident_date_as_per_FIR' : accidentDateAsPerFir,
-      'Vehicle_1_Accused' : vehicle1Accused,
-      'Engine_1_Accused' : engine1Accused,
-      'Chassis_1_Accused' : chassis1Accused,
-      'Vehicle_1_Accused_Accident_ID' : vehicle1AccusedAccidentId,
-      'RID' : rid,
-      'RED' : red,
+      'Police_Station': policeStation,
+      'FIR_No': firNo,
+      'FIR_Date': firDate,
+      'FIR_Month': firMonth,
+      'FIR_Quarter': firQuarter,
+      'FIR_Delay': firDelay,
+      'FIR_Delay_Bucket': firDelayBucket,
+      'Accident_date_as_per_FIR': accidentDateAsPerFir,
+      'Vehicle_1_Accused': vehicle1Accused,
+      'Engine_1_Accused': engine1Accused,
+      'Chassis_1_Accused': chassis1Accused,
+      'Vehicle_1_Accused_Accident_ID': vehicle1AccusedAccidentId,
+      'RID': rid,
+      'RED': red,
     };
   }
 
@@ -296,68 +308,84 @@ class Claim {
     }
   }
 
-  static List<String> get fields {
-    return <String>[
-      'Type of claim',
-      'Date of theft',
-      'Date of Intimation',
-      'Inv Referral Date',
-
-      'Police station',
-      'FIR No.',
-      'FIR Date',
-      'Month',
-      'Quarter',
-      'FIR Delay',
-      'FIR Delay Bucket',
-      'Accident date (as per FIR)',
-      'Vehicle 1 (Accused)',
-      'Engine 1 (Accused)',
-      'Chassis 1 (Accused)',
-      'Vehicle 1 (Accused) Accident ID',
-      'RID',
-      'RED',
-
-      'Product Type',
-      'Location Code',
-      'Claim No',
-      'Policy Number',
-      'Insured Name',
-      'Insured Contact Number',
-      'Insured Alternate Contact Number',
-      'Email Id',
-      'Policy start date From',
-      'Policy start date To',
-      'Vehicle Reg No',
-      'Make',
-      'Model',
-      'Engine No',
-      'Chassis No',
-      'Reserve Amount',
-      'Previous Insurer Name',
-      'Previous Policy Number',
-      'Previous Policy Expiry Date',
-      'No Claim Bonus',
-      'IMT Endorsement',
-      'Insured City',
-      'Insured State',
-      'Loss Location City',
-      'Loss Location State',
-      'Past Claim Number',
-      'Date of Loss',
-      'Previous Type of Claim',
-      'Auto Manual Trigger',
-      'Lot no',
-    ];
+  static Map<String, List<String>> get fields {
+    return <String, List<String>>{
+      'Customer Information': [
+        'Customer name',
+        'Customer city',
+        'Customer state',
+        'Phone number',
+        'Alternate phone number',
+        'Email address',
+      ],
+      'Policy Details': [
+        'Policy number',
+        'Policy start date',
+        'Policy end date',
+        'Previous policy number',
+        'Previous policy expiration date',
+      ],
+      'Vehicle Details': [
+        'Vehicle Registration Number',
+        'Type',
+        'Make',
+        'Model',
+        'Engine number',
+        'Chassis number',
+      ],
+      'Claim Details': [
+        'Type of claim',
+        'Claim number',
+        'Date of theft',
+        'Date of loss',
+        'Date of intimation',
+        'Invoice referral date',
+        'Police station',
+        'FIR No.',
+        'FIR Date',
+        'Month',
+        'Quarter',
+        'FIR Delay',
+        'FIR Delay Bucket',
+        'Accident date (as per FIR)',
+        'Vehicle 1 (Accused)',
+        'Engine 1 (Accused)',
+        'Chassis 1 (Accused)',
+        'Vehicle 1 (Accused) Accident ID',
+        'RID',
+        'RED',
+        'Loss location city',
+        'Loss location state',
+        'Location code'
+      ]
+    };
   }
 
   static List<String> get createFields {
     return <String>[
+      'Insured_Name',
+      'Insured_City',
+      'Insured_State',
+      'Insured_Contact_Number',
+      'Insured_Alternate_Contact_Number',
+      'Email_Id',
+      'Policy_Number',
+      'Policy_start_date_From',
+      'Policy_start_date_To',
+      'Previous_Policy_Number',
+      'Previous_Policy_Expiry_Date',
+      'Vehicle_Reg_No',
+      'Product_Type',
+      'Make',
+      'Model',
+      'Engine_No',
+      'Chassis_No',
       'Type_of_Claim',
-      'Date_of_Theft',
+      'Claim_No'
+          'Date_of_Theft',
+      'Date_of_Loss',
       'Date_of_Intimation',
       'Inv_Referral_Date',
-
       'Police_Station',
       'FIR_No',
       'FIR_Date',
@@ -372,41 +400,220 @@ class Claim {
       'Vehicle_1_Accused_Accident_ID',
       'RID',
       'RED',
-
-      'Product_Type',
-      'Location_Code',
-      'Claim_No',
-      'Policy_Number',
-      'Insured_Name',
-      'Insured_Contact_Number',
-      'Insured_Alternate_Contact_Number',
-      'Email_Id',
-      'Policy_start_date_From',
-      'Policy_start_date_To',
-      'Vehicle_Reg_No',
-      'Make',
-      'Model',
-      'Engine_No',
-      'Chassis_No',
-      'Reserve_Amount',
-      'Previous_Insurer_Name',
-      'Previous_Policy_Number',
-      'Previous_Policy_Expiry_Date',
-      'No_Claim_Bonus',
-      'IMT_Endorsement',
-      'Insured_City',
-      'Insured_State',
       'Loss_Location_City',
       'Loss_Location_State',
-      'Past_Claim_Number',
-      'Date_of_Loss',
-      'Previous_Type_of_Claim',
-      'Auto_Manual_Trigger',
-      'Lot_no',
+      'Location_Code',
     ];
   }
 
   static Map<String, String> getLabelDataMap() {
-    return Map.fromIterables(fields, createFields);
+    final List<String> labelFields = [];
+    fields.forEach((key, value) {
+      for (String val in value) {
+        labelFields.add(val);
+      }
+    });
+    return Map.fromIterables(labelFields, createFields);
+  }
+
+  Future<void> videoCall(BuildContext context) async {
+    bool cameraStatus = await cameraPermission();
+    bool microphoneStatus = await microphonePermission();
+    bool storageStatus = await storagePermission();
+    if (cameraStatus && microphoneStatus && storageStatus) {
+      Navigator.pushNamed(context, '/claim/meeting', arguments: this);
+    } else {
+      showInfoSnackBar(
+        context,
+        AppStrings.camMicStoragePerm,
+        color: Colors.red,
+      );
+    }
+  }
+
+  Future<void> call(BuildContext context) async {
+    String? _selectedPhone;
+    if (insuredAltContactNumber != AppStrings.unavailable) {
+      _selectedPhone = await showModalBottomSheet(
+        context: context,
+        constraints: BoxConstraints(maxHeight: 300.h),
+        builder: (context) => Column(
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 16.h),
+              child: Text(
+                AppStrings.voiceCall,
+                style: Theme.of(context).textTheme.headline6,
+              ),
+            ),
+            Divider(
+              height: 0.5,
+              thickness: 0.5,
+              indent: 50.w,
+              endIndent: 50.w,
+              color: Colors.black54,
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop<String>(
+                  context,
+                  insuredContactNumber,
+                );
+              },
+              child: PhoneListTile(
+                phoneNumber: insuredContactNumber,
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop<String>(
+                  context,
+                  insuredAltContactNumber,
+                );
+              },
+              child: PhoneListTile(
+                phoneNumber: insuredAltContactNumber,
+                primary: false,
+              ),
+            )
+          ],
+        ),
+      );
+    } else {
+      _selectedPhone = insuredContactNumber;
+    }
+    if (_selectedPhone != null) {
+      BlocProvider.of<CallCubit>(context).callClient(
+        claimNumber: claimNumber,
+        phoneNumber: _selectedPhone,
+        customerName: insuredName,
+      );
+    }
+  }
+
+  Future<void> sendMessageModal(BuildContext context) async {
+    final TextEditingController _controller =
+    TextEditingController(text: insuredContactNumber);
+    bool? _result = await showModalBottomSheet<bool?>(
+      context: context,
+      constraints: BoxConstraints(maxHeight: 200.h),
+      builder: (context) => Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: Column(
+          children: <Widget>[
+            CustomTextFormField(
+              textEditingController: _controller,
+              label: "Phone number",
+              hintText: "Enter phone number",
+              keyboardType: TextInputType.phone,
+            ),
+            const SizedBox(height: 10.0),
+            Align(
+              alignment: Alignment.centerRight,
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context, true);
+                  showInfoSnackBar(context, "Sending message",
+                      color: Colors.orange);
+                },
+                child: const Text("SEND"),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+    if (_result == null) {
+      return;
+    } else if (_controller.text.isNotEmpty || _controller.text.length != 10) {
+      if (await CallRepository().sendMessage(
+        claimNumber: claimNumber,
+        phoneNumber: _controller.text,
+      )) {
+        showInfoSnackBar(context, "Message sent", color: Colors.green);
+      } else {
+        showInfoSnackBar(context, "Failed", color: Colors.red);
+      }
+    } else {
+      showInfoSnackBar(context, "Enter a valid phone number",
+          color: Colors.red);
+    }
+  }
+
+  Future<void> assignToSelf(BuildContext context) async {
+    await showModalBottomSheet(
+      context: context,
+      constraints: BoxConstraints(maxHeight: 250.h),
+      builder: (context) => Column(
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 16.h),
+            child: Text(
+              "Are you sure?",
+              style: Theme.of(context).textTheme.headline6,
+            ),
+          ),
+          Divider(
+            height: 0.5,
+            thickness: 0.5,
+            indent: 50.w,
+            endIndent: 50.w,
+            color: Colors.black54,
+          ),
+          BlocProvider<AssignSelfCubit>(
+            create: (context) => AssignSelfCubit(),
+            child: BlocConsumer<AssignSelfCubit, AssignSelfState>(
+                listener: (context, state) {
+                  if (state is AssignSelfLoading) {
+                    showProgressDialog(context, label: "Assigning", content: "Assigning this claim to you...",);
+                  } else if (state is AssignSelfSuccess) {
+                    Navigator.pop(context);
+                    showInfoSnackBar(context, "Assigned", color: Colors.green);
+                  } else if (state is AssignSelfFailed) {
+                    Navigator.pop(context);
+                    showInfoSnackBar(context, "Failed to assign", color: Colors.red);
+                  }
+                }, builder: (context, snapshot) {
+              return TextButton(
+                onPressed: () async {
+                  final SharedPreferences _prefs =
+                  await SharedPreferences.getInstance();
+                  await BlocProvider.of<AssignSelfCubit>(context).assignToSelf(
+                    context,
+                    claimNumber,
+                    _prefs.getString("email") ?? "",
+                  );
+                  Navigator.pop(context);
+                },
+                child: ListTile(
+                  leading: Padding(
+                    padding: EdgeInsets.only(left: 12.w, top: 8.h),
+                    child: Icon(Icons.check,
+                        size: 30.w, color: Theme.of(context).primaryColor),
+                  ),
+                  title: const Text("Assign this claim to me"),
+                ),
+              );
+            }),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop<String>(
+                context,
+                insuredAltContactNumber,
+              );
+            },
+            child: ListTile(
+              leading: Padding(
+                padding: EdgeInsets.only(left: 12.w, top: 8.h),
+                child: Icon(Icons.close,
+                    size: 30.w, color: Theme.of(context).primaryColor),
+              ),
+              title: const Text("Cancel"),
+            ),
+          )
+        ],
+      ),
+    );
   }
 }

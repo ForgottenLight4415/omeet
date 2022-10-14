@@ -1,6 +1,6 @@
+import 'package:omeet_motor/utilities/api_urls.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../utilities/app_constants.dart';
 import 'app_server_provider.dart';
 
 class AuthenticationProvider extends AppServerProvider {
@@ -10,19 +10,18 @@ class AuthenticationProvider extends AppServerProvider {
       "password": password,
     };
     final DecodedResponse _response = await postRequest(
-      path: AppStrings.loginUrl,
+      path: ApiUrl.loginUrl,
       data: _data,
     );
-    if (_response.statusCode == successCode) {
-      final Map<String, dynamic> _rData = _response.data!;
-      _setLoginStatus(await AuthenticationProvider.isLoggedIn(), phone: _rData["phone_no"]);
-      return _rData["code"] == successCode;
-    } else {
-      throw ServerException(
-        code: _response.statusCode,
-        cause: _response.reasonPhrase ?? AppStrings.unknown,
+    final Map<String, dynamic>? _rData = _response.data;
+    if (_rData != null) {
+      _setLoginStatus(
+        await AuthenticationProvider.isLoggedIn(),
+        phone: _rData["phone_no"],
       );
+      return _rData["code"] == successCode;
     }
+    return false;
   }
 
   Future<bool> verifyOtp(String email, String otp) async {
@@ -31,18 +30,11 @@ class AuthenticationProvider extends AppServerProvider {
       "otp": otp,
     };
     final DecodedResponse _response = await postRequest(
-      path: AppStrings.verifyOtp,
+      path: ApiUrl.verifyOtp,
       data: _data,
     );
-    if (_response.statusCode == successCode) {
-      final Map<String, dynamic> _rData = _response.data!;
-      return _setLoginStatus(_rData["code"] == successCode, email: email);
-    } else {
-      throw ServerException(
-        code: _response.statusCode,
-        cause: _response.reasonPhrase ?? AppStrings.unknown,
-      );
-    }
+    final Map<String, dynamic> _rData = _response.data!;
+    return _setLoginStatus(_rData["code"] == successCode, email: email);
   }
 
   static Future<void> signOut() async {

@@ -20,7 +20,7 @@ class CallCubit extends Cubit<CallState> {
       }
     } on SocketException {
       emit(CallFailed(1000, "Couldn't connect to server"));
-    } on ServerException catch (e) {
+    } on AppException catch (e) {
       emit(CallFailed(e.code, e.cause));
     }
   }

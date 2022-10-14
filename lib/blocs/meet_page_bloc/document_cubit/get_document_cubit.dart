@@ -14,14 +14,14 @@ class GetDocumentCubit extends Cubit<GetDocumentState> {
 
   final MeetDocumentsRepository _repository = MeetDocumentsRepository();
 
-  void getDocuments(String claimNumber) async {
+  void getDocuments(String claimNumber, DocumentType type) async {
     emit(GetDocumentLoading());
     try {
-      emit(GetDocumentReady(await _repository.getDocumentList(claimNumber)));
-    } on ServerException catch (a) {
+      emit(GetDocumentReady(await _repository.getDocuments(claimNumber, type)));
+    } on AppException catch (a) {
       emit(GetDocumentFailed(a.code, a.cause));
     } catch (b) {
-      log(b.toString());
+      log("Caught: " + b.toString());
       emit(GetDocumentFailed(1000, "Something went wrong"));
     }
   }
