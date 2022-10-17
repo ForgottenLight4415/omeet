@@ -29,7 +29,7 @@ class DocumentProvider extends AppServerProvider {
     final DecodedResponse _response = await getRequest(
       path: urlPath,
       data: <String, String> {
-        (type == DocumentType.audio ? "Claim_No" : "cnum"): claimNumber,
+        "Claim_No": claimNumber,
       },
     );
     Map<String, dynamic> _rData = _response.data!;
@@ -66,24 +66,6 @@ class DocumentProvider extends AppServerProvider {
       }
     } else {
       throw const AppException(code: 500, cause: "Unknown format");
-    }
-    return _documents;
-  }
-
-  Future<List<Document>> getDocumentList(String claimNumber) async {
-    final Map<String, String> _data = <String, String>{
-      "Claim_No": claimNumber,
-    };
-    final DecodedResponse _response = await postRequest(
-      path: ApiUrl.getDocumentsUrl,
-      data: _data,
-    );
-    Map<String, dynamic> _rData = _response.data!;
-    List<Document> _documents = [];
-    if (_rData["allpost"] != null) {
-      for (var document in _rData["allpost"]) {
-        _documents.add(Document.fromJson(document, DocumentType.video));
-      }
     }
     return _documents;
   }

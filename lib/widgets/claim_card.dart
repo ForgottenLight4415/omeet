@@ -47,7 +47,9 @@ class _ClaimCardState extends State<ClaimCard> {
   @override
   void initState() {
     super.initState();
-    _setCardColor();
+    if (widget.isEditable) {
+      _setCardColor();
+    }
   }
 
   @override
