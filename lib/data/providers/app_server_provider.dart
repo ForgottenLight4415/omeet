@@ -41,7 +41,7 @@ class AppServerProvider {
     try {
       Uri uri = Uri.parse((baseUrl ?? ApiUrl.baseUrl) + (path ?? ""));
       if (data != null) {
-        uri.replace(queryParameters: data);
+        uri = uri.replace(queryParameters: data);
       }
       final Response _response = await get(
         uri,
