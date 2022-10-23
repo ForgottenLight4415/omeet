@@ -431,7 +431,7 @@ class Claim {
     }
   }
 
-  Future<void> call(BuildContext context) async {
+  Future<bool> call(BuildContext context) async {
     String? _selectedPhone;
     if (insuredAltContactNumber != AppStrings.unavailable) {
       _selectedPhone = await showModalBottomSheet(
@@ -486,8 +486,10 @@ class Claim {
       BlocProvider.of<CallCubit>(context).callClient(
         claimNumber: claimNumber,
         phoneNumber: _selectedPhone,
-        customerName: insuredName,
       );
+      return true;
+    } else {
+      return false;
     }
   }
 

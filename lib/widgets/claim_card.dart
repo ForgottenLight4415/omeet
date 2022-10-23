@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:omeet_motor/utilities/bridge_call.dart';
 
 import 'base_card.dart';
 import 'card_detail_text.dart';
@@ -18,7 +19,6 @@ import '../utilities/video_record_config.dart';
 import '../utilities/claim_option_functions.dart';
 
 import '../blocs/call_bloc/call_cubit.dart';
-
 
 class ClaimCard extends StatefulWidget {
   final Claim claim;
@@ -55,7 +55,9 @@ class _ClaimCardState extends State<ClaimCard> {
   @override
   Widget build(BuildContext context) {
     return BaseCard(
-      onPressed: _openClaimMenu,
+      onPressed: () async {
+        await _openClaimMenu(context);
+      },
       card: Card(
         color: _cardColor,
         child: Container(
@@ -128,14 +130,16 @@ class _ClaimCardState extends State<ClaimCard> {
                           ? ElevatedButton(
                               onPressed: () async {
                                 await widget.claim.sendMessageModal(
-                                    context,
+                                  context,
                                 );
                               },
                               child: const Icon(Icons.mail),
                             )
                           : const SizedBox(),
                       ElevatedButton(
-                        onPressed: _openClaimMenu,
+                        onPressed: () async {
+                          await _openClaimMenu(context);
+                        },
                         child: const Text("More"),
                       ),
                     ],
@@ -149,22 +153,11 @@ class _ClaimCardState extends State<ClaimCard> {
     );
   }
 
-
-
-  void _callListener(BuildContext context, CallState state) {
-    if (state is CallLoading) {
-      showSnackBar(context, AppStrings.connecting);
-    } else if (state is CallReady) {
-      showSnackBar(context, AppStrings.receiveCall, type: SnackBarType.success);
-    } else if (state is CallFailed) {
-      showSnackBar(context, state.cause, type: SnackBarType.error);
-    }
-  }
-
-  void _openClaimMenu() async {
-    showModalBottomSheet(
+  Future<void> _openClaimMenu(BuildContext context) async {
+    await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
+      constraints: BoxConstraints(maxHeight: 600.h),
       builder: (modalContext) => SingleChildScrollView(
         child: Column(
           children: <Widget>[
@@ -173,8 +166,109 @@ class _ClaimCardState extends State<ClaimCard> {
                     faIcon: FontAwesomeIcons.plus,
                     label: "Assign to self",
                     onPressed: () {
-                      Navigator.pop(context);
+                      Navigator.pop(modalContext);
                       widget.claim.assignToSelf(context);
+                    },
+                  )
+                : const SizedBox(),
+            widget.isEditable
+                ? BlocProvider<CallCubit>(
+                    create: (context) => CallCubit(),
+                    child: BlocConsumer<CallCubit, CallState>(
+                      listener: _callListener,
+                      builder: (context, state) {
+                        return ClaimPageTiles(
+                          faIcon: FontAwesomeIcons.phoneAlt,
+                          label: "Voice call",
+                          onPressed: () async {
+                            if (await widget.claim.call(context)) {
+                              Navigator.pop(modalContext);
+                            }
+                          },
+                        );
+                      },
+                    ),
+                  )
+                : const SizedBox(),
+            BlocProvider<CallCubit>(
+              create: (context) => CallCubit(),
+              child: BlocConsumer<CallCubit, CallState>(
+                listener: _callListener,
+                builder: (context, state) {
+                  return ClaimPageTiles(
+                    faIcon: FontAwesomeIcons.phoneAlt,
+                    label: "Custom voice call",
+                    onPressed: () async {
+                      if (await customCallSetup(
+                        context,
+                        claimNumber: widget.claim.claimNumber,
+                        insuredContactNumber: widget.claim.insuredContactNumber,
+                      )) {
+                        Navigator.pop(modalContext);
+                      }
+                    },
+                  );
+                },
+              ),
+            ),
+            widget.isEditable
+                ? ClaimPageTiles(
+                    faIcon: FontAwesomeIcons.video,
+                    label: "Video call",
+                    onPressed: () {
+                      Navigator.pop(modalContext);
+                      videoCall(context, widget.claim);
+                    },
+                  )
+                : const SizedBox(),
+            widget.isEditable
+                ? ClaimPageTiles(
+                    faIcon: FontAwesomeIcons.camera,
+                    label: "Capture image",
+                    onPressed: () {
+                      Navigator.pop(modalContext);
+                      captureImage(context, widget.claim);
+                    },
+                  )
+                : const SizedBox(),
+            widget.isEditable
+                ? ClaimPageTiles(
+                    faIcon: FontAwesomeIcons.film,
+                    label: AppStrings.recordVideo,
+                    onPressed: () async {
+                      Navigator.pop(modalContext);
+                      await recordVideo(
+                        context,
+                        widget.claim,
+                        widget.videoRecorderConfig!,
+                      ).then((_) {
+                        _setCardColor();
+                      });
+                    },
+                  )
+                : const SizedBox(),
+            widget.isEditable
+                ? ClaimPageTiles(
+                    faIcon: FontAwesomeIcons.microphone,
+                    label: AppStrings.recordAudio,
+                    onPressed: () {
+                      Navigator.pop(modalContext);
+                      recordAudio(context, widget.claim);
+                    },
+                  )
+                : const SizedBox(),
+            widget.isEditable
+                ? ClaimPageTiles(
+                    faIcon: FontAwesomeIcons.mobileAlt,
+                    label: _getScreenshotText(),
+                    onPressed: () async {
+                      Navigator.pop(modalContext);
+                      await handleScreenshotService(
+                        context,
+                        widget.screenCapture!,
+                        widget.claim.claimNumber,
+                      );
+                      _setCardColor();
                     },
                   )
                 : const SizedBox(),
@@ -223,65 +317,6 @@ class _ClaimCardState extends State<ClaimCard> {
                 );
               },
             ),
-            widget.isEditable
-                ? ClaimPageTiles(
-                    faIcon: FontAwesomeIcons.microphone,
-                    label: AppStrings.recordAudio,
-                    onPressed: () {
-                      Navigator.pop(modalContext);
-                      recordAudio(context, widget.claim);
-                    },
-                  )
-                : const SizedBox(),
-            widget.isEditable
-                ? ClaimPageTiles(
-                    faIcon: FontAwesomeIcons.camera,
-                    label: "Capture image",
-                    onPressed: () {
-                      Navigator.pop(modalContext);
-                      captureImage(context, widget.claim);
-                    },
-                  ) : const SizedBox(),
-            widget.isEditable
-                ? ClaimPageTiles(
-              faIcon: FontAwesomeIcons.film,
-              label: AppStrings.recordVideo,
-              onPressed: () async {
-                Navigator.pop(modalContext);
-                await recordVideo(
-                  context,
-                  widget.claim,
-                  widget.videoRecorderConfig!,
-                ).then((_) {
-                  _setCardColor();
-                });
-              },
-            ) : const SizedBox(),
-            widget.isEditable
-                ? ClaimPageTiles(
-                    faIcon: FontAwesomeIcons.mobileAlt,
-                    label: _getScreenshotText(),
-                    onPressed: () async {
-                      Navigator.pop(modalContext);
-                      await handleScreenshotService(
-                        context,
-                        widget.screenCapture!,
-                        widget.claim.claimNumber,
-                      );
-                      _setCardColor();
-                    },
-                  )
-                : const SizedBox(),
-            widget.isEditable
-                ? ClaimPageTiles(
-                    faIcon: FontAwesomeIcons.video,
-                    label: "Video call",
-                    onPressed: () {
-                      Navigator.pop(modalContext);
-                      videoCall(context, widget.claim);
-                    },
-                  )
-                : const SizedBox(),
             ClaimPageTiles(
                 faIcon: FontAwesomeIcons.info,
                 label: "Details",
@@ -319,6 +354,16 @@ class _ClaimCardState extends State<ClaimCard> {
   //   }
   //   return "Record screen";
   // }
+
+  void _callListener(BuildContext context, CallState state) {
+    if (state is CallLoading) {
+      showSnackBar(context, AppStrings.connecting);
+    } else if (state is CallReady) {
+      showSnackBar(context, AppStrings.receiveCall, type: SnackBarType.success);
+    } else if (state is CallFailed) {
+      showSnackBar(context, state.cause, type: SnackBarType.error);
+    }
+  }
 
   String _getScreenshotText() {
     if (widget.screenCapture!.isServiceRunning) {
