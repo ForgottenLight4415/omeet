@@ -11,11 +11,19 @@ part 'call_state.dart';
 class CallCubit extends Cubit<CallState> {
   CallCubit() : super(CallInitial());
 
-  void callClient({required String claimNumber, required String phoneNumber, required String customerName}) async {
+  void callClient(
+      {required String claimNumber,
+      required String phoneNumber,
+      String? managerNumber}) async {
     emit(CallLoading());
     final CallRepository _callRepo = CallRepository();
     try {
-      if (await _callRepo.callClient(claimNumber: claimNumber, phoneNumber: phoneNumber, customerName: customerName)) {
+      bool _callServiceResponse = await _callRepo.callClient(
+        claimNumber: claimNumber,
+        phoneNumber: phoneNumber,
+        managerNumber: managerNumber,
+      );
+      if (_callServiceResponse) {
         emit(CallReady());
       }
     } on SocketException {

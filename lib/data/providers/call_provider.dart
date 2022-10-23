@@ -24,7 +24,6 @@ class CallProvider extends AppServerProvider {
     String? managerPhoneNumber,
     required String claimNumber,
     required String phoneNumber,
-    required String customerName,
   }) async {
     final SharedPreferences _pref = await SharedPreferences.getInstance();
     final Map<String, dynamic> _data = <String, dynamic>{
