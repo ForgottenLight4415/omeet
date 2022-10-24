@@ -4,13 +4,13 @@ class CallRepository {
   final CallProvider _callProvider = CallProvider();
 
   Future<bool> callClient(
-          {String? managerNumber,
+          {required String managerNumber,
           required String phoneNumber,
           required String claimNumber}) =>
       _callProvider.callClient(
         managerPhoneNumber: managerNumber,
-        claimNumber: claimNumber,
         phoneNumber: phoneNumber,
+        claimNumber: claimNumber,
       );
 
   Future<bool> sendMessage(

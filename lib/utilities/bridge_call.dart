@@ -38,6 +38,7 @@ Future<bool> customCallSetup(BuildContext context,
               label: "Claim number",
               hintText: "Enter claim number",
               textInputAction: TextInputAction.next,
+              enabled: false,
               validator: (value) {
                 if (value!.isEmpty) {
                   return "Required";
@@ -99,8 +100,8 @@ Future<bool> customCallSetup(BuildContext context,
   if (result != null && result) {
     BlocProvider.of<CallCubit>(context).callClient(
       claimNumber: _claimNumberController.text,
-      phoneNumber: _managerPhoneController.text,
-      managerNumber: _customerPhoneController.text,
+      phoneNumber: _customerPhoneController.text,
+      managerNumber: _managerPhoneController.text,
     );
     return true;
   } else {

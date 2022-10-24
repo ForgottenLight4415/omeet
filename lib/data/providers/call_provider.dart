@@ -1,5 +1,3 @@
-import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../utilities/api_urls.dart';
 import 'app_server_provider.dart';
 
@@ -21,16 +19,15 @@ class CallProvider extends AppServerProvider {
   }
 
   Future<bool> callClient({
-    String? managerPhoneNumber,
-    required String claimNumber,
+    required String managerPhoneNumber,
     required String phoneNumber,
+    required String claimNumber,
   }) async {
-    final SharedPreferences _pref = await SharedPreferences.getInstance();
     final Map<String, dynamic> _data = <String, dynamic>{
       "type": "callAndConnect",
       "call1": {
         "type": "phone",
-        "number": managerPhoneNumber ?? _pref.getString("phone"),
+        "number": managerPhoneNumber,
         "callerId": "08037944107",
       },
       "call2": {

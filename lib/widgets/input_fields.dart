@@ -10,6 +10,7 @@ class CustomTextFormField extends StatefulWidget {
   final String hintText;
   final bool obscureText;
   final void Function(String)? onFieldSubmitted;
+  final bool enabled;
 
   const CustomTextFormField(
       {Key? key,
@@ -20,7 +21,8 @@ class CustomTextFormField extends StatefulWidget {
         required this.label,
         required this.hintText,
         this.obscureText = false,
-        this.onFieldSubmitted})
+        this.onFieldSubmitted,
+        this.enabled = true})
       : super(key: key);
 
   @override
@@ -77,6 +79,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
             validator: widget.validator,
             obscureText: widget.obscureText,
             onFieldSubmitted: widget.onFieldSubmitted,
+            enabled: widget.enabled,
           ),
         ),
       ),

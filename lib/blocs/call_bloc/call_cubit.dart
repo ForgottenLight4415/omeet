@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../data/providers/app_server_provider.dart';
 import '../../data/repositories/call_repo.dart';
@@ -12,16 +13,17 @@ class CallCubit extends Cubit<CallState> {
   CallCubit() : super(CallInitial());
 
   void callClient(
-      {required String claimNumber,
+      {required String? claimNumber,
       required String phoneNumber,
       String? managerNumber}) async {
     emit(CallLoading());
     final CallRepository _callRepo = CallRepository();
     try {
+      final SharedPreferences _pref = await SharedPreferences.getInstance();
       bool _callServiceResponse = await _callRepo.callClient(
-        claimNumber: claimNumber,
+        managerNumber: managerNumber ?? _pref.getString("phone")!,
         phoneNumber: phoneNumber,
-        managerNumber: managerNumber,
+        claimNumber: claimNumber ?? "GODJN5432",
       );
       if (_callServiceResponse) {
         emit(CallReady());
