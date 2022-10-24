@@ -10,7 +10,7 @@ Future<bool> customCallSetup(BuildContext context,
     {String? claimNumber, String? insuredContactNumber}) async {
   final SharedPreferences _pref = await SharedPreferences.getInstance();
   final TextEditingController _claimNumberController =
-      TextEditingController(text: claimNumber ?? "");
+      TextEditingController(text: claimNumber ?? "GODJN5432");
   final TextEditingController _managerPhoneController =
       TextEditingController(text: _pref.getString("phone") ?? "");
   final TextEditingController _customerPhoneController =
