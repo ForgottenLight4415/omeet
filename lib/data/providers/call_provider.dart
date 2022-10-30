@@ -34,6 +34,7 @@ class CallProvider extends AppServerProvider {
         "type": "phone",
         "number": phoneNumber,
         "callerId": "08037944107",
+        "ignoreRinging": "false"
       },
       "recordCall": true,
       "stereo": true,
