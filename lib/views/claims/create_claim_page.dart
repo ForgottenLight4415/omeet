@@ -18,6 +18,7 @@ class NewClaimPage extends StatefulWidget {
 
 class _NewClaimPageState extends State<NewClaimPage> {
   Map<String, TextEditingController>? _textEditingControllers;
+  List<Widget>? _formLayout;
   String _typeDropDown = "Select claim type";
 
   final GlobalKey<FormState> _key = GlobalKey<FormState>();
@@ -81,7 +82,7 @@ class _NewClaimPageState extends State<NewClaimPage> {
           child: Form(
             key: _key,
             child: Column(
-              children: _createFormFields(),
+              children: _formLayout ?? _createFormFields(),
             ),
           ),
         ),
@@ -90,7 +91,6 @@ class _NewClaimPageState extends State<NewClaimPage> {
   }
 
   List<Widget> _createFormFields() {
-    // final List<String> claimFields = Claim.fields;
     final Map<String, List<String>> claimFields = Claim.fields;
     final Map<String, TextEditingController> textEditingControllers = {};
     List<Widget> formLayout = [];
@@ -165,6 +165,7 @@ class _NewClaimPageState extends State<NewClaimPage> {
       }
     });
     _textEditingControllers = textEditingControllers;
+    _formLayout = formLayout;
     return formLayout;
   }
 
