@@ -381,8 +381,8 @@ class Claim {
       'Engine_No',
       'Chassis_No',
       'Type_of_Claim',
-      'Claim_No'
-          'Date_of_Theft',
+      'Claim_No',
+      'Date_of_Theft',
       'Date_of_Loss',
       'Date_of_Intimation',
       'Inv_Referral_Date',
