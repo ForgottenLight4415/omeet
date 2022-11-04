@@ -74,7 +74,7 @@ class OMeetDatabase {
       $claimNo $textType,
       $latitude $doubleType,
       $longitude $doubleType,
-      $file $textType,
+      $file $textType UNIQUE,
       $time $timeType
     )''');
   }
@@ -94,6 +94,15 @@ class OMeetDatabase {
       'SELECT * FROM uploads',
     );
     return list;
+  }
+  
+  Future<int> exists(String file) async {
+    final db = await instance.database;
+    List<Map<String, Object?>> list = await db.query("uploads", columns: ["id"], where: "file = ?", whereArgs: ["file"]);
+    if (list.isNotEmpty) {
+      return list[0]['id'] as int;
+    }
+    return 0;
   }
 
   Future<void> delete(int id) async {

@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:omeet_motor/utilities/api_urls.dart';
+
 import '../databases/database.dart';
 import '../providers/app_server_provider.dart';
 
@@ -11,7 +13,7 @@ class DataUploadProvider extends AppServerProvider {
     required File file,
     bool isDoc = false,
   }) async {
-    final int uploadId = await OMeetDatabase.instance.create(
+    int uploadId = await OMeetDatabase.instance.create(
       UploadObject(
         claimNo: claimNumber,
         latitude: latitude,
@@ -20,6 +22,9 @@ class DataUploadProvider extends AppServerProvider {
         time: DateTime.now(),
       ),
     );
+    if (uploadId == 0) {
+      uploadId = await OMeetDatabase.instance.exists(file.path);
+    }
     final Map<String, String> _data = <String, String>{
       'Claim_No': claimNumber,
       'lat': latitude.toString(),
@@ -31,6 +36,7 @@ class DataUploadProvider extends AppServerProvider {
     final DecodedResponse _requestResponse = await multiPartRequest(
       data: _data,
       files: _files,
+      path: isDoc ? ApiUrl.uploadDocUrl : ApiUrl.uploadVideoUrl
     );
     if (_requestResponse.statusCode == successCode) {
       await OMeetDatabase.instance.delete(uploadId);

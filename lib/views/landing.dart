@@ -118,7 +118,7 @@ class LandingPage extends StatelessWidget {
             child: Align(
               alignment: Alignment.center,
               child: Text(
-                "BAGIC MCI\nVersion 1.0.64 (Build 64)",
+                "BAGIC MCI\nVersion 1.0.65 (Build 65)",
                 textAlign: TextAlign.center,
               ),
             ),
