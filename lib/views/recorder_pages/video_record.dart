@@ -304,7 +304,9 @@ class _VideoRecordPageState extends State<VideoRecordPage> with WidgetsBindingOb
             type: SnackBarType.success,
           );
           _videoFile.delete();
+          args.claimNumber = null;
           args.videoFile = null;
+          setState(() {});
         }
       }
     });
@@ -360,7 +362,6 @@ class _VideoRecordPageState extends State<VideoRecordPage> with WidgetsBindingOb
     }
 
     try {
-      args.claimNumber = null;
       return cameraController.stopVideoRecording();
     } on CameraException catch (e) {
       if (cameraController.value.isRecordingVideo) {
