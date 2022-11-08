@@ -41,7 +41,6 @@ class VideosPage extends StatelessWidget {
                   latitude: 0,
                   longitude: 0,
                   file: file,
-                  isDoc: true,
                 );
                 ScaffoldMessenger.of(context).removeCurrentSnackBar();
                 Navigator.pop(context);
