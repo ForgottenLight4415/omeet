@@ -115,34 +115,15 @@ Future<void> recordAudio(BuildContext context, Claim claim) async {
 }
 
 Future<void> recordVideo(BuildContext context, Claim claim, VideoRecorderConfig videoRecorderConfig) async {
-  showInfoSnackBar(context, "Checking permissions...");
   LocationData? locationData = await _getLocationData(context);
-  bool cameraStatus = await cameraPermission();
-  bool microphoneStatus = await microphonePermission();
-  bool storageStatus = await storagePermission();
-  if (cameraStatus && microphoneStatus && storageStatus && locationData != null) {
-    WidgetsFlutterBinding.ensureInitialized();
-    List<CameraDescription>? _cameras;
-    try {
-      _cameras = await availableCameras();
-      videoRecorderConfig.setCameraList(_cameras);
-      videoRecorderConfig.setLocation(locationData);
-      ScaffoldMessenger.of(context).removeCurrentSnackBar();
-      await Navigator.pushNamed(
-        context,
-        '/record/video',
-        arguments: VideoPageConfig(videoRecorderConfig, claim.claimNumber, claim),
-      );
-    } on CameraException catch (e) {
-      showInfoSnackBar(context, "Failed to determine available cameras. (${e.description})", color: Colors.red);
-    }
-  } else {
-    showInfoSnackBar(
-      context,
-      "Camera, microphone, storage and location permission is required to access this feature.",
-      color: Colors.red,
-    );
-  }
+  videoRecorderConfig.setLocation(locationData);
+  await Navigator.pushNamed(
+    context, '/record/video', arguments: VideoPageConfig(
+      videoRecorderConfig,
+      claim.claimNumber,
+      claim,
+    ),
+  );
 }
 
 Future<void> captureImage(BuildContext context, Claim claim) async {

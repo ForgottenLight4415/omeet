@@ -1,28 +1,20 @@
 import 'package:camera/camera.dart';
 import 'package:location/location.dart';
+import 'package:flutter_background_video_recorder/flutter_bvr.dart';
 
 class VideoRecorderConfig {
-  List<CameraDescription?>? cameraList;
-  CameraController? controller;
   XFile? videoFile;
-  bool enableAudio;
   String? claimNumber;
   LocationData? locationData;
+  final FlutterBackgroundVideoRecorder _recorder = FlutterBackgroundVideoRecorder();
 
-  VideoRecorderConfig(
-      {this.cameraList,
-        this.controller,
+  VideoRecorderConfig({
         this.videoFile,
-        this.enableAudio = true,
         this.claimNumber,
         this.locationData});
 
-  void setCameraList(List<CameraDescription?> cameras) {
-    cameraList = cameras;
-  }
-
-  void changeCameraController(CameraController? cameraController) {
-    controller = cameraController;
+  FlutterBackgroundVideoRecorder getRecorder() {
+    return _recorder;
   }
 
   void setOutFile(XFile? videoFile) {
