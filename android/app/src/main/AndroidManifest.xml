@@ -55,6 +55,12 @@
             </intent-filter>
         </activity>
 
+       <service
+           android:name="flutter_bvr_service.VideoRecorderService"
+           android:enabled="true"
+           android:exported="false"
+           android:foregroundServiceType="camera|microphone" />
+
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data
