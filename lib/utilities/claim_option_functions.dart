@@ -116,6 +116,10 @@ Future<void> recordAudio(BuildContext context, Claim claim) async {
 
 Future<void> recordVideo(BuildContext context, Claim claim, VideoRecorderConfig videoRecorderConfig) async {
   LocationData? locationData = await _getLocationData(context);
+  if (locationData == null) {
+    showInfoSnackBar(context, "Location permission is required to access this feature.", color: Colors.red);
+    return;
+  }
   videoRecorderConfig.setLocation(locationData);
   await Navigator.pushNamed(
     context, '/record/video', arguments: VideoPageConfig(
