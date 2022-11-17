@@ -7,6 +7,7 @@ import 'package:omeet_motor/utilities/screen_capture.dart';
 import 'package:omeet_motor/utilities/screen_recorder.dart';
 import 'package:omeet_motor/utilities/video_record_config.dart';
 import 'package:omeet_motor/views/claims/assigned_claims.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'data/repositories/auth_repo.dart';
 
@@ -30,10 +31,15 @@ class _OMeetAppState extends State<OMeetApp> {
   ScreenCapture? _screenCapture;
   VideoRecorderConfig? _videoRecorderConfig;
 
-  void _initMediaRecorders() {
+  void _initMediaRecorders() async {
     _screenRecorder = ScreenRecorder();
     _screenCapture = ScreenCapture();
     _videoRecorderConfig = VideoRecorderConfig();
+    SharedPreferences _pref = await SharedPreferences.getInstance();
+    String? videoRecordingClaimNumber = _pref.getString("video-recording-cn");
+    if (videoRecordingClaimNumber != null) {
+      _videoRecorderConfig!.claimNumber = videoRecordingClaimNumber;
+    }
   }
 
   @override

@@ -156,9 +156,9 @@ packages:
   flutter_background_video_recorder:
     dependency: "direct main"
     description:
-      name: flutter_background_video_recorder
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "C:\\Users\\crv44\\StudioProjects\\flutter_background_video_recorder"
+      relative: false
+    source: path
     version: "0.0.4"
   flutter_bloc:
     dependency: "direct main"
