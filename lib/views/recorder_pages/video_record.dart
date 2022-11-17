@@ -1,26 +1,26 @@
-import 'dart:async';
 import 'dart:io';
-import 'package:flutter_background_video_recorder/flutter_bvr.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
-import 'package:omeet_motor/views/meet_pages/details.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_background_video_recorder/flutter_bvr.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../widgets/buttons.dart';
 import '../../data/models/claim.dart';
-import '../../data/repositories/data_upload_repo.dart';
+import '../../widgets/snack_bar.dart';
 import '../../utilities/app_constants.dart';
 import '../../utilities/upload_dialog.dart';
+import '../../views/meet_pages/details.dart';
 import '../../utilities/video_record_config.dart';
-import '../../widgets/buttons.dart';
-import '../../widgets/snack_bar.dart';
+import '../../data/repositories/data_upload_repo.dart';
 
 class VideoPageConfig {
   final VideoRecorderConfig config;
-  final String? claimNumber;
-  final Claim? claim;
+  final Claim claim;
 
-  const VideoPageConfig(this.config, this.claimNumber, this.claim);
+  const VideoPageConfig(this.config, this.claim);
 }
 
 class VideoRecordPage extends StatefulWidget {
@@ -33,9 +33,10 @@ class VideoRecordPage extends StatefulWidget {
 }
 
 class _VideoRecordPageState extends State<VideoRecordPage> with WidgetsBindingObserver, TickerProviderStateMixin {
-  FlutterBackgroundVideoRecorder? _videoRecorder;
-  StreamSubscription<int?>? _streamSubscription;
-  late final VideoRecorderConfig args;
+  late final FlutterBackgroundVideoRecorder _videoRecorder;
+  late final StreamSubscription<int?> _streamSubscription;
+  late final SharedPreferences _preferences;
+  late final VideoRecorderConfig _recorderConfig;
 
   bool _recorderBusy = false;
   bool _isRecording = false;
@@ -43,16 +44,20 @@ class _VideoRecordPageState extends State<VideoRecordPage> with WidgetsBindingOb
   @override
   void initState() {
     super.initState();
-    args = widget.config.config;
-    _videoRecorder = args.getRecorder();
+    initSharedPreferences();
+    _recorderConfig = widget.config.config;
+    _videoRecorder = _recorderConfig.getRecorder();
     getInitialRecordingStatus();
     listenRecordingState();
   }
 
+  void initSharedPreferences() async {
+    _preferences = await SharedPreferences.getInstance();
+  }
 
   @override
   void dispose() {
-    _streamSubscription?.cancel();
+    _streamSubscription.cancel();
     super.dispose();
   }
 
@@ -72,10 +77,10 @@ class _VideoRecordPageState extends State<VideoRecordPage> with WidgetsBindingOb
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Text(
-                    args.claimNumber != null
-                        ? "Recording in progress for claim number\n${args
+                    _recorderConfig.claimNumber != null
+                        ? "Recording in progress for claim number\n${_recorderConfig
                         .claimNumber}"
-                        : "Start recording for\n${widget.config.claimNumber}",
+                        : "Start recording for\n${widget.config.claim.claimNumber}",
                     textAlign: TextAlign.center,
                   ),
                   SizedBox(height: 10.h),
@@ -86,7 +91,7 @@ class _VideoRecordPageState extends State<VideoRecordPage> with WidgetsBindingOb
                       } else if (!_isRecording && _recorderBusy) {
                         return;
                       } else {
-                        stopVideoRecording(await _videoRecorder?.stopVideoRecording() ?? "");
+                        stopVideoRecording(await _videoRecorder.stopVideoRecording() ?? "");
                       }
                     },
                     child: Text(
@@ -99,18 +104,19 @@ class _VideoRecordPageState extends State<VideoRecordPage> with WidgetsBindingOb
           ),
         ),
         body: SingleChildScrollView(
-          child: ClaimDetails(claim: widget.config.claim!),
+          child: ClaimDetails(claim: widget.config.claim),
         )
     );
   }
 
   Future<void> getInitialRecordingStatus() async {
-    _isRecording = await _videoRecorder?.getVideoRecordingStatus() == 1;
+    int? _recordingStatus = await _videoRecorder.getVideoRecordingStatus();
+    _isRecording = _recordingStatus == 1;
     setState(() {});
   }
 
   void listenRecordingState() {
-    _streamSubscription = _videoRecorder?.recorderState.listen((event) {
+    _streamSubscription = _videoRecorder.recorderState.listen((event) {
       switch (event) {
         case 1:
           _isRecording = true;
@@ -137,18 +143,15 @@ class _VideoRecordPageState extends State<VideoRecordPage> with WidgetsBindingOb
   }
 
   void stopVideoRecording(String? filePath) async {
+    String claimNumber = widget.config.claim.claimNumber;
     if (filePath != null) {
       File _videoFile = File(filePath);
-      LocationData _locationData = args.locationData!;
+      LocationData _locationData = _recorderConfig.locationData!;
       final DataUploadRepository _repository = DataUploadRepository();
-      showSnackBar(
-        context,
-        AppStrings.startingUpload,
-        type: SnackBarType.success,
-      );
+      showSnackBar(context, AppStrings.startingUpload, type: SnackBarType.success);
       showProgressDialog(context);
       bool _result = await _repository.uploadData(
-        claimNumber: args.claimNumber ?? "NULL",
+        claimNumber: claimNumber,
         latitude: _locationData.latitude ?? 0,
         longitude: _locationData.longitude ?? 0,
         file: _videoFile,
@@ -156,22 +159,23 @@ class _VideoRecordPageState extends State<VideoRecordPage> with WidgetsBindingOb
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
       Navigator.pop(context);
       if (_result) {
-        showSnackBar(
-          context,
-          AppStrings.fileUploaded,
-          type: SnackBarType.success,
-        );
+        showSnackBar(context, AppStrings.fileUploaded, type: SnackBarType.success);
         _videoFile.delete();
-        args.claimNumber = null;
-        args.videoFile = null;
-        setState(() {});
+      } else {
+        showSnackBar(context, AppStrings.fileUploadFailed, type: SnackBarType.error);
       }
+      _recorderConfig.claimNumber = null;
+      _recorderConfig.videoFile = null;
+      setState(() {});
+      _preferences.remove("video-recording-cn");
     }
   }
 
   void startVideoRecording() async {
-    args.setClaimNumber(widget.config.claimNumber);
-    await _videoRecorder?.startVideoRecording();
+    String claimNumber = widget.config.claim.claimNumber;
+    _recorderConfig.setClaimNumber(claimNumber);
+    _preferences.setString("video-recording-cn", claimNumber);
+    await _videoRecorder.startVideoRecording();
     setState(() {});
   }
 }
