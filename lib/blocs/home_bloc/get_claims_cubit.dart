@@ -38,8 +38,8 @@ class GetClaimsCubit extends Cubit<GetClaimsState> {
     }
   }
 
-  Future<void> searchClaims(String? searchQuery) async {
-    List<Claim> _claims = await _homeRepository.getClaims();
+  void searchClaims(String? searchQuery) {
+    List<Claim> _claims = _homeRepository.getClaimList();
     if (searchQuery == null || searchQuery.isEmpty) {
       emit(GetClaimsSuccess(_claims));
       return;
