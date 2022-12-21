@@ -43,7 +43,7 @@ dependencies:
   flutter_screenutil: ^5.0.0+2
   font_awesome_flutter: ^9.2.0
   simple_connection_checker: ^0.2.1
-  flutter_background_video_recorder: ^0.0.5
+  flutter_background_video_recorder: ^0.0.7
   syncfusion_flutter_pdfviewer: ^20.1.61-beta
   jitsi_meet:
     git:
