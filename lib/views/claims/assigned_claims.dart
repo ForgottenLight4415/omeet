@@ -1,30 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:omeet_motor/recorder_initialization.dart';
 import 'package:omeet_motor/widgets/buttons.dart';
 
 import '../../blocs/home_bloc/get_claims_cubit.dart';
 import '../../utilities/app_constants.dart';
-import '../../utilities/screen_capture.dart';
-import '../../utilities/screen_recorder.dart';
-import '../../utilities/video_record_config.dart';
 import '../../widgets/input_fields.dart';
 import '../../widgets/loading_widget.dart';
 import '../../widgets/error_widget.dart';
 import '../../widgets/claim_card.dart';
 
-class RecorderObjects {
-  ScreenCapture capture;
-  ScreenRecorder recorder;
-  VideoRecorderConfig config;
-
-  RecorderObjects(this.capture, this.recorder, this.config);
-}
-
 class AssignedClaimsPage extends StatefulWidget {
-  final RecorderObjects recorderObjects;
-
-  const AssignedClaimsPage({Key? key, required this.recorderObjects}) : super(key: key);
+  const AssignedClaimsPage({Key? key}) : super(key: key);
 
   @override
   State<AssignedClaimsPage> createState() => _AssignedClaimsPageState();
@@ -35,9 +23,12 @@ class _AssignedClaimsPageState extends State<AssignedClaimsPage> {
   TextEditingController? _searchController;
   String? _searchQuery;
 
+  late final RecorderInitialization _recorderInitialization;
+
   @override
   void initState() {
     super.initState();
+    initializeRecorders();
     _searchController = TextEditingController();
     _searchController!.addListener(() {
       _searchQuery = _searchController!.text;
@@ -50,6 +41,10 @@ class _AssignedClaimsPageState extends State<AssignedClaimsPage> {
     _searchController!.dispose();
     _claimsCubit.close();
     super.dispose();
+  }
+
+  void initializeRecorders() async {
+    _recorderInitialization = await RecorderInitialization.create();
   }
 
   @override
@@ -69,10 +64,10 @@ class _AssignedClaimsPageState extends State<AssignedClaimsPage> {
               leading: const AppBackButton(),
               title: Text(
                 'Claims',
-                style: Theme.of(context).textTheme.headline3!.copyWith(
-                  color: Colors.black87,
-                  fontWeight: FontWeight.w700,
-                ),
+                style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                      color: Colors.black87,
+                      fontWeight: FontWeight.w700,
+                    ),
               ),
               centerTitle: true,
               flexibleSpace: FlexibleSpaceBar(
@@ -110,9 +105,9 @@ class _AssignedClaimsPageState extends State<AssignedClaimsPage> {
                     itemCount: state.claims.length,
                     itemBuilder: (context, index) => ClaimCard(
                       claim: state.claims[index],
-                      screenRecorder: widget.recorderObjects.recorder,
-                      screenCapture: widget.recorderObjects.capture,
-                      videoRecorderConfig: widget.recorderObjects.config,
+                      screenRecorder: _recorderInitialization.screenRecorder,
+                      screenCapture: _recorderInitialization.screenCapture,
+                      videoRecorder: _recorderInitialization.videoRecorder,
                     ),
                   ),
                 );

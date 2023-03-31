@@ -29,7 +29,7 @@
     </queries>
    <application
         tools:replace="android:label"
-        android:label="Motor Virtual Calling Investigation"
+        android:label="Demo H"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
@@ -56,7 +56,7 @@
         </activity>
 
        <service
-           android:name="flutter_bvr_service.VideoRecorderService"
+           android:name="services.VideoRecorderService"
            android:enabled="true"
            android:exported="false"
            android:foregroundServiceType="camera|microphone" />

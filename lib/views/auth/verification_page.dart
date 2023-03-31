@@ -1,29 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:omeet_motor/views/claims/assigned_claims.dart';
 
 import '../../blocs/otp_bloc/otp_cubit.dart';
 import '../../utilities/show_snackbars.dart';
 import '../../utilities/upload_dialog.dart';
 import '../../widgets/input_fields.dart';
 
-class VerificationPageArguments {
-  final String email;
-  final RecorderObjects objects;
-
-  VerificationPageArguments(this.email, this.objects);
-}
-
 class VerificationPage extends StatefulWidget {
   final String emailAddress;
-  final RecorderObjects recorders;
 
-  const VerificationPage({
-    Key? key,
-    required this.emailAddress,
-    required this.recorders,
-  }) : super(key: key);
+  const VerificationPage({Key? key, required this.emailAddress})
+      : super(key: key);
 
   @override
   State<VerificationPage> createState() => _VerificationPageState();
@@ -57,7 +45,6 @@ class _VerificationPageState extends State<VerificationPage> {
                     context,
                     '/landing',
                     (route) => false,
-                    arguments: widget.recorders,
                   );
                 }
               },

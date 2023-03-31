@@ -15,7 +15,7 @@ import '../data/models/document.dart';
 import '../utilities/app_constants.dart';
 import '../utilities/screen_recorder.dart';
 import '../utilities/screen_capture.dart';
-import '../utilities/video_record_config.dart';
+import '../utilities/video_recorder.dart';
 import '../utilities/claim_option_functions.dart';
 
 import '../blocs/call_bloc/call_cubit.dart';
@@ -24,7 +24,7 @@ class ClaimCard extends StatefulWidget {
   final Claim claim;
   final ScreenRecorder? screenRecorder;
   final ScreenCapture? screenCapture;
-  final VideoRecorderConfig? videoRecorderConfig;
+  final VideoRecorder? videoRecorder;
   final bool isEditable;
 
   const ClaimCard({
@@ -32,7 +32,7 @@ class ClaimCard extends StatefulWidget {
     required this.claim,
     this.screenRecorder,
     this.screenCapture,
-    this.videoRecorderConfig,
+    this.videoRecorder,
     this.isEditable = true,
   }) : super(key: key);
 
@@ -69,7 +69,7 @@ class _ClaimCardState extends State<ClaimCard> {
               Text(
                 widget.claim.claimNumber,
                 softWrap: false,
-                style: Theme.of(context).textTheme.headline4!.copyWith(
+                style: Theme.of(context).textTheme.headlineMedium!.copyWith(
                       fontWeight: FontWeight.w700,
                       color: Theme.of(context).primaryColor,
                       overflow: TextOverflow.fade,
@@ -240,7 +240,7 @@ class _ClaimCardState extends State<ClaimCard> {
                       await recordVideo(
                         context,
                         widget.claim,
-                        widget.videoRecorderConfig!,
+                        widget.videoRecorder!,
                       ).then((_) {
                         _setCardColor();
                       });
@@ -387,8 +387,8 @@ class _ClaimCardState extends State<ClaimCard> {
       setState(() {
         _cardColor = Colors.red.shade100;
       });
-    } else if (widget.videoRecorderConfig!.claimNumber != null &&
-        widget.videoRecorderConfig!.claimNumber == widget.claim.claimNumber) {
+    } else if (widget.videoRecorder!.claimNumber != null &&
+        widget.videoRecorder!.claimNumber == widget.claim.claimNumber) {
       setState(() {
         _cardColor = Colors.red.shade100;
       });

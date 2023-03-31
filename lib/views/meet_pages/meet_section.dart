@@ -53,7 +53,7 @@ class _VideoMeetPageState extends State<VideoMeetPage> with AutomaticKeepAliveCl
   }
 
   TextStyle customBodyTextOne(BuildContext context) {
-    return Theme.of(context).textTheme.bodyText1!.copyWith(
+    return Theme.of(context).textTheme.bodyLarge!.copyWith(
       fontWeight: FontWeight.w500,
       color: Colors.white,
     );
@@ -74,7 +74,7 @@ class _VideoMeetPageState extends State<VideoMeetPage> with AutomaticKeepAliveCl
           Text(
             "Meeting in progress.\nGo to the meeting screen to end call.",
             textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.headline6,
+            style: Theme.of(context).textTheme.titleLarge,
           ),
           ScalingTile(
             onPressed: () async {
@@ -104,7 +104,7 @@ class _VideoMeetPageState extends State<VideoMeetPage> with AutomaticKeepAliveCl
         Text(
           "Tap \"Start meeting\" to join the meet",
           textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.headline5!.copyWith(
+          style: Theme.of(context).textTheme.headlineSmall!.copyWith(
             fontFamily: 'Open Sans',
           ),
         ),
@@ -112,7 +112,7 @@ class _VideoMeetPageState extends State<VideoMeetPage> with AutomaticKeepAliveCl
         Text(
           "Your video and microphone are turned off by default.",
           textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.bodyText1,
+          style: Theme.of(context).textTheme.bodyLarge,
         ),
         SizedBox(height: 20.h),
         Row(

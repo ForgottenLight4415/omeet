@@ -18,13 +18,13 @@ class CardDetailText extends StatelessWidget {
       child: RichText(
           text: TextSpan(
               text: title + '\n',
-              style: Theme.of(context).textTheme.bodyText1!.copyWith(
+              style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
               children: <TextSpan>[
             TextSpan(
               text: content,
-              style: Theme.of(context).textTheme.bodyText2,
+              style: Theme.of(context).textTheme.bodyMedium,
             )
           ])),
     );

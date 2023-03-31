@@ -85,7 +85,7 @@ class DocumentCard extends StatelessWidget {
                       textAlign: TextAlign.left,
                       overflow: TextOverflow.fade,
                       maxLines: 2,
-                      style: Theme.of(context).textTheme.headline5!.copyWith(
+                      style: Theme.of(context).textTheme.headlineSmall!.copyWith(
                           fontWeight: FontWeight.w600, color: Colors.black87),
                     ),
                     SizedBox(height: 10.h),
@@ -94,7 +94,7 @@ class DocumentCard extends StatelessWidget {
                       textAlign: TextAlign.left,
                       overflow: TextOverflow.fade,
                       maxLines: 2,
-                      style: Theme.of(context).textTheme.bodyText2,
+                      style: Theme.of(context).textTheme.bodyMedium,
                     ),
                     type == DocumentType.audio
                         ? Text(
@@ -102,7 +102,7 @@ class DocumentCard extends StatelessWidget {
                             textAlign: TextAlign.left,
                             overflow: TextOverflow.fade,
                             maxLines: 2,
-                            style: Theme.of(context).textTheme.bodyText2,
+                            style: Theme.of(context).textTheme.bodyMedium,
                           )
                         : const SizedBox(),
                     type == DocumentType.audio
@@ -111,7 +111,7 @@ class DocumentCard extends StatelessWidget {
                             textAlign: TextAlign.left,
                             overflow: TextOverflow.fade,
                             maxLines: 2,
-                            style: Theme.of(context).textTheme.bodyText2,
+                            style: Theme.of(context).textTheme.bodyMedium,
                           )
                         : const SizedBox(),
                     Text(
@@ -119,7 +119,7 @@ class DocumentCard extends StatelessWidget {
                       textAlign: TextAlign.left,
                       overflow: TextOverflow.fade,
                       maxLines: 2,
-                      style: Theme.of(context).textTheme.bodyText2,
+                      style: Theme.of(context).textTheme.bodyMedium,
                     ),
                   ],
                 ),

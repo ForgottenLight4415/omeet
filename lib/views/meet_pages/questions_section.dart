@@ -189,7 +189,7 @@ Future<String?> _addQuestionModal(BuildContext context) async {
                   alignment: Alignment.center,
                   child: Text(
                     "Add question",
-                    style: Theme.of(context).textTheme.headline2,
+                    style: Theme.of(context).textTheme.displayMedium,
                   ),
                 ),
                 SizedBox(height: 20.h),

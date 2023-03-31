@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -60,6 +61,7 @@ class _UploadsPageState extends State<UploadsPage> {
                       latitude: value.latitude,
                       longitude: value.longitude,
                       file: _file,
+                      uploadNow: true,
                     );
                     if (_result) {
                       showInfoSnackBar(
@@ -73,6 +75,7 @@ class _UploadsPageState extends State<UploadsPage> {
                       throw Exception("An unknown error occurred while uploading the file.");
                     }
                   } on Exception catch (e) {
+                    log(e.toString());
                     showInfoSnackBar(
                       context,
                       AppStrings.fileUploadFailed + "(${e.toString()})",

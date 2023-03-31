@@ -21,17 +21,17 @@ class AppTheme {
       ),
     ),
     textTheme: TextTheme(
-      headline1: TextStyle(
+      displayLarge: TextStyle(
         fontSize: 38.sp,
         fontWeight: FontWeight.w500,
       ),
-      headline2: TextStyle(fontSize: 30.sp),
-      headline3: TextStyle(fontSize: 28.sp),
-      headline4: TextStyle(fontSize: 26.sp, fontWeight: FontWeight.w700),
-      headline5: TextStyle(fontSize: 24.sp),
-      headline6: TextStyle(fontSize: 22.sp),
-      bodyText1: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w400),
-      bodyText2: TextStyle(fontSize: 18.sp),
+      displayMedium: TextStyle(fontSize: 30.sp),
+      displaySmall: TextStyle(fontSize: 28.sp),
+      headlineMedium: TextStyle(fontSize: 26.sp, fontWeight: FontWeight.w700),
+      headlineSmall: TextStyle(fontSize: 24.sp),
+      titleLarge: TextStyle(fontSize: 22.sp),
+      bodyLarge: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w400),
+      bodyMedium: TextStyle(fontSize: 18.sp),
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ButtonStyle(

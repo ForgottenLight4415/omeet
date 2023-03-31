@@ -8,14 +8,11 @@ import '../data/repositories/auth_repo.dart';
 import '../utilities/app_constants.dart';
 import '../utilities/bridge_call.dart';
 import '../utilities/images.dart';
-import '../views/claims/assigned_claims.dart';
 import '../widgets/landing_card.dart';
 import '../widgets/snack_bar.dart';
 
 class LandingPage extends StatelessWidget {
-  final RecorderObjects objects;
-
-  const LandingPage({Key? key, required this.objects}) : super(key: key);
+  const LandingPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +33,7 @@ class LandingPage extends StatelessWidget {
           Text(
             AppStrings.appName,
             textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.headline3!.copyWith(
+            style: Theme.of(context).textTheme.displaySmall!.copyWith(
                   color: Colors.black87,
                   fontWeight: FontWeight.w500,
                 ),
@@ -59,11 +56,7 @@ class LandingPage extends StatelessWidget {
                       label: "Create\nClaim"),
                   LandingCard(
                       onPressed: () {
-                        Navigator.pushNamed(
-                          context,
-                          '/assigned',
-                          arguments: objects,
-                        );
+                        Navigator.pushNamed(context, '/assigned');
                       },
                       fontAwesomeIcons: FontAwesomeIcons.tasks,
                       label: "Assigned Claims"),
@@ -104,7 +97,6 @@ class LandingPage extends StatelessWidget {
                         context,
                         '/login',
                         (route) => false,
-                        arguments: objects,
                       );
                     },
                     fontAwesomeIcons: FontAwesomeIcons.signOutAlt,

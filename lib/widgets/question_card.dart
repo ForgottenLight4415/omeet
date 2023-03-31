@@ -50,7 +50,8 @@ class _QuestionCardState extends State<QuestionCard> {
             child: Padding(
               padding: EdgeInsets.all(12.w),
               child: BlocProvider<ModifyQuestionBloc>(
-                create: (context) => ModifyQuestionBloc(question: widget.question),
+                create: (context) =>
+                    ModifyQuestionBloc(question: widget.question),
                 child: BlocBuilder<ModifyQuestionBloc, ModifyQuestionState>(
                   builder: (context, state) {
                     return Column(
@@ -61,7 +62,10 @@ class _QuestionCardState extends State<QuestionCard> {
                           child: Text(
                             state.question.question,
                             textAlign: TextAlign.left,
-                            style: Theme.of(context).textTheme.bodyText1!.copyWith(color: Colors.black87),
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyLarge!
+                                .copyWith(color: Colors.black87),
                           ),
                         ),
                         SizedBox(height: 20.h),
@@ -74,7 +78,8 @@ class _QuestionCardState extends State<QuestionCard> {
                           children: <Widget>[
                             ElevatedButton(
                               onPressed: () {
-                                BlocProvider.of<ModifyQuestionBloc>(context).add(ToggleFlag());
+                                BlocProvider.of<ModifyQuestionBloc>(context)
+                                    .add(ToggleFlag());
                               },
                               child: Text(
                                 state.question.flag ? "Flagged" : "Flag",
@@ -82,7 +87,8 @@ class _QuestionCardState extends State<QuestionCard> {
                             ),
                             ElevatedButton(
                               onPressed: () async {
-                                BlocProvider.of<ModifyQuestionBloc>(context).add(
+                                BlocProvider.of<ModifyQuestionBloc>(context)
+                                    .add(
                                   AnswerQuestion(
                                     answer: await _showAnswerInputModal(
                                       context,
@@ -92,12 +98,15 @@ class _QuestionCardState extends State<QuestionCard> {
                                 );
                               },
                               child: Text(
-                                state.question.getAnswer() == null ? "Answer" : "Edit answer",
+                                state.question.getAnswer() == null
+                                    ? "Answer"
+                                    : "Edit answer",
                               ),
                             ),
                             ElevatedButton(
                               onPressed: () async {
-                                BlocProvider.of<ModifyQuestionBloc>(context).add(
+                                BlocProvider.of<ModifyQuestionBloc>(context)
+                                    .add(
                                   ModifyQuestion(
                                     question: await _editQuestionModal(
                                       context,
@@ -122,8 +131,10 @@ class _QuestionCardState extends State<QuestionCard> {
     );
   }
 
-  Future<String?> _showAnswerInputModal(BuildContext context, Question question) async {
-    final TextEditingController _controller = TextEditingController(text: question.getAnswer());
+  Future<String?> _showAnswerInputModal(
+      BuildContext context, Question question) async {
+    final TextEditingController _controller =
+        TextEditingController(text: question.getAnswer());
     final String? _answer = await showModalBottomSheet<String?>(
       context: context,
       isScrollControlled: true,
@@ -144,19 +155,20 @@ class _QuestionCardState extends State<QuestionCard> {
                     alignment: Alignment.center,
                     child: Text(
                       "Question",
-                      style: Theme.of(context).textTheme.headline2,
+                      style: Theme.of(context).textTheme.displayMedium,
                     ),
                   ),
                   SizedBox(height: 20.h),
                   Text(
                     question.question,
-                    style: Theme.of(context).textTheme.headline5,
+                    style: Theme.of(context).textTheme.headlineSmall,
                   ),
                   SizedBox(height: 10.h),
                   TextField(
                     controller: _controller,
                     maxLines: 10,
-                    decoration: const InputDecoration(hintText: "Write an answer"),
+                    decoration:
+                        const InputDecoration(hintText: "Write an answer"),
                   ),
                   const Spacer(),
                   Align(
@@ -178,8 +190,10 @@ class _QuestionCardState extends State<QuestionCard> {
     return _answer;
   }
 
-  Future<String?> _editQuestionModal(BuildContext context, Question question) async {
-    final TextEditingController _controller = TextEditingController(text: question.question);
+  Future<String?> _editQuestionModal(
+      BuildContext context, Question question) async {
+    final TextEditingController _controller =
+        TextEditingController(text: question.question);
     final String? _question = await showModalBottomSheet<String?>(
       context: context,
       isScrollControlled: true,
@@ -200,14 +214,15 @@ class _QuestionCardState extends State<QuestionCard> {
                     alignment: Alignment.center,
                     child: Text(
                       "Edit question",
-                      style: Theme.of(context).textTheme.headline2,
+                      style: Theme.of(context).textTheme.displayMedium,
                     ),
                   ),
                   SizedBox(height: 20.h),
                   TextField(
                     controller: _controller,
                     maxLines: 10,
-                    decoration: const InputDecoration(hintText: "Write a question"),
+                    decoration:
+                        const InputDecoration(hintText: "Write a question"),
                   ),
                   const Spacer(),
                   Row(

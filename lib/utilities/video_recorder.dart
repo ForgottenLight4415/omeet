@@ -2,13 +2,13 @@ import 'package:camera/camera.dart';
 import 'package:location/location.dart';
 import 'package:flutter_background_video_recorder/flutter_bvr.dart';
 
-class VideoRecorderConfig {
+class VideoRecorder {
   XFile? videoFile;
   String? claimNumber;
   LocationData? locationData;
   final FlutterBackgroundVideoRecorder _recorder = FlutterBackgroundVideoRecorder();
 
-  VideoRecorderConfig({
+  VideoRecorder({
         this.videoFile,
         this.claimNumber,
         this.locationData});

@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:omeet_motor/utilities/api_urls.dart';
@@ -12,36 +13,41 @@ class DataUploadProvider extends AppServerProvider {
     required double longitude,
     required File file,
     bool isDoc = false,
+    bool uploadNow = false,
   }) async {
-    int uploadId = await OMeetDatabase.instance.create(
-      UploadObject(
-        claimNo: claimNumber,
-        latitude: latitude,
-        longitude: longitude,
-        file: file.path,
-        time: DateTime.now(),
-      ),
-    );
+    int uploadId = await OMeetDatabase.instance.exists(file.path);
     if (uploadId == 0) {
-      uploadId = await OMeetDatabase.instance.exists(file.path);
+      uploadId = await OMeetDatabase.instance.create(
+        UploadObject(
+          claimNo: claimNumber,
+          latitude: latitude,
+          longitude: longitude,
+          file: file.path,
+          time: DateTime.now(),
+        ),
+      );
     }
-    final Map<String, String> _data = <String, String>{
-      'Claim_No': claimNumber,
-      'lat': latitude.toString(),
-      'long': longitude.toString(),
-    };
-    final Map<String, String> _files = <String, String>{
-      'anyfile': file.path,
-    };
-    final DecodedResponse _requestResponse = await multiPartRequest(
-      data: _data,
-      files: _files,
-      path: isDoc ? ApiUrl.uploadDocUrl : ApiUrl.uploadVideoUrl
-    );
-    if (_requestResponse.statusCode == successCode) {
-      await OMeetDatabase.instance.delete(uploadId);
-      return true;
+
+    if (uploadNow) {
+      final Map<String, String> _data = <String, String>{
+        'Claim_No': claimNumber,
+        'lat': latitude.toString(),
+        'long': longitude.toString(),
+      };
+      final Map<String, String> _files = <String, String>{
+        'anyfile': file.path,
+      };
+      final DecodedResponse _requestResponse = await multiPartRequest(
+          data: _data,
+          files: _files,
+          path: isDoc ? ApiUrl.uploadDocUrl : ApiUrl.uploadVideoUrl
+      );
+      if (_requestResponse.statusCode == successCode) {
+        await OMeetDatabase.instance.delete(uploadId);
+        return true;
+      }
+      return false;
     }
-    return false;
+    return true;
   }
 }

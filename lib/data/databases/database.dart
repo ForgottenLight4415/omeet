@@ -82,9 +82,13 @@ class OMeetDatabase {
   Future<int> create(UploadObject object) async {
     final db = await instance.database;
     int id = -1;
-    await db.transaction((txn) async {
-      id = await txn.insert('uploads', object.toJson());
-    });
+    try {
+      await db.transaction((txn) async {
+        id = await txn.insert('uploads', object.toJson());
+      });
+    } on DatabaseException {
+      id = -1;
+    }
     return id;
   }
 
@@ -98,7 +102,7 @@ class OMeetDatabase {
   
   Future<int> exists(String file) async {
     final db = await instance.database;
-    List<Map<String, Object?>> list = await db.query("uploads", columns: ["id"], where: "file = ?", whereArgs: ["file"]);
+    List<Map<String, Object?>> list = await db.query("uploads", columns: ["id"], where: "file = ?", whereArgs: [file]);
     if (list.isNotEmpty) {
       return list[0]['id'] as int;
     }

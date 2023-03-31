@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 import 'package:omeet_motor/utilities/screen_capture.dart';
 import 'package:omeet_motor/utilities/screen_recorder.dart';
-import 'package:omeet_motor/utilities/video_record_config.dart';
+import 'package:omeet_motor/utilities/video_recorder.dart';
 
 import '../data/models/claim.dart';
 import '../views/recorder_pages/video_record.dart';
@@ -114,16 +114,16 @@ Future<void> recordAudio(BuildContext context, Claim claim) async {
   }
 }
 
-Future<void> recordVideo(BuildContext context, Claim claim, VideoRecorderConfig videoRecorderConfig) async {
+Future<void> recordVideo(BuildContext context, Claim claim, VideoRecorder videoRecorder) async {
   LocationData? locationData = await _getLocationData(context);
   if (locationData == null) {
     showInfoSnackBar(context, "Location permission is required to access this feature.", color: Colors.red);
     return;
   }
-  videoRecorderConfig.setLocation(locationData);
+  videoRecorder.setLocation(locationData);
   await Navigator.pushNamed(
     context, '/record/video', arguments: VideoPageConfig(
-      videoRecorderConfig,
+      videoRecorder,
       claim,
     ),
   );

@@ -32,7 +32,7 @@ class _ClaimDetailsState extends State<ClaimDetails> {
                 maxLines: 2,
                 overflow: TextOverflow.fade,
                 textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.headline3!.copyWith(
+                style: Theme.of(context).textTheme.displaySmall!.copyWith(
                   fontWeight: FontWeight.w700,
                   color: Theme.of(context).primaryColor,
                   overflow: TextOverflow.fade,
@@ -75,7 +75,7 @@ class _ClaimDetailsState extends State<ClaimDetails> {
               maxLines: 2,
               overflow: TextOverflow.fade,
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.headline4!.copyWith(
+              style: Theme.of(context).textTheme.headlineMedium!.copyWith(
                 fontWeight: FontWeight.w700,
                 color: Theme.of(context).primaryColor,
                 overflow: TextOverflow.fade,

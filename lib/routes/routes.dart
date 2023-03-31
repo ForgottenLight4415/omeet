@@ -32,34 +32,19 @@ class RouteGenerator {
     switch (settings.name) {
       // AUTH
       case '/login':
-        final RecorderObjects objects = args as RecorderObjects;
-        return _platformDependentRouting(
-          SignInPage(objects: objects),
-        );
+        return _platformDependentRouting(const SignInPage());
       case '/otp':
-        final VerificationPageArguments arguments =
-            args as VerificationPageArguments;
+        final String email = args as String;
         return _platformDependentRouting(
-          VerificationPage(
-            emailAddress: arguments.email,
-            recorders: arguments.objects,
-          ),
+          VerificationPage(emailAddress: email),
         );
 
       case '/landing':
-        final RecorderObjects objects = args as RecorderObjects;
-        return _platformDependentRouting(
-          LandingPage(objects: objects),
-        );
+        return _platformDependentRouting(const LandingPage());
 
       // Claims
       case '/assigned':
-        final RecorderObjects objects = args as RecorderObjects;
-        return _platformDependentRouting(
-          AssignedClaimsPage(
-            recorderObjects: objects,
-          ),
-        );
+        return _platformDependentRouting(const AssignedClaimsPage());
       case '/new/claim':
         return _platformDependentRouting(const NewClaimPage());
       case '/self-assign':

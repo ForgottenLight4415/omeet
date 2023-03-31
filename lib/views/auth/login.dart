@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:omeet_motor/views/auth/verification_page.dart';
-import 'package:omeet_motor/views/claims/assigned_claims.dart';
 
 import '../../blocs/auth_bloc/auth_cubit.dart';
 import '../../utilities/app_constants.dart';
@@ -11,9 +9,7 @@ import '../../widgets/input_fields.dart';
 import '../../widgets/loading_widget.dart';
 
 class SignInPage extends StatefulWidget {
-  final RecorderObjects objects;
-
-  const SignInPage({Key? key, required this.objects}) : super(key: key);
+  const SignInPage({Key? key}) : super(key: key);
 
   @override
   State<SignInPage> createState() => _SignInPageState();
@@ -87,7 +83,7 @@ class _SignInPageState extends State<SignInPage> {
                               textAlign: TextAlign.center,
                               style: Theme.of(context)
                                   .textTheme
-                                  .headline3!
+                                  .displaySmall!
                                   .copyWith(
                                     color: Colors.black87,
                                     fontWeight: FontWeight.w500,
@@ -210,10 +206,7 @@ class _SignInPageState extends State<SignInPage> {
       Navigator.pushNamed(
         context,
         '/otp',
-        arguments: VerificationPageArguments(
-          _emailController.text,
-          widget.objects,
-        ),
+        arguments: _emailController.text,
       );
       _emailController.clear();
       _passwordController.clear();

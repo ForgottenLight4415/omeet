@@ -56,7 +56,7 @@ class _SelfAssignClaimsPageState extends State<SelfAssignClaimsPage> {
               leading: const AppBackButton(),
               title: Text(
                 'Assign claim',
-                style: Theme.of(context).textTheme.headline3!.copyWith(
+                style: Theme.of(context).textTheme.displaySmall!.copyWith(
                       color: Colors.black87,
                       fontWeight: FontWeight.w700,
                     ),

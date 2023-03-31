@@ -443,7 +443,7 @@ class Claim {
               padding: EdgeInsets.symmetric(vertical: 16.h),
               child: Text(
                 AppStrings.voiceCall,
-                style: Theme.of(context).textTheme.headline6,
+                style: Theme.of(context).textTheme.titleLarge,
               ),
             ),
             Divider(
@@ -552,7 +552,7 @@ class Claim {
             padding: EdgeInsets.symmetric(vertical: 16.h),
             child: Text(
               "Are you sure?",
-              style: Theme.of(context).textTheme.headline6,
+              style: Theme.of(context).textTheme.titleLarge,
             ),
           ),
           Divider(

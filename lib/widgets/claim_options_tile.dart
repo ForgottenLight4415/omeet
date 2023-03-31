@@ -21,7 +21,7 @@ class ClaimPageTiles extends StatelessWidget {
         ),
         title: Text(
           label,
-          style: Theme.of(context).textTheme.bodyText1,
+          style: Theme.of(context).textTheme.bodyLarge,
         ),
       ),
     );

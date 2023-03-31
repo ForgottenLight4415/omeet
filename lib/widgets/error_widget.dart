@@ -60,7 +60,7 @@ class InformationWidget extends StatelessWidget {
           const SizedBox(height: 30),
           Text(
             label,
-            style: Theme.of(context).textTheme.headline5!.copyWith(
+            style: Theme.of(context).textTheme.headlineSmall!.copyWith(
                   fontFamily: AppStrings.secondaryFontFam,
                   fontWeight: FontWeight.w600,
                   color: Colors.black54,
@@ -83,7 +83,7 @@ class _ErrorText extends StatelessWidget {
       errorText,
       textAlign: TextAlign.center,
       maxLines: 3,
-      style: Theme.of(context).textTheme.bodyText1!.copyWith(
+      style: Theme.of(context).textTheme.bodyLarge!.copyWith(
         fontFamily: 'Nunito',
         fontWeight: FontWeight.w600,
         color: Colors.black54,

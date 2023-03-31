@@ -93,7 +93,7 @@ class _AudioRecordPageState extends State<AudioRecordPage> {
               SizedBox(height: 30.h),
               Text(
                 "Claim number",
-                style: Theme.of(context).textTheme.headline6,
+                style: Theme.of(context).textTheme.titleLarge,
               ),
               Text(
                 widget.arguments.claim.claimNumber,
