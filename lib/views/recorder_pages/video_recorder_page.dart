@@ -1,22 +1,13 @@
-import 'dart:developer';
-import 'dart:io';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_background_video_recorder/flutter_bvr_platform_interface.dart';
-import 'package:location/location.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_background_video_recorder/flutter_bvr.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_background_video_recorder/flutter_bvr_platform_interface.dart';
 
 import '../../widgets/buttons.dart';
 import '../../data/models/claim.dart';
-import '../../widgets/snack_bar.dart';
-import '../../utilities/app_constants.dart';
-import '../../utilities/upload_dialog.dart';
 import '../../views/meet_pages/details.dart';
 import '../../utilities/video_recorder.dart';
-import '../../data/repositories/data_upload_repo.dart';
 
 class VideoPageConfig {
   final VideoRecorder videoRecorder;
@@ -36,28 +27,27 @@ class VideoRecordPage extends StatefulWidget {
 
 class _VideoRecordPageState extends State<VideoRecordPage>
     with WidgetsBindingObserver, TickerProviderStateMixin {
-  late final FlutterBackgroundVideoRecorder _videoRecorder;
+  /// Events to [_streamSubscription] are in the
+  /// form of integers which stand for the following:
+  /// 1: Recording
+  /// 2: Not recording or stopped
+  /// 3: Recorder busy. Probably initializing or finalizing internal state.
   late final StreamSubscription<int?> _streamSubscription;
-  late final SharedPreferences _preferences;
-  late final VideoRecorder _video;
 
+  late final VideoRecorder _video;
+  late CameraFacing _cameraFacing;
   bool _recorderBusy = false;
   bool _isRecording = false;
 
-  CameraFacing _cameraFacing = CameraFacing.rearCamera;
+
 
   @override
   void initState() {
     super.initState();
-    initSharedPreferences();
+    _cameraFacing = CameraFacing.rearCamera;
     _video = widget.config.videoRecorder;
-    _videoRecorder = _video.getRecorder();
     getInitialRecordingStatus();
     listenRecordingState();
-  }
-
-  void initSharedPreferences() async {
-    _preferences = await SharedPreferences.getInstance();
   }
 
   @override
@@ -82,8 +72,8 @@ class _VideoRecordPageState extends State<VideoRecordPage>
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Text(
-                    _video.claimNumber != null
-                        ? "Recording in progress for claim number\n${_video.claimNumber}"
+                    _video.caseClaimNumber != null
+                        ? "Recording in progress for claim number\n${_video.caseClaimNumber}"
                         : "Start recording for\n${widget.config.claim.claimNumber}",
                     textAlign: TextAlign.center,
                   ),
@@ -126,14 +116,14 @@ class _VideoRecordPageState extends State<VideoRecordPage>
                   ElevatedButton(
                     onPressed: () async {
                       if (!_isRecording && !_recorderBusy) {
-                        log("Recorder starting");
-                        startVideoRecording();
+                        _video.caseClaimNumber = widget.config.claim.claimNumber;
+                        await _video.startVideoRecording(_cameraFacing);
+                        setState(() {});
                       } else if (!_isRecording && _recorderBusy) {
-                        log("Already recording");
                         return;
                       } else {
-                        stopVideoRecording(
-                            await _videoRecorder.stopVideoRecording() ?? "");
+                        await _video.stopVideoRecording(context);
+                        setState(() {});
                       }
                     },
                     child: Text(
@@ -150,14 +140,13 @@ class _VideoRecordPageState extends State<VideoRecordPage>
         ));
   }
 
-  Future<void> getInitialRecordingStatus() async {
-    int? _recordingStatus = await _videoRecorder.getVideoRecordingStatus();
-    _isRecording = _recordingStatus == 1;
+  void getInitialRecordingStatus() async {
+    _isRecording = await _video.getCurrentRecordingStatus() == 1;
     setState(() {});
   }
 
   void listenRecordingState() {
-    _streamSubscription = _videoRecorder.recorderState.listen((event) {
+    _streamSubscription = _video.recorderState.listen((event) {
       switch (event) {
         case 1:
           _isRecording = true;
@@ -181,61 +170,5 @@ class _VideoRecordPageState extends State<VideoRecordPage>
           return;
       }
     });
-  }
-
-  void stopVideoRecording(String? filePath) async {
-    String claimNumber = widget.config.claim.claimNumber;
-    if (filePath != null) {
-      File _videoFile = File(filePath);
-      LocationData _locationData = _video.locationData!;
-      final DataUploadRepository _repository = DataUploadRepository();
-      await _repository.uploadData(
-        claimNumber: claimNumber,
-        latitude: _locationData.latitude ?? 0,
-        longitude: _locationData.longitude ?? 0,
-        file: _videoFile,
-        uploadNow: false
-      );
-      // showSnackBar(context, AppStrings.startingUpload,
-      //     type: SnackBarType.success);
-      // showProgressDialog(context);
-      // bool _result = await _repository.uploadData(
-      //   claimNumber: claimNumber,
-      //   latitude: _locationData.latitude ?? 0,
-      //   longitude: _locationData.longitude ?? 0,
-      //   file: _videoFile,
-      //   uploadNow: false
-      // );
-      // ScaffoldMessenger.of(context).removeCurrentSnackBar();
-      // Navigator.pop(context);
-      // if (_result) {
-      //   showSnackBar(context, AppStrings.fileUploaded,
-      //       type: SnackBarType.success);
-      //   _videoFile.delete();
-      // } else {
-      //   showSnackBar(context, AppStrings.fileUploadFailed,
-      //       type: SnackBarType.error);
-      // }
-      showSnackBar(context, "Video saved to device.",
-          type: SnackBarType.success);
-      _video.claimNumber = null;
-      _video.videoFile = null;
-      setState(() {});
-      _preferences.remove("video-recording-cn");
-    }
-  }
-
-  void startVideoRecording() async {
-    String claimNumber = widget.config.claim.claimNumber;
-    _video.setClaimNumber(claimNumber);
-    _preferences.setString("video-recording-cn", claimNumber);
-    await _videoRecorder.startVideoRecording(
-        folderName: "BAGIC MCI Video Recordings",
-        cameraFacing: _cameraFacing,
-        notificationTitle: "BAGIC MCI background service",
-        notificationText: "BAGIC MCI is recording a video in the background",
-        showToast: false
-    );
-    setState(() {});
   }
 }

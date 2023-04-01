@@ -1,5 +1,5 @@
 class AppStrings {
-  static const String appName = "Demo H";
+  static const String appName = "BAGIC\nMotor Claim Investigation";
 
   // ERRORS AND FILLERS
   static const String blank = "";
@@ -52,6 +52,12 @@ class AppStrings {
   static const String receiveCall = "You'll receive a call soon.";
   static const String startingUpload = "Starting upload";
   static const String signingIn = "Signing in...";
+
+  // Video recorder
+  static const String videoStorageFolderName = "BAGIC MCI Video Recordings";
+  static const String videoRecordingNotificationTitle = "BAGIC MCI background service";
+  static const String videoRecordingNotificationText = "BAGIC MCI is recording a video in the background";
+  static const String videoSaved = "Video saved to device.";
 
   // DETAILS
   static const String customerName = "Customer name";

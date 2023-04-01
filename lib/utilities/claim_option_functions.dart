@@ -8,12 +8,12 @@ import 'package:omeet_motor/utilities/screen_recorder.dart';
 import 'package:omeet_motor/utilities/video_recorder.dart';
 
 import '../data/models/claim.dart';
-import '../views/recorder_pages/video_record.dart';
+import '../views/recorder_pages/video_recorder_page.dart';
 import 'app_permission_manager.dart';
 import 'camera_utility.dart';
 import 'location_service.dart';
 import 'show_snackbars.dart';
-import '../views/recorder_pages/audio_record.dart';
+import '../views/recorder_pages/audio_recorder_page.dart';
 
 Future<bool> handleScreenshotService(BuildContext context, ScreenCapture screenCapture, String claimNumber) async {
   if (!screenCapture.isServiceRunning) {
@@ -120,7 +120,7 @@ Future<void> recordVideo(BuildContext context, Claim claim, VideoRecorder videoR
     showInfoSnackBar(context, "Location permission is required to access this feature.", color: Colors.red);
     return;
   }
-  videoRecorder.setLocation(locationData);
+  videoRecorder.caseLocation = locationData;
   await Navigator.pushNamed(
     context, '/record/video', arguments: VideoPageConfig(
       videoRecorder,

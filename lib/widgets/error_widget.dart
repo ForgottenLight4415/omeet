@@ -56,7 +56,7 @@ class InformationWidget extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          SvgPicture.asset(svgImage, height: 300.h, width: 150.w),
+          SvgPicture.asset(svgImage, height: 250.h, width: 100.w),
           const SizedBox(height: 30),
           Text(
             label,

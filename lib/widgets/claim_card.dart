@@ -387,8 +387,8 @@ class _ClaimCardState extends State<ClaimCard> {
       setState(() {
         _cardColor = Colors.red.shade100;
       });
-    } else if (widget.videoRecorder!.claimNumber != null &&
-        widget.videoRecorder!.claimNumber == widget.claim.claimNumber) {
+    } else if (widget.videoRecorder!.caseClaimNumber != null &&
+        widget.videoRecorder!.caseClaimNumber == widget.claim.claimNumber) {
       setState(() {
         _cardColor = Colors.red.shade100;
       });

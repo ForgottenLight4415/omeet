@@ -15,11 +15,10 @@ class RecorderInitialization {
 
   static Future<RecorderInitialization> create() async {
     RecorderInitialization component = RecorderInitialization._create();
-    component._videoRecorder = VideoRecorder();
     SharedPreferences _pref = await SharedPreferences.getInstance();
-    component._videoRecorder!.claimNumber =
-        _pref.getString("video-recording-cn");
-
+    component._videoRecorder = VideoRecorder(
+        claimNumber: _pref.getString("video-recording-cn"),
+    );
     return component;
   }
 

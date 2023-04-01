@@ -20,9 +20,9 @@ import '../views/claims/assigned_claims.dart';
 import '../views/invalid_route.dart';
 import '../views/meet_pages/details_page.dart';
 import '../views/meet_pages/meet_main.dart';
-import '../views/recorder_pages/audio_record.dart';
-import '../views/recorder_pages/image_capture.dart';
-import '../views/recorder_pages/video_record.dart';
+import '../views/recorder_pages/audio_recorder_page.dart';
+import '../views/recorder_pages/image_capture_page.dart';
+import '../views/recorder_pages/video_recorder_page.dart';
 import '../views/uploads_page.dart';
 
 class RouteGenerator {

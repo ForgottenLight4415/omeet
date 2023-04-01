@@ -100,8 +100,8 @@ class _UploadsPageState extends State<UploadsPage> {
           if (state is FetchedPendingUploads) {
             if (state.uploads.isEmpty) {
               return const InformationWidget(
-                svgImage: 'images/no-data.svg',
-                label: 'No pending uploads.',
+                svgImage: 'images/upload_files.svg',
+                label: "Nothing to upload",
               );
             }
             return ListView.builder(
