@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class AppTheme {
   AppTheme._();
 
-  static final BorderRadius _borderRadius = BorderRadius.circular(14.r);
+  static final BorderRadius _borderRadius = BorderRadius.circular(16.r);
 
   static final lightTheme = ThemeData(
     primarySwatch: Colors.red,
@@ -42,11 +42,9 @@ class AppTheme {
           (states) => EdgeInsets.symmetric(vertical: 15.h, horizontal: 25.w),
         ),
         shape: MaterialStateProperty.resolveWith(
-          (states) => RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(14.r),
-          ),
+          (states) => RoundedRectangleBorder(borderRadius: _borderRadius),
         ),
-        elevation: MaterialStateProperty.resolveWith((states) => 5.0),
+        elevation: MaterialStateProperty.resolveWith((states) => 3.0),
       ),
     ),
     inputDecorationTheme: InputDecorationTheme(
@@ -61,7 +59,7 @@ class AppTheme {
       shape: RoundedRectangleBorder(
         borderRadius: _borderRadius,
       ),
-      elevation: 4.0,
+      elevation: 3.0,
     ),
   );
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:omeet_motor/widgets/app_logo.dart';
 
 import '../../blocs/auth_bloc/auth_cubit.dart';
 import '../../utilities/app_constants.dart';
@@ -57,7 +58,7 @@ class _SignInPageState extends State<SignInPage> {
             crossFadeState: _crossFadeState,
             duration: const Duration(milliseconds: 500),
             firstChild: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              padding: const EdgeInsets.symmetric(horizontal: 12.0),
               child: Form(
                 key: _formKey,
                 child: Column(
@@ -69,41 +70,20 @@ class _SignInPageState extends State<SignInPage> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
                             // LOGO
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 45.0),
-                              child: Image.asset(
-                                "images/logo.png",
-                                height: 170.w,
-                                width: 170.w,
-                              ),
-                            ),
-                            Text(
-                              AppStrings.appName,
-                              textAlign: TextAlign.center,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .displaySmall!
-                                  .copyWith(
-                                    color: Colors.black87,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                            ),
+                            const AppLogo(),
                             // LOGIN Text
-                            SizedBox(height: 20.h),
                             Align(
                               alignment: Alignment.centerLeft,
                               child: Text(
                                 "Sign in to continue",
-                                style: TextStyle(
-                                  fontSize: 22.sp,
-                                  fontFamily: 'Nunito',
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.black54,
+                                style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                                  fontFamily: AppStrings.secondaryFontFam,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.black54
                                 ),
                               ),
                             ),
-                            const SizedBox(height: 12.0),
+                            const SizedBox(height: 10.0),
                             CustomTextFormField(
                               textEditingController: _emailController,
                               keyboardType: TextInputType.emailAddress,
@@ -129,7 +109,12 @@ class _SignInPageState extends State<SignInPage> {
                                 listener: _authListener,
                                 child: ElevatedButton(
                                   onPressed: _signIn,
-                                  child: const Text("SIGN IN"),
+                                  child: const Text(
+                                      "SIGN IN",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
                                 ),
                               ),
                             )

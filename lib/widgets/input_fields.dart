@@ -33,10 +33,14 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
   FocusNode? _focusNode;
   Color _borderColor = Colors.transparent;
 
+  late final double _borderRadius;
+
   @override
   void initState() {
     super.initState();
     _borderColor = Colors.transparent;
+    _borderRadius = 16.r;
+
     _focusNode = FocusNode();
     _focusNode!.addListener(() {
       setState(() {
@@ -57,15 +61,12 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 7.0),
       child: Material(
-        elevation: 5.0,
-        borderRadius: BorderRadius.circular(14.r),
+        elevation: 3.0,
+        borderRadius: BorderRadius.circular(_borderRadius),
         child: Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(14.r),
-            border: Border.all(
-              color: _borderColor,
-              width: 2,
-            ),
+            borderRadius: BorderRadius.circular(_borderRadius),
+            border: Border.all(color: _borderColor, width: 2),
           ),
           child: TextFormField(
             controller: widget.textEditingController,

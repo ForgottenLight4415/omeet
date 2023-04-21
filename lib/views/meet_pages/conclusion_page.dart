@@ -41,10 +41,9 @@ class _ConclusionPageState extends State<ConclusionPage> {
         children: <Widget>[
           Card(
             child: SizedBox(
-              width: 412.w,
               height: 70.h,
               child: Padding(
-                padding: const EdgeInsets.all(10.0),
+                padding: const EdgeInsets.all(12.0),
                 child: DropdownButton<String>(
                   value: _selectedConclusion,
                   isExpanded: true,
@@ -77,7 +76,7 @@ class _ConclusionPageState extends State<ConclusionPage> {
               ),
             ),
           ),
-          SizedBox(height: 10.h),
+          SizedBox(height: 5.h),
           CustomTextFormField(
             textEditingController: _controller,
             textInputAction: TextInputAction.done,
