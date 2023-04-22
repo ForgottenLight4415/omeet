@@ -9,14 +9,14 @@ import '../../utilities/check_connection.dart';
 import '../../widgets/input_fields.dart';
 import '../../widgets/loading_widget.dart';
 
-class SignInPage extends StatefulWidget {
-  const SignInPage({Key? key}) : super(key: key);
+class LoginView extends StatefulWidget {
+  const LoginView({Key? key}) : super(key: key);
 
   @override
-  State<SignInPage> createState() => _SignInPageState();
+  State<LoginView> createState() => _LoginViewState();
 }
 
-class _SignInPageState extends State<SignInPage> {
+class _LoginViewState extends State<LoginView> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -46,7 +46,7 @@ class _SignInPageState extends State<SignInPage> {
           style: Theme.of(context).elevatedButtonTheme.style!.copyWith(
                 padding: MaterialStateProperty.resolveWith(
                   (states) =>
-                      EdgeInsets.symmetric(horizontal: 70.w, vertical: 16.h),
+                      EdgeInsets.symmetric(horizontal: 50.w, vertical: 16.h),
                 ),
                 elevation: MaterialStateProperty.resolveWith((states) => 5.0),
               ),

@@ -1,11 +1,13 @@
 class ApiUrl {
-  static const String baseUrl = 'https://omeet.in/BAGIC_Motor_Claim_Investigation/';
+  static const String baseUrl = 'https://omeet.in/api/dromeet/';
 
-  static const String loginUrl = "api/loginm.php";
-  static const String verifyOtp = "api/verify_otp.php";
+  static const String loginUrl = "loginm.php";
+  static const String verifyOtp = "verify_otp.php";
 
   // CLAIMS
-  static const String getClaimsUrl = "api/allclaims.php";
+  static const String getCompletedClaimsUrl = "allclaims_completed.php";
+  static const String getRegisteredClaimsUrl = "allclaims_registered.php";
+
   static const String getDepartmentClaimsUrl = "api/alldepartmentclaims.php";
   static const String assignToSelfUrl = "api/assigntome.php";
   static const String newClaim = "api/addnewcase.php";

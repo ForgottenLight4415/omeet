@@ -13,26 +13,17 @@ import '../data/models/claim.dart';
 import '../data/models/document.dart';
 
 import '../utilities/app_constants.dart';
-import '../utilities/screen_recorder.dart';
-import '../utilities/screen_capture.dart';
-import '../utilities/video_recorder.dart';
 import '../utilities/claim_option_functions.dart';
 
 import '../blocs/call_bloc/call_cubit.dart';
 
 class ClaimCard extends StatefulWidget {
   final Claim claim;
-  final ScreenRecorder? screenRecorder;
-  final ScreenCapture? screenCapture;
-  final VideoRecorder? videoRecorder;
   final bool isEditable;
 
   const ClaimCard({
     Key? key,
     required this.claim,
-    this.screenRecorder,
-    this.screenCapture,
-    this.videoRecorder,
     this.isEditable = true,
   }) : super(key: key);
 
@@ -41,17 +32,6 @@ class ClaimCard extends StatefulWidget {
 }
 
 class _ClaimCardState extends State<ClaimCard> {
-  String? _screenshotClaim;
-  Color? _cardColor;
-
-  @override
-  void initState() {
-    super.initState();
-    if (widget.isEditable) {
-      _setCardColor();
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return BaseCard(
@@ -59,7 +39,6 @@ class _ClaimCardState extends State<ClaimCard> {
         await _openClaimMenu(context);
       },
       card: Card(
-        color: _cardColor,
         child: Container(
           constraints: BoxConstraints(minHeight: 250.h),
           padding: EdgeInsets.all(16.w),
@@ -161,16 +140,6 @@ class _ClaimCardState extends State<ClaimCard> {
       builder: (modalContext) => SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            !widget.isEditable
-                ? ClaimPageTiles(
-                    faIcon: FontAwesomeIcons.plus,
-                    label: "Assign to self",
-                    onPressed: () {
-                      Navigator.pop(modalContext);
-                      widget.claim.assignToSelf(context);
-                    },
-                  )
-                : const SizedBox(),
             widget.isEditable
                 ? BlocProvider<CallCubit>(
                     create: (context) => CallCubit(),
@@ -178,7 +147,7 @@ class _ClaimCardState extends State<ClaimCard> {
                       listener: _callListener,
                       builder: (context, state) {
                         return ClaimPageTiles(
-                          faIcon: FontAwesomeIcons.phoneAlt,
+                          faIcon: FontAwesomeIcons.phone,
                           label: "Voice call",
                           onPressed: () async {
                             if (await widget.claim.call(context)) {
@@ -196,7 +165,7 @@ class _ClaimCardState extends State<ClaimCard> {
                 listener: _callListener,
                 builder: (context, state) {
                   return ClaimPageTiles(
-                    faIcon: FontAwesomeIcons.phoneAlt,
+                    faIcon: FontAwesomeIcons.phone,
                     label: "Custom voice call",
                     onPressed: () async {
                       if (await customCallSetup(
@@ -221,95 +190,14 @@ class _ClaimCardState extends State<ClaimCard> {
                     },
                   )
                 : const SizedBox(),
-            widget.isEditable
-                ? ClaimPageTiles(
-                    faIcon: FontAwesomeIcons.camera,
-                    label: "Capture image",
-                    onPressed: () {
-                      Navigator.pop(modalContext);
-                      captureImage(context, widget.claim);
-                    },
-                  )
-                : const SizedBox(),
-            widget.isEditable
-                ? ClaimPageTiles(
-                    faIcon: FontAwesomeIcons.film,
-                    label: AppStrings.recordVideo,
-                    onPressed: () async {
-                      Navigator.pop(modalContext);
-                      await recordVideo(
-                        context,
-                        widget.claim,
-                        widget.videoRecorder!,
-                      ).then((_) {
-                        _setCardColor();
-                      });
-                    },
-                  )
-                : const SizedBox(),
-            widget.isEditable
-                ? ClaimPageTiles(
-                    faIcon: FontAwesomeIcons.microphone,
-                    label: AppStrings.recordAudio,
-                    onPressed: () {
-                      Navigator.pop(modalContext);
-                      recordAudio(context, widget.claim);
-                    },
-                  )
-                : const SizedBox(),
-            widget.isEditable
-                ? ClaimPageTiles(
-                    faIcon: FontAwesomeIcons.mobileAlt,
-                    label: _getScreenshotText(),
-                    onPressed: () async {
-                      Navigator.pop(modalContext);
-                      await handleScreenshotService(
-                        context,
-                        widget.screenCapture!,
-                        widget.claim.claimNumber,
-                      );
-                      _setCardColor();
-                    },
-                  )
-                : const SizedBox(),
             ClaimPageTiles(
-              faIcon: FontAwesomeIcons.fileAlt,
+              faIcon: FontAwesomeIcons.fileLines,
               label: "Documents",
               onPressed: () {
                 Navigator.pop(modalContext);
                 Navigator.pushNamed(
                   context,
                   '/documents',
-                  arguments: DocumentPageArguments(
-                    widget.claim.claimNumber,
-                    !widget.isEditable,
-                  ),
-                );
-              },
-            ),
-            ClaimPageTiles(
-              faIcon: FontAwesomeIcons.fileAudio,
-              label: "Audio recordings",
-              onPressed: () {
-                Navigator.pop(modalContext);
-                Navigator.pushNamed(
-                  context,
-                  '/audio',
-                  arguments: DocumentPageArguments(
-                    widget.claim.claimNumber,
-                    !widget.isEditable,
-                  ),
-                );
-              },
-            ),
-            ClaimPageTiles(
-              faIcon: FontAwesomeIcons.fileVideo,
-              label: "Videos",
-              onPressed: () {
-                Navigator.pop(modalContext);
-                Navigator.pushNamed(
-                  context,
-                  '/videos',
                   arguments: DocumentPageArguments(
                     widget.claim.claimNumber,
                     !widget.isEditable,
@@ -325,35 +213,11 @@ class _ClaimCardState extends State<ClaimCard> {
                   Navigator.pushNamed(context, '/claim/details',
                       arguments: widget.claim);
                 })
-            // ClaimPageTiles(
-            //   faIcon: FontAwesomeIcons.recordVinyl,
-            //   label: _getScreenRecordText(),
-            //   onPressed: () async {
-            //     Navigator.pop(modalContext);
-            //     await handleScreenRecordingService(
-            //       context,
-            //       widget.screenRecorder,
-            //       widget.claim.claimNumber,
-            //     );
-            //     _setCardColor();
-            //   },
-            // ),
           ],
         ),
       ),
     );
   }
-
-  // String _getScreenRecordText() {
-  //   if (widget.screenRecorder.isRecording) {
-  //     if (widget.screenRecorder.claimNumber != widget.claim.claimNumber) {
-  //       return "Stop for ${widget.screenRecorder.claimNumber}";
-  //     } else {
-  //       return "Stop recording screen";
-  //     }
-  //   }
-  //   return "Record screen";
-  // }
 
   void _callListener(BuildContext context, CallState state) {
     if (state is CallLoading) {
@@ -362,40 +226,6 @@ class _ClaimCardState extends State<ClaimCard> {
       showSnackBar(context, AppStrings.receiveCall, type: SnackBarType.success);
     } else if (state is CallFailed) {
       showSnackBar(context, state.cause, type: SnackBarType.error);
-    }
-  }
-
-  String _getScreenshotText() {
-    if (widget.screenCapture!.isServiceRunning) {
-      if (widget.screenCapture!.claimNumber != widget.claim.claimNumber) {
-        return "Stop screenshot service for ${widget.screenCapture!.claimNumber}";
-      } else {
-        return "Stop screenshot service";
-      }
-    }
-    return "Start screenshot service";
-  }
-
-  void _setCardColor() async {
-    _screenshotClaim = widget.screenCapture!.claimNumber;
-    if (widget.screenRecorder!.isRecording) {
-      setState(() {
-        _cardColor = Colors.red.shade100;
-      });
-    } else if (_screenshotClaim != null &&
-        _screenshotClaim == widget.claim.claimNumber) {
-      setState(() {
-        _cardColor = Colors.red.shade100;
-      });
-    } else if (widget.videoRecorder!.caseClaimNumber != null &&
-        widget.videoRecorder!.caseClaimNumber == widget.claim.claimNumber) {
-      setState(() {
-        _cardColor = Colors.red.shade100;
-      });
-    } else {
-      setState(() {
-        _cardColor = null;
-      });
     }
   }
 }

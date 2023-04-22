@@ -12,7 +12,7 @@ class ClaimProvider extends AppServerProvider {
     final DecodedResponse _response = await postRequest(
       path: department
           ? ApiUrl.getDepartmentClaimsUrl
-          : ApiUrl.getClaimsUrl,
+          : ApiUrl.getCompletedClaimsUrl,
       data: _data,
     );
     final Map<String, dynamic> _rData = _response.data!;

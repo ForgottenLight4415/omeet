@@ -7,17 +7,17 @@ import '../../utilities/show_snackbars.dart';
 import '../../utilities/upload_dialog.dart';
 import '../../widgets/input_fields.dart';
 
-class VerificationPage extends StatefulWidget {
+class VerificationView extends StatefulWidget {
   final String emailAddress;
 
-  const VerificationPage({Key? key, required this.emailAddress})
+  const VerificationView({Key? key, required this.emailAddress})
       : super(key: key);
 
   @override
-  State<VerificationPage> createState() => _VerificationPageState();
+  State<VerificationView> createState() => _VerificationViewState();
 }
 
-class _VerificationPageState extends State<VerificationPage> {
+class _VerificationViewState extends State<VerificationView> {
   final TextEditingController _controller = TextEditingController();
 
   @override
@@ -38,6 +38,7 @@ class _VerificationPageState extends State<VerificationPage> {
                 child: BlocConsumer<OtpCubit, OtpState>(
                   listener: (context, state) {
                     if (state is OtpFailed) {
+                      Navigator.pop(context);
                       showInfoSnackBar(context, state.cause, color: Colors.red);
                     } else if (state is OtpLoading) {
                       showProgressDialog(context,

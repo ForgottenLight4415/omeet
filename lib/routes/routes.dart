@@ -3,20 +3,18 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:omeet_motor/data/models/document.dart';
-import 'package:omeet_motor/views/claims/self_assign.dart';
 import 'package:omeet_motor/views/documents/video_player.dart';
 import 'package:omeet_motor/views/documents/videos_page.dart';
 import 'package:omeet_motor/views/landing.dart';
 
 import '../data/models/claim.dart';
 import '../utilities/camera_utility.dart';
-import '../views/auth/verification_page.dart';
-import '../views/claims/create_claim_page.dart';
-import '../views/documents/audio_page.dart';
+import '../views/auth/verification_view.dart';
+import '../views/documents/audio_list_view.dart';
 import '../views/documents/doc_viewer.dart';
 import '../views/documents/documents_page.dart';
-import '../views/auth/login.dart';
-import '../views/claims/assigned_claims.dart';
+import '../views/auth/login_view.dart';
+import '../views/claims/assigned_claims_view.dart';
 import '../views/invalid_route.dart';
 import '../views/meet_pages/details_page.dart';
 import '../views/meet_pages/meet_main.dart';
@@ -32,11 +30,11 @@ class RouteGenerator {
     switch (settings.name) {
       // AUTH
       case '/login':
-        return _platformDependentRouting(const SignInPage());
+        return _platformDependentRouting(const LoginView());
       case '/otp':
         final String email = args as String;
         return _platformDependentRouting(
-          VerificationPage(emailAddress: email),
+          VerificationView(emailAddress: email),
         );
 
       case '/landing':
@@ -44,11 +42,7 @@ class RouteGenerator {
 
       // Claims
       case '/assigned':
-        return _platformDependentRouting(const AssignedClaimsPage());
-      case '/new/claim':
-        return _platformDependentRouting(const NewClaimPage());
-      case '/self-assign':
-        return _platformDependentRouting(const SelfAssignClaimsPage());
+        return _platformDependentRouting(const AssignedClaimsView());
       case '/claim/details':
         final Claim _claim = args as Claim;
         return _platformDependentRouting(
@@ -100,7 +94,7 @@ class RouteGenerator {
       case '/audio':
         final DocumentPageArguments _arguments = args as DocumentPageArguments;
         return _platformDependentRouting(
-          AudioPage(
+          AudioListView(
             claimNumber: _arguments.claimNumber,
             readOnly: _arguments.readOnly,
           ),

@@ -10,7 +10,7 @@ class HomeProvider extends AppServerProvider {
       "email": await AuthenticationProvider.getEmail(),
     };
     final DecodedResponse _response = await postRequest(
-      path: ApiUrl.getClaimsUrl,
+      path: ApiUrl.getCompletedClaimsUrl,
       data: _data,
     );
     final Map<String, dynamic> _rData = _response.data!;

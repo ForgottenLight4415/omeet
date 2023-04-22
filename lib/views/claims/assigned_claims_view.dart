@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:omeet_motor/recorder_initialization.dart';
 import 'package:omeet_motor/widgets/buttons.dart';
 
 import '../../blocs/home_bloc/get_claims_cubit.dart';
@@ -11,24 +10,21 @@ import '../../widgets/loading_widget.dart';
 import '../../widgets/error_widget.dart';
 import '../../widgets/claim_card.dart';
 
-class AssignedClaimsPage extends StatefulWidget {
-  const AssignedClaimsPage({Key? key}) : super(key: key);
+class AssignedClaimsView extends StatefulWidget {
+  const AssignedClaimsView({Key? key}) : super(key: key);
 
   @override
-  State<AssignedClaimsPage> createState() => _AssignedClaimsPageState();
+  State<AssignedClaimsView> createState() => _AssignedClaimsViewState();
 }
 
-class _AssignedClaimsPageState extends State<AssignedClaimsPage> {
+class _AssignedClaimsViewState extends State<AssignedClaimsView> {
   final GetClaimsCubit _claimsCubit = GetClaimsCubit();
   TextEditingController? _searchController;
   String? _searchQuery;
 
-  late final RecorderInitialization _recorderInitialization;
-
   @override
   void initState() {
     super.initState();
-    initializeRecorders();
     _searchController = TextEditingController();
     _searchController!.addListener(() {
       _searchQuery = _searchController!.text;
@@ -41,10 +37,6 @@ class _AssignedClaimsPageState extends State<AssignedClaimsPage> {
     _searchController!.dispose();
     _claimsCubit.close();
     super.dispose();
-  }
-
-  void initializeRecorders() async {
-    _recorderInitialization = await RecorderInitialization.create();
   }
 
   @override
@@ -105,9 +97,6 @@ class _AssignedClaimsPageState extends State<AssignedClaimsPage> {
                     itemCount: state.claims.length,
                     itemBuilder: (context, index) => ClaimCard(
                       claim: state.claims[index],
-                      screenRecorder: _recorderInitialization.screenRecorder,
-                      screenCapture: _recorderInitialization.screenCapture,
-                      videoRecorder: _recorderInitialization.videoRecorder,
                     ),
                   ),
                 );
