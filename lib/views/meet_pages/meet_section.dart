@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:jitsi_meet/jitsi_meet.dart';
+import 'package:jitsi_meet_wrapper/jitsi_meet_wrapper.dart';
 
 import '/data/models/claim.dart';
 import '/data/providers/authentication_provider.dart';
@@ -36,20 +36,6 @@ class _VideoMeetPageState extends State<VideoMeetPage> with AutomaticKeepAliveCl
   void initState() {
     super.initState();
     _screenRecorder = ScreenRecorder();
-    JitsiMeet.addListener(
-      JitsiMeetingListener(
-        onConferenceWillJoin: _onConferenceWillJoin,
-        onConferenceJoined: _onConferenceJoined,
-        onConferenceTerminated: _onConferenceTerminated,
-        onError: _onError,
-      ),
-    );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    JitsiMeet.removeAllListeners();
   }
 
   TextStyle customBodyTextOne(BuildContext context) {
@@ -205,49 +191,53 @@ class _VideoMeetPageState extends State<VideoMeetPage> with AutomaticKeepAliveCl
     });
   }
 
-  void _onConferenceTerminated(message) async {
+  void _onConferenceTerminated(url, error) async {
+    _onClose();
+  }
+
+  void _onClose() async {
     setState(() {
       _status = VideoMeetStatus.terminated;
     });
     await _screenRecorder!.stopRecord(claimNumber: widget.claim.claimNumber, context: context);
   }
 
-  void _onError(error) async {
-    setState(() {
-      _status = VideoMeetStatus.error;
-    });
-    await _screenRecorder!.stopRecord(claimNumber: widget.claim.claimNumber, context: context);
-  }
-
   Future<void> _joinMeeting() async {
     try {
-      Map<FeatureFlagEnum, bool> featureFlags = {
-        FeatureFlagEnum.WELCOME_PAGE_ENABLED: false,
-        FeatureFlagEnum.CALL_INTEGRATION_ENABLED: false,
-        FeatureFlagEnum.PIP_ENABLED: true,
-        FeatureFlagEnum.CALENDAR_ENABLED: false,
-        FeatureFlagEnum.LIVE_STREAMING_ENABLED: false,
-        FeatureFlagEnum.RECORDING_ENABLED: false,
+      final Map<FeatureFlag, bool> featureFlags = {
+        FeatureFlag.isWelcomePageEnabled: false,
+        FeatureFlag.isCallIntegrationEnabled: false,
+        FeatureFlag.isPipEnabled: false,
+        FeatureFlag.isCalendarEnabled: false,
+        FeatureFlag.isLiveStreamingEnabled: false,
+        FeatureFlag.isRecordingEnabled: false,
       };
       final String meetId = widget.claim.insuredContactNumber;
-      var options = JitsiMeetingOptions(room: meetId)
-        ..serverURL = "https://hi.omeet.in/$meetId"
-        ..subject = "Meeting with ${widget.claim.insuredName}"
-        ..userDisplayName = "OMeet Agent"
-        ..userEmail = await AuthenticationProvider.getEmail()
-        ..audioOnly = _isAudioOnly
-        ..audioMuted = _isAudioMuted
-        ..videoMuted = _isVideoMuted
-        ..featureFlags = featureFlags;
-      log(options.room);
-      await JitsiMeet.joinMeeting(options, roomNameConstraints: {});
+      var options = JitsiMeetingOptions(
+          roomNameOrUrl: meetId,
+          serverUrl: "https://hi.omeet.in/$meetId",
+          subject: "Meeting with ${widget.claim.insuredName}",
+          userDisplayName: "OMeet Agent",
+          userEmail: await AuthenticationProvider.getEmail(),
+          isAudioOnly: _isAudioOnly,
+          isAudioMuted: _isAudioMuted,
+          isVideoMuted: _isVideoMuted,
+          featureFlags: featureFlags);
+      await JitsiMeetWrapper.joinMeeting(
+        options: options,
+        listener: JitsiMeetingListener(
+            onConferenceWillJoin: _onConferenceWillJoin,
+            onConferenceJoined: _onConferenceJoined,
+            onConferenceTerminated: _onConferenceTerminated,
+            onClosed: _onClose),
+      );
     } catch (error) {
       log(error.toString());
     }
   }
 
   Future<void> _closeMeeting() async {
-    await JitsiMeet.closeMeeting();
+    await JitsiMeetWrapper.hangUp();
     setState(() {
       _status = VideoMeetStatus.terminated;
     });
