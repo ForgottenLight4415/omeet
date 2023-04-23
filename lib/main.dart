@@ -33,7 +33,7 @@ class _OMeetAppState extends State<OMeetApp> {
       designSize: const Size(412, 915),
       builder: (BuildContext context, Widget? child) => MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'OMeet',
+        title: 'DR OMeet',
         theme: AppTheme.lightTheme,
         builder: (BuildContext? context, Widget? widget) {
           return MediaQuery(
