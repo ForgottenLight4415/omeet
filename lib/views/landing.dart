@@ -43,18 +43,8 @@ class LandingPage extends StatelessWidget {
                         onPressed: () {
                           Navigator.pushNamed(context, '/assigned');
                         },
-                        fontAwesomeIcons: FontAwesomeIcons.tasks,
+                        fontAwesomeIcons: FontAwesomeIcons.listCheck,
                         label: "Assigned Claims"),
-                    LandingCard(
-                      onPressed: () {
-                        Navigator.pushNamed(
-                          context,
-                          '/self-assign',
-                        );
-                      },
-                      fontAwesomeIcons: FontAwesomeIcons.tasks,
-                      label: "Assign\nto self",
-                    ),
                     BlocProvider<CallCubit>(
                       create: (context) => CallCubit(),
                       child: BlocConsumer<CallCubit, CallState>(
@@ -63,7 +53,7 @@ class LandingPage extends StatelessWidget {
                           onPressed: () async {
                             await customCallSetup(context);
                           },
-                          fontAwesomeIcons: FontAwesomeIcons.phoneAlt,
+                          fontAwesomeIcons: FontAwesomeIcons.phone,
                           label: "Custom calls",
                         ),
                       ),
@@ -84,7 +74,7 @@ class LandingPage extends StatelessWidget {
                           (route) => false,
                         );
                       },
-                      fontAwesomeIcons: FontAwesomeIcons.signOutAlt,
+                      fontAwesomeIcons: FontAwesomeIcons.rightFromBracket,
                       label: "Sign out",
                     ),
                   ],
@@ -95,7 +85,7 @@ class LandingPage extends StatelessWidget {
               child: Align(
                 alignment: Alignment.center,
                 child: Text(
-                  "BAGIC MCI\nVersion 1.1.4 (Build 72)",
+                  "OMeet Health Audit\nVersion 1.1.5 (Build 73)",
                   textAlign: TextAlign.center,
                 ),
               ),

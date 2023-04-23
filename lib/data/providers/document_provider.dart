@@ -45,6 +45,8 @@ class DocumentProvider extends AppServerProvider {
         _recordings.add(AudioRecordings.fromJson(document));
       }
       return _recordings;
+    } else if (_rData["response"] == "nopost") {
+      return [];
     } else {
       throw AppException(code: error, cause: "Unknown format");
     }

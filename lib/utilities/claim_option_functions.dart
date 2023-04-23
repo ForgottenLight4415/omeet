@@ -3,16 +3,17 @@ import 'dart:developer';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
-import 'package:omeet_motor/utilities/screen_capture.dart';
-import 'package:omeet_motor/utilities/screen_recorder.dart';
-import 'package:omeet_motor/utilities/video_recorder.dart';
+
+import 'show_snackbars.dart';
+import 'camera_utility.dart';
+import 'screen_capture.dart';
+import 'screen_recorder.dart';
+import 'video_recorder.dart';
+import 'location_service.dart';
+import 'app_permission_manager.dart';
 
 import '../data/models/claim.dart';
 import '../views/recorder_pages/video_recorder_page.dart';
-import 'app_permission_manager.dart';
-import 'camera_utility.dart';
-import 'location_service.dart';
-import 'show_snackbars.dart';
 import '../views/recorder_pages/audio_recorder_page.dart';
 
 Future<bool> handleScreenshotService(BuildContext context, ScreenCapture screenCapture, String claimNumber) async {

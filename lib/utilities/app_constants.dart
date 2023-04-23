@@ -1,5 +1,5 @@
 class AppStrings {
-  static const String appName = "BAGIC\nMotor Claim Investigation";
+  static const String appName = "OMeet\nHealth Audit";
 
   // ERRORS AND FILLERS
   static const String blank = "";
