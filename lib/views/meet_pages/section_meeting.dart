@@ -28,8 +28,8 @@ class _VideoMeetPageState extends State<VideoMeetPage> with AutomaticKeepAliveCl
   // Video meet settings
   VideoMeetStatus _status = VideoMeetStatus.none;
   bool _isAudioOnly = false;
-  bool _isAudioMuted = true;
-  bool _isVideoMuted = true;
+  bool _isAudioMuted = false;
+  bool _isVideoMuted = false;
 
   List<CameraDescription>? _cameras;
   CameraController? _controller;
