@@ -12,16 +12,16 @@ import '../../utilities/app_constants.dart';
 import '../../utilities/camera_utility.dart';
 import '../../data/repositories/data_upload_repo.dart';
 
-class CaptureImagePage extends StatefulWidget {
+class CaptureImageView extends StatefulWidget {
   final CameraCaptureArguments arguments;
 
-  const CaptureImagePage({Key? key, required this.arguments}) : super(key: key);
+  const CaptureImageView({Key? key, required this.arguments}) : super(key: key);
 
   @override
-  State<CaptureImagePage> createState() => _CaptureImagePageState();
+  State<CaptureImageView> createState() => _CaptureImageViewState();
 }
 
-class _CaptureImagePageState extends State<CaptureImagePage> with WidgetsBindingObserver, TickerProviderStateMixin {
+class _CaptureImageViewState extends State<CaptureImageView> with WidgetsBindingObserver, TickerProviderStateMixin {
   CameraController? controller;
   XFile? imageFile;
   double _minAvailableExposureOffset = 0.0;
@@ -531,7 +531,7 @@ class _CaptureImagePageState extends State<CaptureImagePage> with WidgetsBinding
           LocationData _locationData = widget.arguments.locationData;
           final DataUploadRepository _repository = DataUploadRepository();
           bool _result = await _repository.uploadData(
-            claimNumber: widget.arguments.claim.claimNumber,
+            claimNumber: widget.arguments.claim.hospital.id,
             latitude: _locationData.latitude ?? 0,
             longitude: _locationData.longitude ?? 0,
             file: _imageFile,

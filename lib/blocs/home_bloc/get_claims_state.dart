@@ -8,9 +8,15 @@ class GetClaimsInitial extends GetClaimsState {}
 class GetClaimsLoading extends GetClaimsState {}
 
 class GetClaimsSuccess extends GetClaimsState {
-  final List<Claim> claims;
+  final List<Audit> claims;
 
   GetClaimsSuccess(this.claims);
+}
+
+class GetHospitalClaimsSuccess extends GetClaimsState {
+  final List<Claim> claims;
+
+  GetHospitalClaimsSuccess(this.claims);
 }
 
 class GetClaimsFailed extends GetClaimsState {

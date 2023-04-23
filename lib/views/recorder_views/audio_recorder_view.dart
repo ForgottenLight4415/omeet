@@ -5,27 +5,27 @@ import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../data/models/claim.dart';
+import '../../data/models/audit.dart';
 import '../../utilities/show_snackbars.dart';
 import '../../utilities/sound_recorder.dart';
 import '../../widgets/buttons.dart';
 
 class AudioRecordArguments {
-  final Claim claim;
+  final Audit claim;
   final LocationData locationData;
 
   const AudioRecordArguments(this.claim, this.locationData);
 }
 
-class AudioRecordPage extends StatefulWidget {
+class AudioRecordView extends StatefulWidget {
   final AudioRecordArguments arguments;
-  const AudioRecordPage({Key? key, required this.arguments}) : super(key: key);
+  const AudioRecordView({Key? key, required this.arguments}) : super(key: key);
 
   @override
-  State<AudioRecordPage> createState() => _AudioRecordPageState();
+  State<AudioRecordView> createState() => _AudioRecordViewState();
 }
 
-class _AudioRecordPageState extends State<AudioRecordPage> {
+class _AudioRecordViewState extends State<AudioRecordView> {
   SoundRecorder? _recorder;
   Duration _duration = const Duration();
   Timer? _timer;
@@ -96,7 +96,7 @@ class _AudioRecordPageState extends State<AudioRecordPage> {
                 style: Theme.of(context).textTheme.titleLarge,
               ),
               Text(
-                widget.arguments.claim.claimNumber,
+                widget.arguments.claim.hospital.id,
                 style: TextStyle(
                   fontSize: 28.sp,
                   color: Theme.of(context).primaryColor,

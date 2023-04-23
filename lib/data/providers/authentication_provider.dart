@@ -1,7 +1,7 @@
-import 'package:omeet_motor/utilities/api_urls.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app_server_provider.dart';
+import '../../utilities/api_urls.dart';
 
 class AuthenticationProvider extends AppServerProvider {
   Future<bool> signIn(String email, String password) async {

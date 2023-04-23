@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:omeet_motor/widgets/app_logo.dart';
 
 import '../../blocs/auth_bloc/auth_cubit.dart';
 import '../../utilities/app_constants.dart';
 import '../../utilities/check_connection.dart';
+import '../../widgets/app_logo.dart';
 import '../../widgets/input_fields.dart';
 import '../../widgets/loading_widget.dart';
 
-class SignInPage extends StatefulWidget {
-  const SignInPage({Key? key}) : super(key: key);
+class LoginView extends StatefulWidget {
+  const LoginView({Key? key}) : super(key: key);
 
   @override
-  State<SignInPage> createState() => _SignInPageState();
+  State<LoginView> createState() => _LoginViewState();
 }
 
-class _SignInPageState extends State<SignInPage> {
+class _LoginViewState extends State<LoginView> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 

@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:omeet_motor/recorder_initialization.dart';
-import 'package:omeet_motor/widgets/buttons.dart';
 
-import '../../blocs/home_bloc/get_claims_cubit.dart';
-import '../../utilities/app_constants.dart';
+import '../../widgets/buttons.dart';
+import '../../widgets/claim_card.dart';
+import '../../widgets/error_widget.dart';
 import '../../widgets/input_fields.dart';
 import '../../widgets/loading_widget.dart';
-import '../../widgets/error_widget.dart';
-import '../../widgets/claim_card.dart';
+import '../../recorder_initialization.dart';
+import '../../utilities/app_constants.dart';
+import '../../blocs/home_bloc/get_claims_cubit.dart';
 
-class AssignedClaimsPage extends StatefulWidget {
-  const AssignedClaimsPage({Key? key}) : super(key: key);
+class ClaimsView extends StatefulWidget {
+  const ClaimsView({Key? key}) : super(key: key);
 
   @override
-  State<AssignedClaimsPage> createState() => _AssignedClaimsPageState();
+  State<ClaimsView> createState() => _ClaimsViewState();
 }
 
-class _AssignedClaimsPageState extends State<AssignedClaimsPage> {
+class _ClaimsViewState extends State<ClaimsView> {
   final GetClaimsCubit _claimsCubit = GetClaimsCubit();
   TextEditingController? _searchController;
   String? _searchQuery;
@@ -63,7 +63,7 @@ class _AssignedClaimsPageState extends State<AssignedClaimsPage> {
               foregroundColor: Colors.black87,
               leading: const AppBackButton(),
               title: Text(
-                'Claims',
+                'Hospitals',
                 style: Theme.of(context).textTheme.displaySmall!.copyWith(
                       color: Colors.black87,
                       fontWeight: FontWeight.w700,
@@ -77,7 +77,7 @@ class _AssignedClaimsPageState extends State<AssignedClaimsPage> {
                     padding: EdgeInsets.all(16.w),
                     child: SearchField(
                       textEditingController: _searchController,
-                      hintText: "Search claims",
+                      hintText: "Search hospitals",
                     ),
                   ),
                 ),

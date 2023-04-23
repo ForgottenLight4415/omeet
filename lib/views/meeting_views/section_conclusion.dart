@@ -2,15 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../data/models/claim.dart';
 import '../../data/providers/claim_provider.dart';
 import '../../utilities/show_snackbars.dart';
 import '../../widgets/input_fields.dart';
 
 class ConclusionPage extends StatefulWidget {
-  final Claim claim;
+  final String claimNumber;
 
-  const ConclusionPage({Key? key, required this.claim}) : super(key: key);
+  const ConclusionPage({Key? key, required this.claimNumber}) : super(key: key);
 
   @override
   State<ConclusionPage> createState() => _ConclusionPageState();
@@ -55,16 +54,16 @@ class _ConclusionPageState extends State<ConclusionPage> {
                       value: "Select",
                     ),
                     DropdownMenuItem<String>(
-                      child: Text("Positive"),
-                      value: "Positive",
+                      child: Text("Not Paid"),
+                      value: "Not Paid",
                     ),
                     DropdownMenuItem<String>(
-                      child: Text("Neutral"),
-                      value: "Neutral",
+                      child: Text("Partially Paid"),
+                      value: "Partially Paid",
                     ),
                     DropdownMenuItem<String>(
-                      child: Text("Negative"),
-                      value: "Negative",
+                      child: Text("Paid"),
+                      value: "Paid",
                     ),
                   ],
                   onChanged: (conclusion) {
@@ -95,7 +94,7 @@ class _ConclusionPageState extends State<ConclusionPage> {
                       FocusScope.of(context).unfocus();
                       final ClaimProvider _provider = ClaimProvider();
                       if (await _provider.submitConclusion(
-                        widget.claim.claimNumber,
+                        widget.claimNumber,
                         _selectedConclusion!,
                         _controller!.text,
                       )) {

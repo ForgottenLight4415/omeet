@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../../data/models/claim.dart';
-import './details.dart';
+import '../../data/models/audit.dart';
+import '../../widgets/claim_details.dart';
 
 class MeetDetails extends StatefulWidget {
-  final Claim claim;
+  final Audit claim;
   const MeetDetails({Key? key, required this.claim}) : super(key: key);
 
   @override

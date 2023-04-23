@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:ed_screen_recorder/ed_screen_recorder.dart';
 import 'package:flutter/material.dart';
 import 'package:omeet_motor/utilities/show_snackbars.dart';
-import 'package:omeet_motor/utilities/upload_dialog.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../data/repositories/data_upload_repo.dart';
@@ -37,7 +36,6 @@ class ScreenRecorder {
     var response = await _edScreenRecorder?.stopRecord();
     File _videoFile = response!['file'];
     final DataUploadRepository _repository = DataUploadRepository();
-    showProgressDialog(context);
     try {
       bool _result = await _repository.uploadData(
         claimNumber: claimNumber,
@@ -58,7 +56,6 @@ class ScreenRecorder {
         color: Colors.red,
       );
     }
-    Navigator.pop(context);
     _claimNumber = null;
     _isRecording = false;
     return response;

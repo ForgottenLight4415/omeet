@@ -2,28 +2,27 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:omeet_motor/data/models/document.dart';
-import 'package:omeet_motor/views/claims/self_assign.dart';
-import 'package:omeet_motor/views/documents/video_player.dart';
-import 'package:omeet_motor/views/documents/videos_page.dart';
-import 'package:omeet_motor/views/landing.dart';
+import 'package:omeet_motor/views/claims/hospital_claims_view.dart';
 
-import '../data/models/claim.dart';
+import '../data/models/audit.dart';
+import '../data/models/document.dart';
 import '../utilities/camera_utility.dart';
-import '../views/auth/verification_page.dart';
-import '../views/claims/create_claim_page.dart';
-import '../views/documents/audio_page.dart';
+import '../views/auth/verification_view.dart';
+import '../views/documents/audio_list_view.dart';
 import '../views/documents/doc_viewer.dart';
-import '../views/documents/documents_page.dart';
-import '../views/auth/login.dart';
-import '../views/claims/assigned_claims.dart';
+import '../views/documents/documents_list_view.dart';
+import '../views/auth/login_view.dart';
+import '../views/claims/claims_view.dart';
 import '../views/invalid_route.dart';
-import '../views/meet_pages/details_page.dart';
-import '../views/meet_pages/meet_main.dart';
-import '../views/recorder_pages/audio_recorder_page.dart';
-import '../views/recorder_pages/image_capture_page.dart';
-import '../views/recorder_pages/video_recorder_page.dart';
+import '../views/claims/details_view.dart';
+import '../views/meeting_views/meet_main.dart';
+import '../views/recorder_views/audio_recorder_view.dart';
+import '../views/recorder_views/image_capture_view.dart';
+import '../views/recorder_views/video_recorder_view.dart';
 import '../views/uploads_page.dart';
+import '../views/documents/video_player.dart';
+import '../views/documents/videos_list_view.dart';
+import '../views/landing.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -32,11 +31,11 @@ class RouteGenerator {
     switch (settings.name) {
       // AUTH
       case '/login':
-        return _platformDependentRouting(const SignInPage());
+        return _platformDependentRouting(const LoginView());
       case '/otp':
         final String email = args as String;
         return _platformDependentRouting(
-          VerificationPage(emailAddress: email),
+          VerificationView(emailAddress: email),
         );
 
       case '/landing':
@@ -44,20 +43,23 @@ class RouteGenerator {
 
       // Claims
       case '/assigned':
-        return _platformDependentRouting(const AssignedClaimsPage());
-      case '/new/claim':
-        return _platformDependentRouting(const NewClaimPage());
-      case '/self-assign':
-        return _platformDependentRouting(const SelfAssignClaimsPage());
-      case '/claim/details':
-        final Claim _claim = args as Claim;
+        return _platformDependentRouting(const ClaimsView());
+      case '/hospital/claims':
+        final String hospitalId = args as String;
         return _platformDependentRouting(
-          DetailsPage(claim: _claim),
+          HospitalClaimsView(
+            hospitalId: hospitalId,
+          ),
+        );
+      case '/claim/details':
+        final Audit _claim = args as Audit;
+        return _platformDependentRouting(
+          DetailsView(claim: _claim),
         );
 
       // MEETING ROUTES
       case '/claim/meeting':
-        final Claim _claim = args as Claim;
+        final Audit _claim = args as Audit;
         return _platformDependentRouting(MeetingMainPage(claim: _claim));
 
       // RECORDER ROUTES
@@ -65,17 +67,17 @@ class RouteGenerator {
         final AudioRecordArguments _audioRecArguments =
             args as AudioRecordArguments;
         return _platformDependentRouting(
-            AudioRecordPage(arguments: _audioRecArguments));
+            AudioRecordView(arguments: _audioRecArguments));
       case '/record/video':
         final VideoPageConfig _videoRecArgs = args as VideoPageConfig;
         return _platformDependentRouting(
-          VideoRecordPage(config: _videoRecArgs),
+          VideoRecordView(config: _videoRecArgs),
         );
       case '/capture/image':
         final CameraCaptureArguments _captureImageArgs =
             args as CameraCaptureArguments;
         return _platformDependentRouting(
-          CaptureImagePage(arguments: _captureImageArgs),
+          CaptureImageView(arguments: _captureImageArgs),
         );
 
       // DOCUMENT ROUTES
@@ -84,7 +86,7 @@ class RouteGenerator {
       case '/documents':
         final DocumentPageArguments _arguments = args as DocumentPageArguments;
         return _platformDependentRouting(
-          DocumentsPage(
+          DocumentsListView(
             claimNumber: _arguments.claimNumber,
             readOnly: _arguments.readOnly,
           ),
@@ -92,7 +94,7 @@ class RouteGenerator {
       case '/videos':
         final DocumentPageArguments _arguments = args as DocumentPageArguments;
         return _platformDependentRouting(
-          VideosPage(
+          VideosListView(
             claimNumber: _arguments.claimNumber,
             readOnly: _arguments.readOnly,
           ),
@@ -100,7 +102,7 @@ class RouteGenerator {
       case '/audio':
         final DocumentPageArguments _arguments = args as DocumentPageArguments;
         return _platformDependentRouting(
-          AudioPage(
+          AudioListView(
             claimNumber: _arguments.claimNumber,
             readOnly: _arguments.readOnly,
           ),

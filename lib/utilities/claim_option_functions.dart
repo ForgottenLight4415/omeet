@@ -4,6 +4,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 
+import '../data/models/audit.dart';
 import 'show_snackbars.dart';
 import 'camera_utility.dart';
 import 'screen_capture.dart';
@@ -13,8 +14,8 @@ import 'location_service.dart';
 import 'app_permission_manager.dart';
 
 import '../data/models/claim.dart';
-import '../views/recorder_pages/video_recorder_page.dart';
-import '../views/recorder_pages/audio_recorder_page.dart';
+import '../views/recorder_views/video_recorder_view.dart';
+import '../views/recorder_views/audio_recorder_view.dart';
 
 Future<bool> handleScreenshotService(BuildContext context, ScreenCapture screenCapture, String claimNumber) async {
   if (!screenCapture.isServiceRunning) {
@@ -82,7 +83,7 @@ Future<bool> _stopScreenRecord(BuildContext context, ScreenRecorder screenRecord
   return true;
 }
 
-Future<void> videoCall(BuildContext context, Claim claim) async {
+Future<void> videoCall(BuildContext context, Audit claim) async {
   showInfoSnackBar(context, "Checking permissions...");
   bool cameraStatus = await cameraPermission();
   bool microphoneStatus = await microphonePermission();
@@ -102,7 +103,7 @@ Future<void> videoCall(BuildContext context, Claim claim) async {
   }
 }
 
-Future<void> recordAudio(BuildContext context, Claim claim) async {
+Future<void> recordAudio(BuildContext context, Audit claim) async {
   showInfoSnackBar(context, "Checking permissions...");
   LocationData? locationData = await _getLocationData(context);
   bool microphoneStatus = await microphonePermission();
@@ -115,7 +116,7 @@ Future<void> recordAudio(BuildContext context, Claim claim) async {
   }
 }
 
-Future<void> recordVideo(BuildContext context, Claim claim, VideoRecorder videoRecorder) async {
+Future<void> recordVideo(BuildContext context, Audit claim, VideoRecorder videoRecorder) async {
   LocationData? locationData = await _getLocationData(context);
   if (locationData == null) {
     showInfoSnackBar(context, "Location permission is required to access this feature.", color: Colors.red);
@@ -130,7 +131,7 @@ Future<void> recordVideo(BuildContext context, Claim claim, VideoRecorder videoR
   );
 }
 
-Future<void> captureImage(BuildContext context, Claim claim) async {
+Future<void> captureImage(BuildContext context, Audit claim) async {
   showInfoSnackBar(context, "Checking permissions...");
   LocationData? _locationData = await _getLocationData(context);
   bool _cameraStatus = await cameraPermission();

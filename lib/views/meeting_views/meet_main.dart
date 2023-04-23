@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:omeet_motor/views/meet_pages/questions_section.dart';
 
-import '../../data/models/claim.dart';
+import '../../data/models/audit.dart';
 import '../../widgets/buttons.dart';
-import 'conclusion_page.dart';
-import 'details_section.dart';
-import 'documents_section.dart';
-import 'meet_section.dart';
+import 'section_questions.dart';
+import 'section_conclusion.dart';
+import 'section_details.dart';
+import 'section_documents.dart';
+import 'section_meet.dart';
 
 class MeetingMainPage extends StatefulWidget {
-  final Claim claim;
+  final Audit claim;
 
   const MeetingMainPage({Key? key, required this.claim}) : super(key: key);
 
@@ -27,14 +27,14 @@ class _MeetingMainPageState extends State<MeetingMainPage> {
         appBar: AppBar(
           leading: const AppBackButton(),
           centerTitle: true,
-          title: Text("Meeting with ${widget.claim.insuredName}"),
+          title: Text("Meeting with ${widget.claim.hospital.name}"),
           bottom: const TabBar(
             isScrollable: true,
             tabs: <Widget>[
               Tab(icon: FaIcon(FontAwesomeIcons.video), text: "Meet"),
               Tab(icon: FaIcon(FontAwesomeIcons.question), text: "Q & A"),
               Tab(icon: FaIcon(FontAwesomeIcons.file), text: "Documents"),
-              Tab(icon: FaIcon(FontAwesomeIcons.checkCircle), text: "Conclusion"),
+              Tab(icon: FaIcon(FontAwesomeIcons.circleCheck), text: "Conclusion"),
               Tab(icon: FaIcon(FontAwesomeIcons.info), text: "Details"),
             ],
           ),
@@ -42,9 +42,9 @@ class _MeetingMainPageState extends State<MeetingMainPage> {
         body: TabBarView(
           children: [
             VideoMeetPage(claim: widget.claim),
-            QuestionsPage(claimNumber: widget.claim.claimNumber),
-            DocumentsView(claimNumber: widget.claim.claimNumber),
-            ConclusionPage(claim: widget.claim),
+            QuestionsPage(claimNumber: widget.claim.hospital.id),
+            DocumentsView(claimNumber: widget.claim.hospital.id),
+            ConclusionPage(claimNumber: widget.claim.hospital.id),
             MeetDetails(claim: widget.claim),
           ],
         ),

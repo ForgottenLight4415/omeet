@@ -35,12 +35,6 @@ class LandingPage extends StatelessWidget {
                   children: <Widget>[
                     LandingCard(
                         onPressed: () {
-                          Navigator.pushNamed(context, '/new/claim');
-                        },
-                        fontAwesomeIcons: FontAwesomeIcons.plus,
-                        label: "Create\nClaim"),
-                    LandingCard(
-                        onPressed: () {
                           Navigator.pushNamed(context, '/assigned');
                         },
                         fontAwesomeIcons: FontAwesomeIcons.listCheck,

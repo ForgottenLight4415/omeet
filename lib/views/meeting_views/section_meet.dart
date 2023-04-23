@@ -7,8 +7,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:jitsi_meet_wrapper/jitsi_meet_wrapper.dart';
 
 import '../../utilities/show_snackbars.dart';
-import '/data/models/claim.dart';
-import '/data/providers/authentication_provider.dart';
+import '../../data/providers/authentication_provider.dart';
+import '../../data/models/audit.dart';
 import '/utilities/screen_recorder.dart';
 import '/widgets/buttons.dart';
 import '/widgets/scaling_tile.dart';
@@ -16,7 +16,7 @@ import '/widgets/scaling_tile.dart';
 enum VideoMeetStatus { none, joining, inProgress, terminated, error }
 
 class VideoMeetPage extends StatefulWidget {
-  final Claim claim;
+  final Audit claim;
 
   const VideoMeetPage({Key? key, required this.claim}) : super(key: key);
 
@@ -156,7 +156,7 @@ class _VideoMeetPageState extends State<VideoMeetPage> with AutomaticKeepAliveCl
             ScalingTile(
               onPressed: () async {
                 await _screenRecorder!.startRecord(
-                  claimNumber: widget.claim.claimNumber,
+                  claimNumber: widget.claim.hospital.id,
                 );
                 await _joinMeeting();
               },
@@ -355,7 +355,7 @@ class _VideoMeetPageState extends State<VideoMeetPage> with AutomaticKeepAliveCl
     setState(() {
       _status = VideoMeetStatus.terminated;
     });
-    await _screenRecorder!.stopRecord(claimNumber: widget.claim.claimNumber, context: context);
+    await _screenRecorder!.stopRecord(claimNumber: widget.claim.hospital.id, context: context);
   }
 
   Future<void> _joinMeeting() async {
@@ -368,11 +368,11 @@ class _VideoMeetPageState extends State<VideoMeetPage> with AutomaticKeepAliveCl
         FeatureFlag.isLiveStreamingEnabled: false,
         FeatureFlag.isRecordingEnabled: false,
       };
-      final String meetId = widget.claim.insuredContactNumber;
+      final String meetId = widget.claim.hospital.id;
       var options = JitsiMeetingOptions(
           roomNameOrUrl: meetId,
           serverUrl: "https://hi.omeet.in/$meetId",
-          subject: "Meeting with ${widget.claim.insuredName}",
+          subject: "Meeting with ${widget.claim.hospital.name}",
           userDisplayName: "OMeet Agent",
           userEmail: await AuthenticationProvider.getEmail(),
           isAudioOnly: _isAudioOnly,
@@ -397,7 +397,7 @@ class _VideoMeetPageState extends State<VideoMeetPage> with AutomaticKeepAliveCl
     setState(() {
       _status = VideoMeetStatus.terminated;
     });
-    await _screenRecorder!.stopRecord(claimNumber: widget.claim.claimNumber, context: context);
+    await _screenRecorder!.stopRecord(claimNumber: widget.claim.hospital.id, context: context);
   }
 
   @override

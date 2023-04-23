@@ -48,9 +48,9 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.godjn.omeet_motor"
+        applicationId "com.godjn.omeet_ha"
         minSdkVersion 28
-        targetSdkVersion 30
+        targetSdkVersion 33
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }

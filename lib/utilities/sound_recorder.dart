@@ -6,12 +6,12 @@ import 'package:omeet_motor/utilities/upload_dialog.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:wakelock/wakelock.dart';
 
-import '../data/models/claim.dart';
+import '../data/models/audit.dart';
 import '../utilities/app_constants.dart';
 import '../data/repositories/data_upload_repo.dart';
 
 class SoundRecorder {
-  final Claim claim;
+  final Audit claim;
 
   FlutterSoundRecorder? _audioRecorder;
   bool _isRecorderInitialized = false;
@@ -37,7 +37,7 @@ class SoundRecorder {
     int _currentTime = DateTime.now().microsecondsSinceEpoch;
     Directory? directory = await getExternalStorageDirectory();
     Directory? _saveDirectory = await Directory(directory!.path + "/Audio").create();
-    String _fileName = "/${claim.claimNumber}_$_currentTime.aac";
+    String _fileName = "/${claim.hospital.id}_$_currentTime.aac";
     await _audioRecorder!.startRecorder(toFile: _saveDirectory.path + _fileName, codec: Codec.aacADTS);
   }
 
@@ -48,7 +48,7 @@ class SoundRecorder {
     final DataUploadRepository _repository = DataUploadRepository();
     showProgressDialog(context);
     bool _result = await _repository.uploadData(
-      claimNumber: claim.claimNumber,
+      claimNumber: claim.hospital.id,
       latitude: latitude,
       longitude: longitude,
       file: _audioFile,

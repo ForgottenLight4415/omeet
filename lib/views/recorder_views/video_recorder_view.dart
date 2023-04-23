@@ -5,27 +5,27 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_background_video_recorder/flutter_bvr_platform_interface.dart';
 
 import '../../widgets/buttons.dart';
-import '../../data/models/claim.dart';
-import '../../views/meet_pages/details.dart';
+import '../../data/models/audit.dart';
+import '../../widgets/claim_details.dart';
 import '../../utilities/video_recorder.dart';
 
 class VideoPageConfig {
   final VideoRecorder videoRecorder;
-  final Claim claim;
+  final Audit claim;
 
   const VideoPageConfig(this.videoRecorder, this.claim);
 }
 
-class VideoRecordPage extends StatefulWidget {
+class VideoRecordView extends StatefulWidget {
   final VideoPageConfig config;
 
-  const VideoRecordPage({Key? key, required this.config}) : super(key: key);
+  const VideoRecordView({Key? key, required this.config}) : super(key: key);
 
   @override
-  State<VideoRecordPage> createState() => _VideoRecordPageState();
+  State<VideoRecordView> createState() => _VideoRecordViewState();
 }
 
-class _VideoRecordPageState extends State<VideoRecordPage>
+class _VideoRecordViewState extends State<VideoRecordView>
     with WidgetsBindingObserver, TickerProviderStateMixin {
   /// Events to [_streamSubscription] are in the
   /// form of integers which stand for the following:
@@ -74,7 +74,7 @@ class _VideoRecordPageState extends State<VideoRecordPage>
                   Text(
                     _video.caseClaimNumber != null
                         ? "Recording in progress for claim number\n${_video.caseClaimNumber}"
-                        : "Start recording for\n${widget.config.claim.claimNumber}",
+                        : "Start recording for\n${widget.config.claim.hospital.id}",
                     textAlign: TextAlign.center,
                   ),
                   SizedBox(height: 10.h),
@@ -116,7 +116,7 @@ class _VideoRecordPageState extends State<VideoRecordPage>
                   ElevatedButton(
                     onPressed: () async {
                       if (!_isRecording && !_recorderBusy) {
-                        _video.caseClaimNumber = widget.config.claim.claimNumber;
+                        _video.caseClaimNumber = widget.config.claim.hospital.id;
                         await _video.startVideoRecording(_cameraFacing);
                         setState(() {});
                       } else if (!_isRecording && _recorderBusy) {

@@ -9,12 +9,12 @@ class Hospital {
   final String region;
 
   Hospital.fromJson(Map<String, dynamic > decodedJson) 
-    : id = cleanOrConvert(decodedJson["hospital_id"]),
-    name = cleanOrConvert(decodedJson["hospital_name"]),
-    address = cleanOrConvert(decodedJson["hospital_address"]),
-    nameOfAuthority = cleanOrConvert(decodedJson["name_of_hospital_authority"]),
-    location = cleanOrConvert(decodedJson["location"]),
-    region = cleanOrConvert(decodedJson["region"]);
+    : id = cleanOrConvert(decodedJson["Hos_ID"]),
+    name = cleanOrConvert(decodedJson["Hospital_Name"]),
+    address = cleanOrConvert(decodedJson["Hospital_Address"]),
+    nameOfAuthority = cleanOrConvert(decodedJson["Name_of_Hospital_Authority"]),
+    location = cleanOrConvert(decodedJson["Location"]),
+    region = cleanOrConvert(decodedJson["Region"]);
 
   Map<String, String> toMap() {
     return <String, String> {

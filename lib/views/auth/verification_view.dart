@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:omeet_motor/widgets/app_logo.dart';
 
 import '../../blocs/otp_bloc/otp_cubit.dart';
 import '../../utilities/show_snackbars.dart';
 import '../../utilities/upload_dialog.dart';
+import '../../widgets/app_logo.dart';
 import '../../widgets/input_fields.dart';
 
-class VerificationPage extends StatefulWidget {
+class VerificationView extends StatefulWidget {
   final String emailAddress;
 
-  const VerificationPage({Key? key, required this.emailAddress})
+  const VerificationView({Key? key, required this.emailAddress})
       : super(key: key);
 
   @override
-  State<VerificationPage> createState() => _VerificationPageState();
+  State<VerificationView> createState() => _VerificationViewState();
 }
 
-class _VerificationPageState extends State<VerificationPage> {
+class _VerificationViewState extends State<VerificationView> {
   final TextEditingController _controller = TextEditingController();
 
   @override

@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 
-import '../../data/models/claim.dart';
+import '../../data/models/audit.dart';
 import '../../widgets/buttons.dart';
-import 'details.dart';
+import '../../widgets/claim_details.dart';
 
-class DetailsPage extends StatelessWidget {
-  final Claim claim;
-  const DetailsPage({Key? key, required this.claim}) : super(key: key);
+class DetailsView extends StatelessWidget {
+  final Audit claim;
+  const DetailsView({Key? key, required this.claim}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         leading: const AppBackButton(),
-        title: const Text('Claim details'),
+        title: Text('Details: ${claim.hospital.id}'),
       ),
       body: ClaimDetails(claim: claim)
     );

@@ -60,9 +60,9 @@ class AppStrings {
   static const String videoSaved = "Video saved to device.";
 
   // DETAILS
-  static const String customerName = "Customer name";
-  static const String customerAddress = "Customer address";
-  static const String phoneNumber = "Phone number: ";
-  static const String phoneNumberAlt = "Alternate phone number: ";
-  static const String emailAddress = "Email address";
+  static const String hospitalName = "Hospital name";
+  static const String hospitalAddress = "Hospital address";
+  static const String authorityName = "Name of Authority";
+  static const String location = "Location";
+  static const String region = "Region";
 }

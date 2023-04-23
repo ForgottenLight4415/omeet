@@ -1,8 +1,16 @@
-import 'package:omeet_motor/utilities/data_cleaner.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../utilities/app_constants.dart';
+import '../../utilities/app_permission_manager.dart';
+import '../../utilities/data_cleaner.dart';
+import '../../utilities/show_snackbars.dart';
+import '../../widgets/input_fields.dart';
+import '../repositories/call_repo.dart';
 import 'hospital.dart';
 
 class Audit {
+  final String auditId;
   final Hospital hospital;
   final String auditeeName;
   final String locationManager;
@@ -33,37 +41,38 @@ class Audit {
   final String dataUploaded;
 
   Audit.fromJson(Map<String, dynamic> decodedJson)
-    : hospital = Hospital.fromJson(decodedJson),
-  auditeeName = cleanOrConvert(decodedJson["auditee_name"]),
-  locationManager = cleanOrConvert(decodedJson["location_manager"]),
-  status = cleanOrConvert(decodedJson["audit_status"]),
-  actionSuggested = cleanOrConvert(decodedJson["action_suggested"]),
-  hatFinalAction = cleanOrConvert(decodedJson["hat_final_action"]),
-  auditObservations = cleanOrConvert(decodedJson["description_of_audit_observations"]),
-  distinctHospitalId = cleanOrConvert(decodedJson["distinct_hospital_ids"]),
-  network = cleanOrConvert(decodedJson["network"]),
-  claimsCount = cleanOrConvert(decodedJson["claims_count"]),
-  claimsPaid = cleanOrConvert(decodedJson["claims_paid"]),
-  investigated = cleanOrConvert(decodedJson["investigated"]),
-  investigatedPercent = cleanOrConvert(decodedJson["investigated_percent"]),
-  softFraud = cleanOrConvert(decodedJson["soft_fraud"]),
-  hardFraud = cleanOrConvert(decodedJson["hard_fraud"]),
-  total = cleanOrConvert(decodedJson["total_percent"]),
-  softFraudPercent = cleanOrConvert(decodedJson["soft_fraud_percent"]),
-  hardFraudPercent = cleanOrConvert(decodedJson["hard_fraud_percent"]),
-  totalPercent = cleanOrConvert(decodedJson["total_percent"]),
-  covidClaims = cleanOrConvert(decodedJson["covid_claims"]),
-  covidPercent = cleanOrConvert(decodedJson["covid_percent"]),
-  audited = cleanOrConvert(decodedJson["audited"]),
-  preventiveAction = cleanOrConvert(decodedJson["preventive_action"]),
-  recoveredAmount = cleanOrConvert(decodedJson["recovered_amount"]),
-  chequeNumber = cleanOrConvert(decodedJson["cheque_number"]),
-  chequeDate = cleanOrConvert(decodedJson["cheque_date"]),
-  industryAlert = cleanOrConvert(decodedJson["industry_alert_given"]),
-  dataUploaded = cleanOrConvert(decodedJson["data_uploaded"]);
+    : auditId = cleanOrConvert(decodedJson["id"]),
+  hospital = Hospital.fromJson(decodedJson),
+  auditeeName = cleanOrConvert(decodedJson["Auditee_Name"]),
+  locationManager = cleanOrConvert(decodedJson["Location_Manager"]),
+  status = cleanOrConvert(decodedJson["Audit_status"]),
+  actionSuggested = cleanOrConvert(decodedJson["Action_Suggested"]),
+  hatFinalAction = cleanOrConvert(decodedJson["HAT_Final_Action"]),
+  auditObservations = cleanOrConvert(decodedJson["Description_of_Audit_observations"]),
+  distinctHospitalId = cleanOrConvert(decodedJson["Distinct_hospital_Ids"]),
+  network = cleanOrConvert(decodedJson["Network_OR__non_network"]),
+  claimsCount = cleanOrConvert(decodedJson["Claims_count"]),
+  claimsPaid = cleanOrConvert(decodedJson["Claims_paid"]),
+  investigated = cleanOrConvert(decodedJson["Investigated"]),
+  investigatedPercent = cleanOrConvert(decodedJson["Investigated_Percent"]),
+  softFraud = cleanOrConvert(decodedJson["Soft_Fraud"]),
+  hardFraud = cleanOrConvert(decodedJson["Hard_Fraud"]),
+  total = cleanOrConvert(decodedJson["Total_F"]),
+  softFraudPercent = cleanOrConvert(decodedJson["Soft_Fraud_Percent"]),
+  hardFraudPercent = cleanOrConvert(decodedJson["Hard_Fraud_Percent"]),
+  totalPercent = cleanOrConvert(decodedJson["Total_Percent"]),
+  covidClaims = cleanOrConvert(decodedJson["Covid_Claims"]),
+  covidPercent = cleanOrConvert(decodedJson["COVID_Percent"]),
+  audited = cleanOrConvert(decodedJson["Audited"]),
+  preventiveAction = cleanOrConvert(decodedJson["Preventive_Action"]),
+  recoveredAmount = cleanOrConvert(decodedJson["Recovered_Amount"]),
+  chequeNumber = cleanOrConvert(decodedJson["Cheque_OR_UTR_NO"]),
+  chequeDate = cleanOrConvert(decodedJson["Date_Cheque_OR_UTR_NO"]),
+  industryAlert = cleanOrConvert(decodedJson["Industry_Alert_Given"]),
+  dataUploaded = cleanOrConvert(decodedJson["Data_Uploaded_in_FRMP"]);
 
-  Map<String, dynamic> toMap() {
-    return <String, dynamic> {
+  Map<String, Map<String, dynamic>> toMap() {
+    return <String, Map<String, dynamic>> {
       'Hospital Details': hospital.toMap(),
       'Audit Details': {
         'Auditee name': auditeeName,
@@ -97,5 +106,68 @@ class Audit {
         'Data uploaded in FRMP': dataUploaded,
       }
     };
+  }
+
+  Future<void> videoCall(BuildContext context) async {
+    bool cameraStatus = await cameraPermission();
+    bool microphoneStatus = await microphonePermission();
+    bool storageStatus = await storagePermission();
+    if (cameraStatus && microphoneStatus && storageStatus) {
+      Navigator.pushNamed(context, '/claim/meeting', arguments: this);
+    } else {
+      showInfoSnackBar(
+        context,
+        AppStrings.camMicStoragePerm,
+        color: Colors.red,
+      );
+    }
+  }
+
+  Future<void> sendMessageModal(BuildContext context) async {
+    final TextEditingController _controller = TextEditingController();
+    bool? _result = await showModalBottomSheet<bool?>(
+      context: context,
+      constraints: BoxConstraints(maxHeight: 200.h),
+      builder: (context) => Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: Column(
+          children: <Widget>[
+            CustomTextFormField(
+              textEditingController: _controller,
+              label: "Phone number",
+              hintText: "Enter phone number",
+              keyboardType: TextInputType.phone,
+            ),
+            const SizedBox(height: 10.0),
+            Align(
+              alignment: Alignment.centerRight,
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context, true);
+                  showInfoSnackBar(context, "Sending message",
+                      color: Colors.orange);
+                },
+                child: const Text("SEND"),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+    if (_result == null) {
+      return;
+    } else if (_controller.text.isNotEmpty || _controller.text.length != 10) {
+      if (await CallRepository().sendMessage(
+        claimNumber: hospital.id,
+        phoneNumber: _controller.text,
+      )) {
+        showInfoSnackBar(context, "Message sent", color: Colors.green);
+      } else {
+        showInfoSnackBar(context, "Failed", color: Colors.red);
+      }
+    } else {
+      showInfoSnackBar(context, "Enter a valid phone number",
+          color: Colors.red);
+    }
   }
 }

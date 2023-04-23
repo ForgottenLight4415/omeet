@@ -29,7 +29,7 @@
     </queries>
    <application
         tools:replace="android:label"
-        android:label="BAGIC MCI"
+        android:label="OMeet Health Audit"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

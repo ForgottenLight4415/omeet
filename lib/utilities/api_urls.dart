@@ -1,19 +1,17 @@
 class ApiUrl {
-  static const String baseUrl = 'https://omeet.in/BAGIC_Motor_Claim_Investigation/';
+  static const String baseUrl = 'https://omeet.in/api/health_audit/';
 
-  static const String loginUrl = "api/loginm.php";
-  static const String verifyOtp = "api/verify_otp.php";
+  static const String loginUrl = "loginm.php";
+  static const String verifyOtp = "verify_otp.php";
 
   // CLAIMS
-  static const String getClaimsUrl = "api/allclaims.php";
-  static const String getDepartmentClaimsUrl = "api/alldepartmentclaims.php";
-  static const String assignToSelfUrl = "api/assigntome.php";
-  static const String newClaim = "api/addnewcase.php";
-  static const String claimConclusion = "api/conclusion.php";
+  static const String getClaimsUrl = "allclaims.php";
+  static const String getHospitalClaimsUrl = "allclaims_hospital_claims.php";
+  static const String claimConclusion = "conclusion.php";
 
   // DATA UPLOAD
-  static const String uploadVideoUrl = "admin/meet/video_meet/s3upload/upload.php";
-  static const String uploadDocUrl = "documents/s3jaya/mobupload.php";
+  static const String uploadVideoUrl = "https://omeet.in/BAGIC_Health_Claim_Investigation/admin/meet/video_meet/s3upload/upload.php";
+  static const String uploadDocUrl = "https://omeet.in/BAGIC_Health_Claim_Investigation/documents/s3jaya/mobupload.php";
 
   //  VOICE CALL AND MESSAGES
   static const String bridgeCallUrl = "https://dashboard.hellotubelight.com/tenant/v1/cpaas/calls";
@@ -29,11 +27,11 @@ class ApiUrl {
   // MEET DOCUMENTS SECTION
   static const String actualDocBaseUrl = "$baseUrl/documents/s3jaya/displaydocs.php?vurl=";
   static const String actualVideoBaseUrl = "$baseUrl/admin/meet/video_meet/s3upload/displayvideo.php?vurl=";
-  static const String getDocumentsUrl = "api/documents.php";
-  static const String getVideosUrl = "api/videos.php";
-  static const String getAudioUrl = "api/audiolist.php";
+  static const String getDocumentsUrl = "documents.php";
+  static const String getVideosUrl = "videos.php";
+  static const String getAudioUrl = "audiolist.php";
 
   // MEET QUESTIONS SECTION
-  static const String getQuestionsUrl = "api/allquestions.php";
-  static const String submitAnswersUrl = "api/allquestionanswers.php";
+  static const String getQuestionsUrl = "allquestions.php";
+  static const String submitAnswersUrl = "allquestionanswers.php";
 }
