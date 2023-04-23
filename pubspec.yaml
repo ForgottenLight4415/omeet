@@ -13,7 +13,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.1.4+72
+version: 1.1.5+73
 
 environment:
   sdk: ">=2.15.1 <3.0.0"
@@ -25,29 +25,20 @@ dependencies:
   http: ^0.13.4
   html: ^0.15.0
   camera: ^0.10.4
-  location: ^4.4.0
-  wakelock: ^0.6.2
   sqflite: ^2.0.2+1
   flutter_svg: ^1.0.3
   flutter_bloc: ^8.0.1
   file_picker: ^5.0.0
-  maps_launcher: ^2.0.1
-  url_launcher: ^6.0.20
   path_provider: ^2.0.14
   cupertino_icons: ^1.0.2
-  webview_flutter: ^3.0.4
-  flutter_sound_lite: ^8.5.0
   permission_handler: ^10.2.0
   shared_preferences: ^2.0.8
   ed_screen_recorder: ^0.0.10
   flutter_screenutil: ^5.0.0+2
   font_awesome_flutter: ^10.4.0
   simple_connection_checker: ^0.2.1
-  flutter_background_video_recorder: ^0.0.9+1
-  syncfusion_flutter_pdfviewer: ^20.1.61-beta
+  syncfusion_flutter_pdfviewer: ^21.1.41
   jitsi_meet_wrapper: ^0.0.6
-  omeet_screen_capture:
-    path: ./omeet_screen_capture
 
 dev_dependencies:
   flutter_test:
@@ -68,10 +59,3 @@ flutter:
          weight: 600
        - asset: fonts/Nunito/Nunito-Bold.ttf
          weight: 700
-
-  #   - family: Trajan Pro
-  #     fonts:
-  #       - asset: fonts/TrajanPro.ttf
-  #       - asset: fonts/TrajanPro_Bold.ttf
-  #         weight: 700
-  #

@@ -16,12 +16,6 @@ class DocumentProvider extends AppServerProvider {
       case DocumentType.file:
         urlPath = ApiUrl.getDocumentsUrl;
         break;
-      case DocumentType.audio:
-        urlPath = ApiUrl.getAudioUrl;
-        break;
-      case DocumentType.video:
-        urlPath = ApiUrl.getVideosUrl;
-        break;
       case DocumentType.image:
         urlPath = ApiUrl.getDocumentsUrl;
         break;
@@ -33,41 +27,18 @@ class DocumentProvider extends AppServerProvider {
       },
     );
     Map<String, dynamic> _rData = _response.data!;
-    if (type != DocumentType.audio && _rData["allpost"] != null) {
+    print(_rData);
+    if (_rData["allpost"] != null) {
       final List<Document> _documents = [];
       for (var document in _rData["allpost"]) {
         _documents.add(Document.fromJson(document, type));
       }
       return _documents;
-    } else if (type == DocumentType.audio) {
-      final List<AudioRecordings> _recordings = [];
-      for (var document in _rData["allpost"]) {
-        _recordings.add(AudioRecordings.fromJson(document));
-      }
-      return _recordings;
+    } else if (_rData["response"] == "nopost") {
+      return [];
     } else {
       throw AppException(code: error, cause: "Unknown format");
     }
-  }
-
-  Future<List<Document>> getVideosList(String claimNumber) async {
-    final Map<String, String> _data = <String, String>{
-      "cnum": claimNumber,
-    };
-    final DecodedResponse _response = await getRequest(
-      path: ApiUrl.getVideosUrl,
-      data: _data,
-    );
-    Map<String, dynamic> _rData = _response.data!;
-    List<Document> _documents = [];
-    if (_rData["allpost"] != null) {
-      for (var document in _rData["allpost"]) {
-        _documents.add(Document.fromJson(document, DocumentType.file));
-      }
-    } else {
-      throw const AppException(code: 500, cause: "Unknown format");
-    }
-    return _documents;
   }
 
   Future<String> getDocument(String documentUrl) async {

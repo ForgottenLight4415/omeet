@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:omeet_motor/views/meet_pages/questions_section.dart';
+import 'package:omeet_motor/views/meet_pages/section_questions.dart';
 
 import '../../data/models/claim.dart';
 import '../../widgets/buttons.dart';
-import 'conclusion_page.dart';
-import 'details_section.dart';
-import 'documents_section.dart';
-import 'meet_section.dart';
+import 'section_conclusion.dart';
+import 'section_details.dart';
+import 'section_documents.dart';
+import 'section_meeting.dart';
 
 class MeetingMainPage extends StatefulWidget {
   final Claim claim;
@@ -27,7 +27,7 @@ class _MeetingMainPageState extends State<MeetingMainPage> {
         appBar: AppBar(
           leading: const AppBackButton(),
           centerTitle: true,
-          title: Text("Meeting with ${widget.claim.insuredName}"),
+          title: Text("Meeting with ${widget.claim.insuredPerson.insuredName}"),
           bottom: const TabBar(
             isScrollable: true,
             tabs: <Widget>[
@@ -45,7 +45,7 @@ class _MeetingMainPageState extends State<MeetingMainPage> {
             QuestionsPage(claimNumber: widget.claim.claimNumber),
             DocumentsView(claimNumber: widget.claim.claimNumber),
             ConclusionPage(claim: widget.claim),
-            MeetDetails(claim: widget.claim),
+            SectionDetails(claim: widget.claim),
           ],
         ),
       ),

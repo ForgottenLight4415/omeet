@@ -1,5 +1,7 @@
 class ApiUrl {
+  static const domainUrl = "https://omeet.in/";
   static const String baseUrl = 'https://omeet.in/api/dromeet/';
+  static const String secondaryBaseUrl = "https://omeet.in/BAGIC_Health_Claim_Investigation/";
 
   static const String loginUrl = "loginm.php";
   static const String verifyOtp = "verify_otp.php";
@@ -8,14 +10,11 @@ class ApiUrl {
   static const String getCompletedClaimsUrl = "allclaims_completed.php";
   static const String getRegisteredClaimsUrl = "allclaims_registered.php";
 
-  static const String getDepartmentClaimsUrl = "api/alldepartmentclaims.php";
-  static const String assignToSelfUrl = "api/assigntome.php";
-  static const String newClaim = "api/addnewcase.php";
-  static const String claimConclusion = "api/conclusion.php";
+  static const String claimConclusion = "conclusion.php";
 
   // DATA UPLOAD
-  static const String uploadVideoUrl = "admin/meet/video_meet/s3upload/upload.php";
-  static const String uploadDocUrl = "documents/s3jaya/mobupload.php";
+  static const String uploadVideoUrl = secondaryBaseUrl + "admin/meet/video_meet/s3upload/upload.php";
+  static const String uploadDocUrl = secondaryBaseUrl + "documents/s3jaya/mobupload.php";
 
   //  VOICE CALL AND MESSAGES
   static const String bridgeCallUrl = "https://dashboard.hellotubelight.com/tenant/v1/cpaas/calls";
@@ -29,13 +28,10 @@ class ApiUrl {
   static const String smsSenderId = "GODJNO";
 
   // MEET DOCUMENTS SECTION
-  static const String actualDocBaseUrl = "$baseUrl/documents/s3jaya/displaydocs.php?vurl=";
-  static const String actualVideoBaseUrl = "$baseUrl/admin/meet/video_meet/s3upload/displayvideo.php?vurl=";
-  static const String getDocumentsUrl = "api/documents.php";
-  static const String getVideosUrl = "api/videos.php";
-  static const String getAudioUrl = "api/audiolist.php";
+  static const String actualDocBaseUrl = "$secondaryBaseUrl/documents/s3jaya/displaydocs.php?vurl=";
+  static const String getDocumentsUrl = "documents.php";
 
   // MEET QUESTIONS SECTION
-  static const String getQuestionsUrl = "api/allquestions.php";
-  static const String submitAnswersUrl = "api/allquestionanswers.php";
+  static const String getQuestionsUrl = "allquestions.php";
+  static const String submitAnswersUrl = "allquestionanswers.php";
 }

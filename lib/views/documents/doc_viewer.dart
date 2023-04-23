@@ -42,12 +42,6 @@ class _DocumentViewPageState extends State<DocumentViewPage> {
         pageTitle = "PDF viewer";
         _cubit = ViewDocumentCubit();
         break;
-      case DocumentType.audio:
-        // TODO: Handle this case.
-        break;
-      case DocumentType.video:
-        // TODO: Handle this case.
-        break;
       case DocumentType.image:
         pageTitle = "Image viewer";
         break;
@@ -102,7 +96,10 @@ class _DocumentViewPageState extends State<DocumentViewPage> {
                         child: Image.network(
                             state.docUrl,
                             errorBuilder: (context, object, stack) {
-                              return const InformationWidget(svgImage: "images/no-data.svg", label: "Image unavailable");
+                              return const InformationWidget(
+                                  svgImage: "images/no-data.svg",
+                                  label: "Image unavailable",
+                              );
                             },
                         ),
                       );

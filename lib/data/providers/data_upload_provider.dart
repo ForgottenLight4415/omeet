@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:omeet_motor/utilities/api_urls.dart';
@@ -40,7 +39,7 @@ class DataUploadProvider extends AppServerProvider {
       final DecodedResponse _requestResponse = await multiPartRequest(
           data: _data,
           files: _files,
-          path: isDoc ? ApiUrl.uploadDocUrl : ApiUrl.uploadVideoUrl
+          baseUrl: isDoc ? ApiUrl.uploadDocUrl : ApiUrl.uploadVideoUrl
       );
       if (_requestResponse.statusCode == successCode) {
         await OMeetDatabase.instance.delete(uploadId);

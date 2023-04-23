@@ -53,10 +53,14 @@ class VideoMeetToggleButton extends StatelessWidget {
     return ScalingTile(
       onPressed: onPressed,
       child: SizedBox(
-        height: 70.h,
-        width: 70.h,
+        height: 80.h,
+        width: 80.h,
         child: Card(
           color: toggleParameter ? Colors.red : Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius:
+            BorderRadius.circular(40.0),
+          ),
           child: Center(
             child: AnimatedCrossFade(
               duration: const Duration(milliseconds: 200),

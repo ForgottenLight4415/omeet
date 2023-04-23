@@ -35,10 +35,26 @@ class LandingPage extends StatelessWidget {
                   children: <Widget>[
                     LandingCard(
                         onPressed: () {
-                          Navigator.pushNamed(context, '/assigned');
+                          Navigator.pushNamed(
+                            context,
+                            '/claims',
+                            arguments: false,
+                          );
                         },
                         fontAwesomeIcons: FontAwesomeIcons.listCheck,
-                        label: "Assigned Claims"),
+                        label: "Assigned",
+                    ),
+                    LandingCard(
+                      onPressed: () {
+                        Navigator.pushNamed(
+                          context,
+                          '/claims',
+                          arguments: true,
+                        );
+                      },
+                      fontAwesomeIcons: FontAwesomeIcons.listCheck,
+                      label: "Completed",
+                    ),
                     BlocProvider<CallCubit>(
                       create: (context) => CallCubit(),
                       child: BlocConsumer<CallCubit, CallState>(
@@ -79,7 +95,7 @@ class LandingPage extends StatelessWidget {
               child: Align(
                 alignment: Alignment.center,
                 child: Text(
-                  "${AppStrings.appName}\nVersion 1.1.4 (Build 72)",
+                  "${AppStrings.appName}\nVersion 1.1.5 (Build 73)",
                   textAlign: TextAlign.center,
                 ),
               ),

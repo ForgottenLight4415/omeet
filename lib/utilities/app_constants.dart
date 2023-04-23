@@ -61,7 +61,7 @@ class AppStrings {
 
   // DETAILS
   static const String customerName = "Customer name";
-  static const String customerAddress = "Customer address";
+  static const String patientAddress = "Patient address";
   static const String phoneNumber = "Phone number: ";
   static const String phoneNumberAlt = "Alternate phone number: ";
   static const String emailAddress = "Email address";

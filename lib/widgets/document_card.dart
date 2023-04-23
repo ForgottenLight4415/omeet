@@ -18,27 +18,15 @@ class DocumentCard extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 8.w),
       child: ScalingTile(
-        onPressed: () async {
-          if (type != DocumentType.video && type != DocumentType.audio) {
-            Navigator.pushNamed(
-              context,
-              '/view/document',
-              arguments: DocumentViewPageArguments(
-                type == DocumentType.audio
-                    ? document.callUrl
-                    : document.fileUrl,
-                type,
-              ),
-            );
-          } else {
-            Navigator.pushNamed(
-              context,
-              '/view/audio-video',
-              arguments: type == DocumentType.video
-                  ? document.fileUrl
-                  : document.callUrl,
-            );
-          }
+        onPressed: () {
+          Navigator.pushNamed(
+            context,
+            '/view/document',
+            arguments: DocumentViewPageArguments(
+              document.fileUrl,
+              type,
+            ),
+          );
         },
         child: Card(
           child: Container(
@@ -62,11 +50,7 @@ class DocumentCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(14.r)),
                   child: Center(
                     child: FaIcon(
-                      type == DocumentType.file
-                          ? FontAwesomeIcons.fileAlt
-                          : type == DocumentType.video
-                              ? FontAwesomeIcons.fileVideo
-                              : FontAwesomeIcons.fileAudio,
+                      FontAwesomeIcons.fileLines,
                       size: 50.sp,
                       color: Colors.white,
                     ),
@@ -77,11 +61,7 @@ class DocumentCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      type == DocumentType.file
-                          ? "PDF Document"
-                          : type == DocumentType.video
-                              ? "Video file"
-                              : "Audio file",
+                      "PDF Document",
                       textAlign: TextAlign.left,
                       overflow: TextOverflow.fade,
                       maxLines: 2,
@@ -96,24 +76,6 @@ class DocumentCard extends StatelessWidget {
                       maxLines: 2,
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
-                    type == DocumentType.audio
-                        ? Text(
-                            "From: " + document.callFrom,
-                            textAlign: TextAlign.left,
-                            overflow: TextOverflow.fade,
-                            maxLines: 2,
-                            style: Theme.of(context).textTheme.bodyMedium,
-                          )
-                        : const SizedBox(),
-                    type == DocumentType.audio
-                        ? Text(
-                            "To: " + document.callTo,
-                            textAlign: TextAlign.left,
-                            overflow: TextOverflow.fade,
-                            maxLines: 2,
-                            style: Theme.of(context).textTheme.bodyMedium,
-                          )
-                        : const SizedBox(),
                     Text(
                       document.uploadDateTime,
                       textAlign: TextAlign.left,
