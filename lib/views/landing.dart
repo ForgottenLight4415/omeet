@@ -95,7 +95,7 @@ class LandingPage extends StatelessWidget {
               child: Align(
                 alignment: Alignment.center,
                 child: Text(
-                  "${AppStrings.appName}\nVersion 1.1.6 (Build 74)",
+                  "${AppStrings.appName}\nVersion 1.1.7 (Build 76)",
                   textAlign: TextAlign.center,
                 ),
               ),

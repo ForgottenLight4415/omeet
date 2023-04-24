@@ -28,12 +28,12 @@ class CallProvider extends AppServerProvider {
       "call1": {
         "type": "phone",
         "number": managerPhoneNumber,
-        "callerId": "08037944107",
+        "callerId": "08062160343",
       },
       "call2": {
         "type": "phone",
         "number": phoneNumber,
-        "callerId": "08037944107",
+        "callerId": "08062160343",
         "ignoreRinging": "false"
       },
       "recordCall": true,
@@ -41,7 +41,7 @@ class CallProvider extends AppServerProvider {
       "callbackUrl": "http://localhost:9898/events",
       "extraParams": {
         "cmnumber": claimNumber,
-        "servicetype": "BAGIC_MCI",
+        "servicetype": "BAGIC_HOSPITAL",
       }
     };
     final DecodedResponse _requestResponse = await callRequest(_data);
@@ -62,7 +62,7 @@ class CallProvider extends AppServerProvider {
       "type" : ApiUrl.smsType,
       "contacts" : phoneNumber,
       "senderid" : ApiUrl.smsSenderId,
-      "msg" : "Kindly join the video meet by clicking on https://omeet.in/BAGIC_Motor_Claim_Investigation/OMEET/index.php?id=$claimNumber GODJNO"
+      "msg" : "Kindly join the video meet by clicking on https//omeet.in/video_link/index.php?id=$claimNumber GODJNO"
     };
     final DecodedResponse _requestResponse = await messageRequest(_data);
     return _requestResponse.statusCode == successCode;
