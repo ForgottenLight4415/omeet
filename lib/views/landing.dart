@@ -79,7 +79,7 @@ class LandingPage extends StatelessWidget {
               child: Align(
                 alignment: Alignment.center,
                 child: Text(
-                  "OMeet Health Audit\nVersion 1.1.5 (Build 73)",
+                  "OMeet Health Audit\nVersion 1.1.7 (Build 75)",
                   textAlign: TextAlign.center,
                 ),
               ),

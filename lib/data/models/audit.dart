@@ -1,12 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-
-import '../../utilities/app_constants.dart';
-import '../../utilities/app_permission_manager.dart';
 import '../../utilities/data_cleaner.dart';
-import '../../utilities/show_snackbars.dart';
-import '../../widgets/input_fields.dart';
-import '../repositories/call_repo.dart';
 import 'hospital.dart';
 
 class Audit {
@@ -106,68 +98,5 @@ class Audit {
         'Data uploaded in FRMP': dataUploaded,
       }
     };
-  }
-
-  Future<void> videoCall(BuildContext context) async {
-    bool cameraStatus = await cameraPermission();
-    bool microphoneStatus = await microphonePermission();
-    bool storageStatus = await storagePermission();
-    if (cameraStatus && microphoneStatus && storageStatus) {
-      Navigator.pushNamed(context, '/claim/meeting', arguments: this);
-    } else {
-      showInfoSnackBar(
-        context,
-        AppStrings.camMicStoragePerm,
-        color: Colors.red,
-      );
-    }
-  }
-
-  Future<void> sendMessageModal(BuildContext context) async {
-    final TextEditingController _controller = TextEditingController();
-    bool? _result = await showModalBottomSheet<bool?>(
-      context: context,
-      constraints: BoxConstraints(maxHeight: 200.h),
-      builder: (context) => Padding(
-        padding: const EdgeInsets.all(15.0),
-        child: Column(
-          children: <Widget>[
-            CustomTextFormField(
-              textEditingController: _controller,
-              label: "Phone number",
-              hintText: "Enter phone number",
-              keyboardType: TextInputType.phone,
-            ),
-            const SizedBox(height: 10.0),
-            Align(
-              alignment: Alignment.centerRight,
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context, true);
-                  showInfoSnackBar(context, "Sending message",
-                      color: Colors.orange);
-                },
-                child: const Text("SEND"),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-    if (_result == null) {
-      return;
-    } else if (_controller.text.isNotEmpty || _controller.text.length != 10) {
-      if (await CallRepository().sendMessage(
-        claimNumber: hospital.id,
-        phoneNumber: _controller.text,
-      )) {
-        showInfoSnackBar(context, "Message sent", color: Colors.green);
-      } else {
-        showInfoSnackBar(context, "Failed", color: Colors.red);
-      }
-    } else {
-      showInfoSnackBar(context, "Enter a valid phone number",
-          color: Colors.red);
-    }
   }
 }

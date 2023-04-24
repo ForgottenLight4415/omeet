@@ -3,9 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../data/repositories/call_repo.dart';
+import '../utilities/show_snackbars.dart';
 import 'base_card.dart';
 import 'card_detail_text.dart';
 import 'claim_options_tile.dart';
+import 'input_fields.dart';
 import 'snack_bar.dart';
 
 import '../data/models/audit.dart';
@@ -127,10 +130,8 @@ class _ClaimCardState extends State<ClaimCard> {
                         child: const FaIcon(FontAwesomeIcons.video),
                       ),
                       ElevatedButton(
-                        onPressed: () async {
-                          await widget.claim.sendMessageModal(
-                            context,
-                          );
+                        onPressed: () {
+                          _sendMessageModal(context);
                         },
                         child: const Icon(Icons.mail),
                       ),
@@ -324,6 +325,54 @@ class _ClaimCardState extends State<ClaimCard> {
   //   }
   //   return "Record screen";
   // }
+
+  Future<void> _sendMessageModal(BuildContext context) async {
+    final TextEditingController _controller = TextEditingController();
+    bool? _result = await showModalBottomSheet<bool?>(
+      context: context,
+      constraints: BoxConstraints(maxHeight: 200.h),
+      builder: (context) => Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: Column(
+          children: <Widget>[
+            CustomTextFormField(
+              textEditingController: _controller,
+              label: "Phone number",
+              hintText: "Enter phone number",
+              keyboardType: TextInputType.phone,
+            ),
+            const SizedBox(height: 10.0),
+            Align(
+              alignment: Alignment.centerRight,
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context, true);
+                  showInfoSnackBar(context, "Sending message",
+                      color: Colors.orange);
+                },
+                child: const Text("SEND"),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+    if (_result == null) {
+      return;
+    } else if (_controller.text.isNotEmpty || _controller.text.length != 10) {
+      if (await CallRepository().sendMessage(
+        claimNumber: widget.claim.hospital.id,
+        phoneNumber: _controller.text,
+      )) {
+        showInfoSnackBar(context, "Message sent", color: Colors.green);
+      } else {
+        showInfoSnackBar(context, "Failed", color: Colors.red);
+      }
+    } else {
+      showInfoSnackBar(context, "Enter a valid phone number",
+          color: Colors.red);
+    }
+  }
 
   void _callListener(BuildContext context, CallState state) {
     if (state is CallLoading) {
