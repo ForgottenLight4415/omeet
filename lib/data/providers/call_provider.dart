@@ -28,12 +28,12 @@ class CallProvider extends AppServerProvider {
       "call1": {
         "type": "phone",
         "number": managerPhoneNumber,
-        "callerId": "08037944107",
+        "callerId": "08062160343",
       },
       "call2": {
         "type": "phone",
         "number": phoneNumber,
-        "callerId": "08037944107",
+        "callerId": "08062160343",
         "ignoreRinging": "false"
       },
       "recordCall": true,
@@ -41,7 +41,7 @@ class CallProvider extends AppServerProvider {
       "callbackUrl": "http://localhost:9898/events",
       "extraParams": {
         "cmnumber": claimNumber,
-        "servicetype": "BAGIC_MCI",
+        "servicetype": "BAGIC_MOTOR_FFRM",
       }
     };
     final DecodedResponse _requestResponse = await callRequest(_data);
