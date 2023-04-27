@@ -13,7 +13,6 @@ import 'video_recorder.dart';
 import 'location_service.dart';
 import 'app_permission_manager.dart';
 
-import '../data/models/claim.dart';
 import '../views/recorder_views/video_recorder_view.dart';
 import '../views/recorder_views/audio_recorder_view.dart';
 

@@ -1,27 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import '../data/repositories/call_repo.dart';
-import '../utilities/show_snackbars.dart';
 import 'base_card.dart';
 import 'card_detail_text.dart';
 import 'claim_options_tile.dart';
-import 'input_fields.dart';
-import 'snack_bar.dart';
 
 import '../data/models/audit.dart';
 import '../data/models/document.dart';
 
-import '../utilities/bridge_call.dart';
 import '../utilities/app_constants.dart';
 import '../utilities/screen_recorder.dart';
 import '../utilities/screen_capture.dart';
 import '../utilities/video_recorder.dart';
 import '../utilities/claim_option_functions.dart';
-
-import '../blocs/call_bloc/call_cubit.dart';
 
 class ClaimCard extends StatefulWidget {
   final Audit claim;
@@ -58,8 +50,8 @@ class _ClaimCardState extends State<ClaimCard> {
   @override
   Widget build(BuildContext context) {
     return BaseCard(
-      onPressed: () async {
-        await _openClaimMenu(context);
+      onPressed: () {
+        _openClaimMenu(context);
       },
       card: Card(
         color: _cardColor,
@@ -106,22 +98,15 @@ class _ClaimCardState extends State<ClaimCard> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: <Widget>[
-                      BlocProvider<CallCubit>(
-                        create: (callContext) => CallCubit(),
-                        child: BlocConsumer<CallCubit, CallState>(
-                          listener: _callListener,
-                          builder: (context, state) => ElevatedButton(
-                            onPressed: () async {
-                              if (await customCallSetup(
-                                context,
-                                claimNumber: widget.claim.hospital.id,
-                              )) {
-                                Navigator.pop(context);
-                              }
-                            },
-                            child: const FaIcon(FontAwesomeIcons.phone),
-                          ),
-                        ),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.pushNamed(
+                            context,
+                            "/hospital/claims",
+                            arguments: widget.claim.hospital.id,
+                          );
+                        },
+                        child: const FaIcon(FontAwesomeIcons.listCheck),
                       ),
                       ElevatedButton(
                         onPressed: () {
@@ -131,13 +116,17 @@ class _ClaimCardState extends State<ClaimCard> {
                       ),
                       ElevatedButton(
                         onPressed: () {
-                          _sendMessageModal(context);
+                          Navigator.pushNamed(
+                            context,
+                            '/claim/details',
+                            arguments: widget.claim,
+                          );
                         },
-                        child: const Icon(Icons.mail),
+                        child: const FaIcon(FontAwesomeIcons.circleInfo),
                       ),
                       ElevatedButton(
-                        onPressed: () async {
-                          await _openClaimMenu(context);
+                        onPressed: () {
+                          _openClaimMenu(context);
                         },
                         child: const Text("More"),
                       ),
@@ -152,54 +141,14 @@ class _ClaimCardState extends State<ClaimCard> {
     );
   }
 
-  Future<void> _openClaimMenu(BuildContext context) async {
-    await showModalBottomSheet(
+  void _openClaimMenu(BuildContext context) {
+    showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       constraints: BoxConstraints(maxHeight: 600.h),
       builder: (modalContext) => SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            ClaimPageTiles(
-              faIcon: FontAwesomeIcons.listCheck,
-              label: "Claims",
-              onPressed: () {
-                Navigator.pop(modalContext);
-                Navigator.pushNamed(
-                    context,
-                    "/hospital/claims",
-                    arguments: widget.claim.hospital.id,
-                );
-              },
-            ),
-            BlocProvider<CallCubit>(
-              create: (context) => CallCubit(),
-              child: BlocConsumer<CallCubit, CallState>(
-                listener: _callListener,
-                builder: (context, state) {
-                  return ClaimPageTiles(
-                    faIcon: FontAwesomeIcons.phone,
-                    label: "Custom voice call",
-                    onPressed: () async {
-                      if (await customCallSetup(
-                        context,
-                        claimNumber: widget.claim.hospital.id,
-                      )) {
-                        Navigator.pop(modalContext);
-                      }
-                    },
-                  );
-                },
-              ),
-            ),
-            ClaimPageTiles(
-              faIcon: FontAwesomeIcons.video,
-              label: "Video call",
-              onPressed: () {
-                Navigator.pop(modalContext);
-                videoCall(context, widget.claim);
-              },
-            ),
             ClaimPageTiles(
               faIcon: FontAwesomeIcons.camera,
               label: "Capture image",
@@ -288,14 +237,6 @@ class _ClaimCardState extends State<ClaimCard> {
                 );
               },
             ),
-            ClaimPageTiles(
-                faIcon: FontAwesomeIcons.info,
-                label: "Details",
-                onPressed: () {
-                  Navigator.pop(modalContext);
-                  Navigator.pushNamed(context, '/claim/details',
-                      arguments: widget.claim);
-                })
             // ClaimPageTiles(
             //   faIcon: FontAwesomeIcons.recordVinyl,
             //   label: _getScreenRecordText(),
@@ -325,64 +266,6 @@ class _ClaimCardState extends State<ClaimCard> {
   //   }
   //   return "Record screen";
   // }
-
-  Future<void> _sendMessageModal(BuildContext context) async {
-    final TextEditingController _controller = TextEditingController();
-    bool? _result = await showModalBottomSheet<bool?>(
-      context: context,
-      constraints: BoxConstraints(maxHeight: 200.h),
-      builder: (context) => Padding(
-        padding: const EdgeInsets.all(15.0),
-        child: Column(
-          children: <Widget>[
-            CustomTextFormField(
-              textEditingController: _controller,
-              label: "Phone number",
-              hintText: "Enter phone number",
-              keyboardType: TextInputType.phone,
-            ),
-            const SizedBox(height: 10.0),
-            Align(
-              alignment: Alignment.centerRight,
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context, true);
-                  showInfoSnackBar(context, "Sending message",
-                      color: Colors.orange);
-                },
-                child: const Text("SEND"),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-    if (_result == null) {
-      return;
-    } else if (_controller.text.isNotEmpty || _controller.text.length != 10) {
-      if (await CallRepository().sendMessage(
-        claimNumber: widget.claim.hospital.id,
-        phoneNumber: _controller.text,
-      )) {
-        showInfoSnackBar(context, "Message sent", color: Colors.green);
-      } else {
-        showInfoSnackBar(context, "Failed", color: Colors.red);
-      }
-    } else {
-      showInfoSnackBar(context, "Enter a valid phone number",
-          color: Colors.red);
-    }
-  }
-
-  void _callListener(BuildContext context, CallState state) {
-    if (state is CallLoading) {
-      showSnackBar(context, AppStrings.connecting);
-    } else if (state is CallReady) {
-      showSnackBar(context, AppStrings.receiveCall, type: SnackBarType.success);
-    } else if (state is CallFailed) {
-      showSnackBar(context, state.cause, type: SnackBarType.error);
-    }
-  }
 
   String _getScreenshotText() {
     if (widget.screenCapture!.isServiceRunning) {

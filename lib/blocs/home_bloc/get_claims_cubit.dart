@@ -67,7 +67,10 @@ class GetClaimsCubit extends Cubit<GetClaimsState> {
       List<Audit> _result = [];
       String _searchQuery = searchQuery.trim().toLowerCase();
       for (var claim in _claims) {
-        if (claim.hospital.id.toString().toLowerCase().contains(_searchQuery)) {
+        String hospitalId = claim.hospital.id.toLowerCase();
+        String hospitalName = claim.hospital.name.toLowerCase();
+        if (hospitalId.contains(_searchQuery)
+            || hospitalName.contains(_searchQuery)) {
           _result.add(claim);
         }
       }
