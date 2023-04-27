@@ -52,8 +52,6 @@ class CallProvider extends AppServerProvider {
     required String claimNumber,
     required String phoneNumber,
   }) async {
-    // claimNumber = claimNumber.replaceAll(RegExp(r"\D"), "");
-    // final String meetId = claimNumber + phoneNumber;
     final Map<String, dynamic> _data = <String, dynamic>{
       "key": ApiUrl.smsKey,
       "entity" : ApiUrl.smsEntity,

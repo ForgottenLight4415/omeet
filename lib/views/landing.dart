@@ -43,7 +43,7 @@ class LandingPage extends StatelessWidget {
                         onPressed: () {
                           Navigator.pushNamed(context, '/assigned');
                         },
-                        fontAwesomeIcons: FontAwesomeIcons.tasks,
+                        fontAwesomeIcons: FontAwesomeIcons.listCheck,
                         label: "Assigned Claims"),
                     LandingCard(
                       onPressed: () {
@@ -52,7 +52,7 @@ class LandingPage extends StatelessWidget {
                           '/self-assign',
                         );
                       },
-                      fontAwesomeIcons: FontAwesomeIcons.tasks,
+                      fontAwesomeIcons: FontAwesomeIcons.listCheck,
                       label: "Assign\nto self",
                     ),
                     BlocProvider<CallCubit>(
@@ -63,7 +63,7 @@ class LandingPage extends StatelessWidget {
                           onPressed: () async {
                             await customCallSetup(context);
                           },
-                          fontAwesomeIcons: FontAwesomeIcons.phoneAlt,
+                          fontAwesomeIcons: FontAwesomeIcons.phone,
                           label: "Custom calls",
                         ),
                       ),
@@ -84,7 +84,7 @@ class LandingPage extends StatelessWidget {
                           (route) => false,
                         );
                       },
-                      fontAwesomeIcons: FontAwesomeIcons.signOutAlt,
+                      fontAwesomeIcons: FontAwesomeIcons.rightFromBracket,
                       label: "Sign out",
                     ),
                   ],
@@ -95,7 +95,7 @@ class LandingPage extends StatelessWidget {
               child: Align(
                 alignment: Alignment.center,
                 child: Text(
-                  "BAGIC MCI\nVersion 1.1.5 (Build 73)",
+                  "BAGIC MCI\nVersion 1.1.6 (Build 74)",
                   textAlign: TextAlign.center,
                 ),
               ),
