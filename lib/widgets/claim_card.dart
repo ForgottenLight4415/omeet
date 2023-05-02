@@ -32,9 +32,9 @@ class _ClaimCardState extends State<ClaimCard> {
   @override
   Widget build(BuildContext context) {
     return BaseCard(
-      onPressed: () async {
+      onPressed: widget.isEditable ? () async {
         await _openClaimMenu(context);
-      },
+      } : () {},
       card: Card(
         child: Container(
           constraints: BoxConstraints(minHeight: 200.h),
@@ -57,56 +57,88 @@ class _ClaimCardState extends State<ClaimCard> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   CardDetailText(
-                    title: AppStrings.customerName,
-                    content: widget.claim.insuredPerson.insuredName,
+                    title: AppStrings.patientName,
+                    content: widget.claim.patient.name,
+                  ),
+                  CardDetailText(
+                    title: AppStrings.patientGender,
+                    content: widget.claim.patient.gender,
+                  ),
+                  CardDetailText(
+                    title: AppStrings.patientAge,
+                    content: widget.claim.patient.age,
                   ),
                   CardDetailText(
                     title: AppStrings.phoneNumber,
                     content: widget.claim.insuredPerson.insuredContactNumber,
                   ),
                   SizedBox(height: 15.h),
-                  Row(
+                  widget.isEditable
+                    ? Row(
                     mainAxisAlignment: widget.isEditable
                         ? MainAxisAlignment.spaceAround
                         : MainAxisAlignment.start,
                     children: <Widget>[
-                      widget.isEditable
-                          ? BlocProvider<CallCubit>(
-                              create: (callContext) => CallCubit(),
-                              child: BlocConsumer<CallCubit, CallState>(
-                                listener: _callListener,
-                                builder: (context, state) => ElevatedButton(
-                                  onPressed: () async {
-                                    await widget.claim.call(context);
-                                  },
-                                  child: const Icon(Icons.phone),
-                                ),
-                              ),
-                            )
-                          : const SizedBox(),
-                      widget.isEditable
-                          ? ElevatedButton(
-                              onPressed: () async {
-                                await widget.claim.videoCall(context);
-                              },
-                              child: const FaIcon(FontAwesomeIcons.video),
-                            )
-                          : const SizedBox(),
-                      widget.isEditable
-                          ? ElevatedButton(
-                              onPressed: () async {
-                                await widget.claim.sendMessageModal(
-                                  context,
-                                );
-                              },
-                              child: const Icon(Icons.mail),
-                            )
-                          : const SizedBox(),
+                      BlocProvider<CallCubit>(
+                        create: (callContext) => CallCubit(),
+                        child: BlocConsumer<CallCubit, CallState>(
+                          listener: _callListener,
+                          builder: (context, state) => ElevatedButton(
+                            onPressed: () async {
+                              await widget.claim.call(context);
+                            },
+                            child: const Icon(Icons.phone),
+                          ),
+                        ),
+                      ),
+                      ElevatedButton(
+                        onPressed: () async {
+                          await widget.claim.videoCall(context);
+                        },
+                        child: const FaIcon(FontAwesomeIcons.video),
+                      ),
+                      ElevatedButton(
+                        onPressed: () async {
+                          await widget.claim.sendMessageModal(
+                            context,
+                          );
+                        },
+                        child: const Icon(Icons.mail),
+                      ),
                       ElevatedButton(
                         onPressed: () async {
                           await _openClaimMenu(context);
                         },
                         child: const Text("More"),
+                      ),
+                    ],
+                  )
+                    : Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.pushNamed(
+                            context,
+                            '/documents',
+                            arguments: DocumentPageArguments(
+                              widget.claim.claimNumber,
+                              !widget.isEditable,
+                            ),
+                          );
+                        },
+                        child: const FaIcon(FontAwesomeIcons.fileLines),
+                      ),
+                      const SizedBox(width: 20),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.pushNamed(
+                              context,
+                              '/claim/details',
+                              arguments: widget.claim,
+                          );
+                        },
+                        child: const FaIcon(FontAwesomeIcons.circleInfo),
                       ),
                     ],
                   ),

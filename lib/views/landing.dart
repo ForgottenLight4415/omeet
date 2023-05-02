@@ -73,7 +73,7 @@ class LandingPage extends StatelessWidget {
                         Navigator.pushNamed(context, '/uploads');
                       },
                       fontAwesomeIcons: FontAwesomeIcons.arrowUp,
-                      label: "Pending Uploads",
+                      label: "Uploads",
                     ),
                     LandingCard(
                       onPressed: () async {
@@ -95,7 +95,7 @@ class LandingPage extends StatelessWidget {
               child: Align(
                 alignment: Alignment.center,
                 child: Text(
-                  "${AppStrings.appName}\nVersion 1.1.7 (Build 76)",
+                  "${AppStrings.appName}\nVersion 1.1.9 (Build 77)",
                   textAlign: TextAlign.center,
                 ),
               ),
