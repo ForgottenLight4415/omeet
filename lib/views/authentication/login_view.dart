@@ -64,61 +64,63 @@ class _LoginViewState extends State<LoginView> {
                 child: Column(
                   children: <Widget>[
                     Expanded(
-                      child: SingleChildScrollView(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            // LOGO
-                            const AppLogo(),
-                            // LOGIN Text
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                "Sign in to continue",
-                                style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                                  fontFamily: AppStrings.secondaryFontFam,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.black54
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 10.0),
-                            CustomTextFormField(
-                              textEditingController: _emailController,
-                              keyboardType: TextInputType.emailAddress,
-                              textInputAction: TextInputAction.next,
-                              label: "Email address",
-                              hintText: "Enter registered email address",
-                              validator: _isEmailValid,
-                            ),
-                            CustomTextFormField(
-                                textEditingController: _passwordController,
-                                textInputAction: TextInputAction.go,
-                                label: "Password",
-                                hintText: "Enter your password",
-                                validator: _isPasswordValid,
-                                obscureText: true,
-                                onFieldSubmitted: (value) {
-                                  _signIn();
-                                }),
-                            const SizedBox(height: 18.0),
-                            BlocProvider<AuthenticationCubit>.value(
-                              value: _authCubit!,
-                              child: BlocListener<AuthenticationCubit, AuthenticationState>(
-                                listener: _authListener,
-                                child: ElevatedButton(
-                                  onPressed: _signIn,
-                                  child: const Text(
-                                      "SIGN IN",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                    ),
+                      child: Center(
+                        child: SingleChildScrollView(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              // LOGO
+                              const AppLogo(),
+                              // LOGIN Text
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  "Sign in to continue",
+                                  style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                                    fontFamily: AppStrings.secondaryFontFam,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.black54
                                   ),
                                 ),
                               ),
-                            )
-                          ],
+                              const SizedBox(height: 10.0),
+                              CustomTextFormField(
+                                textEditingController: _emailController,
+                                keyboardType: TextInputType.emailAddress,
+                                textInputAction: TextInputAction.next,
+                                label: "Email address",
+                                hintText: "Enter registered email address",
+                                validator: _isEmailValid,
+                              ),
+                              CustomTextFormField(
+                                  textEditingController: _passwordController,
+                                  textInputAction: TextInputAction.go,
+                                  label: "Password",
+                                  hintText: "Enter your password",
+                                  validator: _isPasswordValid,
+                                  obscureText: true,
+                                  onFieldSubmitted: (value) {
+                                    _signIn();
+                                  }),
+                              const SizedBox(height: 18.0),
+                              BlocProvider<AuthenticationCubit>.value(
+                                value: _authCubit!,
+                                child: BlocListener<AuthenticationCubit, AuthenticationState>(
+                                  listener: _authListener,
+                                  child: ElevatedButton(
+                                    onPressed: _signIn,
+                                    child: const Text(
+                                        "SIGN IN",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     ),

@@ -8,14 +8,25 @@ import 'data/repositories/auth_repo.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final bool _isSignedIn = await AuthRepository().signIn();
-  runApp(OMeetApp(isSignedIn: _isSignedIn));
+  final AuthRepository authRepository = AuthRepository();
+  final bool isSignedIn = await authRepository.signIn();
+  List<String?>? userDetails;
+
+  if (isSignedIn) {
+    userDetails = await authRepository.getUserDetails();
+  }
+  runApp(OMeetApp(isSignedIn: isSignedIn, userDetails: userDetails));
 }
 
 class OMeetApp extends StatefulWidget {
   final bool isSignedIn;
+  final List<String?>? userDetails;
 
-  const OMeetApp({Key? key, required this.isSignedIn}) : super(key: key);
+  const OMeetApp({
+    Key? key,
+    required this.isSignedIn,
+    required this.userDetails,
+  }) : super(key: key);
 
   @override
   State<OMeetApp> createState() => _OMeetAppState();
@@ -46,7 +57,10 @@ class _OMeetAppState extends State<OMeetApp> {
           if (widget.isSignedIn) {
             return [
               RouteGenerator.generateRoute(
-                  const RouteSettings(name: '/landing'),
+                RouteSettings(
+                  name: '/new_landing',
+                  arguments: widget.userDetails,
+                ),
               ),
             ];
           } else {

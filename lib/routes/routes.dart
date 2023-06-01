@@ -2,14 +2,13 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:omeet_motor/views/landing_new.dart';
 
 import '../data/models/claim.dart';
 import '../data/models/document.dart';
 
 import '../views/authentication/login_view.dart';
 import '../views/authentication/verification_view.dart';
-import '../views/landing.dart';
-import '../views/claims/claims_view.dart';
 import '../views/uploads_view.dart';
 
 import '../views/documents/documents_list_view.dart';
@@ -34,13 +33,16 @@ class RouteGenerator {
           VerificationView(emailAddress: email),
         );
 
-      case '/landing':
-        return _platformDependentRouting(const LandingPage());
+      case '/new_landing':
+        final List<String?>? userDetails = args as List<String?>?;
+        return _platformDependentRouting(
+          ModernLandingPage(
+            email: userDetails?[0] ?? "Unavailable",
+            phone: userDetails?[1] ?? "Unavailable",
+          ),
+        );
 
       // Claims
-      case '/claims':
-        final bool isCompleted = args as bool;
-        return _platformDependentRouting(ClaimsView(isCompleted: isCompleted));
       case '/claim/details':
         final Claim _claim = args as Claim;
         return _platformDependentRouting(

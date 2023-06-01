@@ -36,7 +36,7 @@ class AppTheme {
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ButtonStyle(
         textStyle: MaterialStateProperty.resolveWith(
-          (states) => TextStyle(fontSize: 20.sp, color: Colors.white),
+          (states) => TextStyle(fontSize: 18.sp, color: Colors.white),
         ),
         padding: MaterialStateProperty.resolveWith(
           (states) => EdgeInsets.symmetric(vertical: 15.h, horizontal: 25.w),

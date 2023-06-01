@@ -1,5 +1,6 @@
 class AppStrings {
   static const String appName = "DR OMeet";
+  static const String appVersion = "VERSION 1.2.0 (BUILD 78)";
 
   // ERRORS AND FILLERS
   static const String blank = "";
@@ -25,6 +26,10 @@ class AppStrings {
   static const String startRecording = "Start recording";
   static const String recordVideo = "Record video";
   static const String recordAudio = "Record audio";
+
+  static const String customCall = "Custom call";
+  static const String uploads = "Uploads";
+  static const String signOut = "Sign out";
 
   // LONG INFORMATION TEXT
   static const String locationExplanation = "Location access is needed to access this feature.";
