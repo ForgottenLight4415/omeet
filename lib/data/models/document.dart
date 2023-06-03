@@ -1,12 +1,5 @@
 import 'package:omeet_motor/utilities/api_urls.dart';
 
-class DocumentPageArguments {
-  final String claimNumber;
-  final bool readOnly;
-
-  const DocumentPageArguments(this.claimNumber, this.readOnly);
-}
-
 enum DocumentType { file, audio, video, image }
 
 class Document {

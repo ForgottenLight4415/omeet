@@ -51,6 +51,11 @@ class AuthenticationProvider extends AppServerProvider {
     return _pref.getString("email") ?? "";
   }
 
+  static Future<String> getPhone() async {
+    final SharedPreferences _pref = await SharedPreferences.getInstance();
+    return _pref.getString("phone") ?? "";
+  }
+
   static Future<bool> _setLoginStatus(bool status, {String? email, String? phone}) async {
     final SharedPreferences _pref = await SharedPreferences.getInstance();
     if (email != null) {

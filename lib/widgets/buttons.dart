@@ -8,7 +8,8 @@ import './scaling_tile.dart';
 class PrimaryButton extends StatelessWidget {
   final VoidCallback onPressed;
   final String label;
-  const PrimaryButton({Key? key, required this.onPressed, required this.label}) : super(key: key);
+  const PrimaryButton({Key? key, required this.onPressed, required this.label})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {

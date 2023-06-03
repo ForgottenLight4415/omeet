@@ -14,7 +14,7 @@ class VideosListView extends StatelessWidget {
   final String claimNumber;
   final bool readOnly;
 
-  const VideosListView({Key? key, required this.claimNumber, this.readOnly = false})
+  const VideosListView({Key? key, required this.claimNumber, this.readOnly = true})
       : super(key: key);
 
   @override

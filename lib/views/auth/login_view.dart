@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../blocs/auth_bloc/auth_cubit.dart';
 import '../../utilities/app_constants.dart';
@@ -40,116 +39,98 @@ class _LoginViewState extends State<LoginView> {
 
   @override
   Widget build(BuildContext context) {
-    return Theme(
-      data: Theme.of(context).copyWith(
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: Theme.of(context).elevatedButtonTheme.style!.copyWith(
-                padding: MaterialStateProperty.resolveWith(
-                  (states) =>
-                      EdgeInsets.symmetric(horizontal: 70.w, vertical: 16.h),
-                ),
-                elevation: MaterialStateProperty.resolveWith((states) => 5.0),
-              ),
-        ),
-      ),
-      child: Scaffold(
-        body: SafeArea(
-          child: AnimatedCrossFade(
-            crossFadeState: _crossFadeState,
-            duration: const Duration(milliseconds: 500),
-            firstChild: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12.0),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  children: <Widget>[
-                    Expanded(
-                      child: SingleChildScrollView(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            // LOGO
-                            const AppLogo(),
-                            // LOGIN Text
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                "Sign in to continue",
-                                style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                                  fontFamily: AppStrings.secondaryFontFam,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.black54
+    return Scaffold(
+      body: SafeArea(
+        child: AnimatedCrossFade(
+          crossFadeState: _crossFadeState,
+          duration: const Duration(milliseconds: 500),
+          firstChild: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: <Widget>[
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          // LOGO
+                          const AppLogo(),
+                          // LOGIN Text
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              "Sign in to continue",
+                              style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                                fontFamily: AppStrings.secondaryFontFam,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black54
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 10.0),
+                          CustomTextFormField(
+                            textEditingController: _emailController,
+                            keyboardType: TextInputType.emailAddress,
+                            textInputAction: TextInputAction.next,
+                            label: "Email address",
+                            hintText: "Enter registered email address",
+                            validator: _isEmailValid,
+                          ),
+                          CustomTextFormField(
+                              textEditingController: _passwordController,
+                              textInputAction: TextInputAction.go,
+                              label: "Password",
+                              hintText: "Enter your password",
+                              validator: _isPasswordValid,
+                              obscureText: true,
+                              onFieldSubmitted: (value) {
+                                _signIn();
+                              }),
+                          const SizedBox(height: 18.0),
+                          BlocProvider<AuthCubit>.value(
+                            value: _authCubit!,
+                            child: BlocListener<AuthCubit, AuthState>(
+                              listener: _authListener,
+                              child: ElevatedButton(
+                                onPressed: _signIn,
+                                child: const Text("SIGN IN"),
                                 ),
                               ),
                             ),
-                            const SizedBox(height: 10.0),
-                            CustomTextFormField(
-                              textEditingController: _emailController,
-                              keyboardType: TextInputType.emailAddress,
-                              textInputAction: TextInputAction.next,
-                              label: "Email address",
-                              hintText: "Enter registered email address",
-                              validator: _isEmailValid,
-                            ),
-                            CustomTextFormField(
-                                textEditingController: _passwordController,
-                                textInputAction: TextInputAction.go,
-                                label: "Password",
-                                hintText: "Enter your password",
-                                validator: _isPasswordValid,
-                                obscureText: true,
-                                onFieldSubmitted: (value) {
-                                  _signIn();
-                                }),
-                            const SizedBox(height: 18.0),
-                            BlocProvider<AuthCubit>.value(
-                              value: _authCubit!,
-                              child: BlocListener<AuthCubit, AuthState>(
-                                listener: _authListener,
-                                child: ElevatedButton(
-                                  onPressed: _signIn,
-                                  child: const Text(
-                                      "SIGN IN",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
+                        ],
                       ),
                     ),
-                  ],
-                ),
-              ),
-            ),
-            secondChild: const LoadingWidget(
-              label: AppStrings.signingIn,
-            ),
-            layoutBuilder:
-                (topChild, topChildKey, bottomChild, bottomChildKey) {
-              return Stack(
-                clipBehavior: Clip.none,
-                // Align the non-positioned child to center.
-                alignment: Alignment.center,
-                children: <Widget>[
-                  Positioned(
-                    key: bottomChildKey,
-                    top: 0,
-                    bottom: 0,
-                    child: bottomChild,
-                  ),
-                  Positioned(
-                    key: topChildKey,
-                    child: topChild,
                   ),
                 ],
-              );
-            },
+              ),
+            ),
           ),
+          secondChild: const LoadingWidget(
+            label: AppStrings.signingIn,
+          ),
+          layoutBuilder:
+              (topChild, topChildKey, bottomChild, bottomChildKey) {
+            return Stack(
+              clipBehavior: Clip.none,
+              // Align the non-positioned child to center.
+              alignment: Alignment.center,
+              children: <Widget>[
+                Positioned(
+                  key: bottomChildKey,
+                  top: 0,
+                  bottom: 0,
+                  child: bottomChild,
+                ),
+                Positioned(
+                  key: topChildKey,
+                  child: topChild,
+                ),
+              ],
+            );
+          },
         ),
       ),
     );

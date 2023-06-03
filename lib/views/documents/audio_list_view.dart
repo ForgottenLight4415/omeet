@@ -14,7 +14,7 @@ class AudioListView extends StatelessWidget {
   final String claimNumber;
   final bool readOnly;
 
-  const AudioListView({Key? key, required this.claimNumber, this.readOnly = false})
+  const AudioListView({Key? key, required this.claimNumber, this.readOnly = true})
       : super(key: key);
 
   @override

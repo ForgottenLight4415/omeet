@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:location/location.dart';
 
 import '../data/models/audit.dart';
 import 'show_snackbars.dart';
@@ -16,140 +15,125 @@ import 'app_permission_manager.dart';
 import '../views/recorder_views/video_recorder_view.dart';
 import '../views/recorder_views/audio_recorder_view.dart';
 
-Future<bool> handleScreenshotService(BuildContext context, ScreenCapture screenCapture, String claimNumber) async {
+Future<bool> handleScreenshotService(
+    {required BuildContext context,
+    required String claimNumber,
+    required ScreenCapture screenCapture}) async {
   if (!screenCapture.isServiceRunning) {
-    return await _startScreenshotService(context, screenCapture, claimNumber);
-  } else {
-    return await _stopScreenshotService(context, screenCapture);
-  }
-}
-
-Future<bool> _startScreenshotService(BuildContext context, ScreenCapture screenCapture, String claimNumber) async {
-  bool storageStatus = await storagePermission();
-  if (storageStatus) {
-    return await screenCapture.startService(claimNumber: claimNumber);
-  } else {
-    showInfoSnackBar(context, "Storage permission is required to access this feature.", color: Colors.red);
-    return false;
-  }
-}
-
-Future<bool> _stopScreenshotService(BuildContext context, ScreenCapture screenCapture) async {
-  return await screenCapture.stopService();
-}
-
-Future<bool> handleScreenRecordingService(BuildContext context, ScreenRecorder screenRecorder, String claimNumber) async {
-  if (!screenRecorder.isRecording) {
-    return await _startScreenRecord(
-      context,
-      screenRecorder,
-      claimNumber,
-    );
-  } else {
-    return await _stopScreenRecord(
-      context,
-      screenRecorder,
-      claimNumber,
-    );
-  }
-}
-
-Future<bool> _startScreenRecord(BuildContext context, ScreenRecorder screenRecorder, String claimNumber) async {
-  // Check permissions
-  bool _microphoneStatus = await microphonePermission();
-  bool _storageStatus = await storagePermission();
-
-  // If permissions are granted
-  if (_microphoneStatus && _storageStatus) {
-    await screenRecorder.startRecord(
-      claimNumber: claimNumber,
-    );
-    return true;
-  } else {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text(
-          "Microphone and storage permission is required to access this feature.",
-        ),
-      ),
-    );
-    return false;
-  }
-}
-
-Future<bool> _stopScreenRecord(BuildContext context, ScreenRecorder screenRecorder, String claimNumber) async {
-  await screenRecorder.stopRecord(claimNumber: claimNumber, context: context);
-  return true;
-}
-
-Future<void> videoCall(BuildContext context, Audit claim) async {
-  showInfoSnackBar(context, "Checking permissions...");
-  bool cameraStatus = await cameraPermission();
-  bool microphoneStatus = await microphonePermission();
-  bool storageStatus = await storagePermission();
-  if (cameraStatus && microphoneStatus && storageStatus) {
-    log("Starting meet");
-    Navigator.pushNamed(context, '/claim/meeting', arguments: claim);
-    ScaffoldMessenger.of(context).removeCurrentSnackBar();
-  } else {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text(
-          "Camera, microphone and storage permission is required to access this feature.",
-        ),
-      ),
-    );
-  }
-}
-
-Future<void> recordAudio(BuildContext context, Audit claim) async {
-  showInfoSnackBar(context, "Checking permissions...");
-  LocationData? locationData = await _getLocationData(context);
-  bool microphoneStatus = await microphonePermission();
-  bool storageStatus = await storagePermission();
-  if (microphoneStatus && storageStatus && locationData != null) {
-    Navigator.pushNamed(context, '/record/audio', arguments: AudioRecordArguments(claim, locationData));
-    ScaffoldMessenger.of(context).removeCurrentSnackBar();
-  } else {
-    showInfoSnackBar(context, "Microphone, storage and location permission is required to access this feature.", color: Colors.red);
-  }
-}
-
-Future<void> recordVideo(BuildContext context, Audit claim, VideoRecorder videoRecorder) async {
-  LocationData? locationData = await _getLocationData(context);
-  if (locationData == null) {
-    showInfoSnackBar(context, "Location permission is required to access this feature.", color: Colors.red);
-    return;
-  }
-  videoRecorder.caseLocation = locationData;
-  await Navigator.pushNamed(
-    context, '/record/video', arguments: VideoPageConfig(
-      videoRecorder,
-      claim,
-    ),
-  );
-}
-
-Future<void> captureImage(BuildContext context, Audit claim) async {
-  showInfoSnackBar(context, "Checking permissions...");
-  LocationData? _locationData = await _getLocationData(context);
-  bool _cameraStatus = await cameraPermission();
-  bool _microphoneStatus = await microphonePermission();
-  bool _storageStatus = await storagePermission();
-  if (_cameraStatus && _microphoneStatus && _storageStatus && _locationData != null) {
-    WidgetsFlutterBinding.ensureInitialized();
-    List<CameraDescription>? _cameras;
-    try {
-      _cameras = await availableCameras();
-      Navigator.pushNamed(
+    final bool storagePermStatus = await storagePermission(context) ?? false;
+    if (storagePermStatus) {
+      return await screenCapture.startService(claimNumber: claimNumber);
+    } else {
+      showInfoSnackBar(
         context,
-        '/capture/image',
-        arguments: CameraCaptureArguments(_cameras, _locationData, claim),
+        "Storage permission is required to access this feature.",
+        color: Colors.red,
       );
-      ScaffoldMessenger.of(context).removeCurrentSnackBar();
-    } on CameraException catch (e) {
-      showInfoSnackBar(context, "Failed to determine available cameras. (${e.description})", color: Colors.red);
+      return false;
     }
+  } else {
+    return await screenCapture.stopService();
+  }
+}
+
+Future<bool> handleScreenRecordingService(
+    {required BuildContext context,
+    required String claimNumber,
+    required ScreenRecorder screenRecorder}) async {
+  if (!screenRecorder.isRecording) {
+    final bool micPermStatus = await microphonePermission(context) ?? false;
+    final bool storagePermStatus = await storagePermission(context) ?? false;
+
+    if (micPermStatus && storagePermStatus) {
+      await screenRecorder.startRecord(
+        context: context,
+        claimNumber: claimNumber,
+      );
+      return true;
+    } else {
+      showInfoSnackBar(
+        context,
+        "Microphone and storage permission is required to access this feature.",
+        color: Colors.red,
+      );
+      return false;
+    }
+  } else {
+    await screenRecorder.stopRecord(claimNumber: claimNumber, context: context);
+    return true;
+  }
+}
+
+Future<void> videoCall(
+    {required BuildContext context, required Audit audit}) async {
+  final bool cameraStatus = await cameraPermission(context) ?? false;
+  final bool microphoneStatus = await microphonePermission(context) ?? false;
+  // final bool storageStatus = await storagePermission(context) ?? false;
+
+  final LocationService locationService = LocationService();
+  final bool locationStatus =
+      await locationService.checkLocationStatus(context);
+
+  if (cameraStatus && microphoneStatus && locationStatus) {
+    log("Starting meet");
+    Navigator.pushNamed(context, '/claim/meeting', arguments: audit);
+    ScaffoldMessenger.of(context).removeCurrentSnackBar();
+  } else {
+    showInfoSnackBar(
+      context,
+      "Grant required permissions to access this feature",
+      color: Colors.red,
+    );
+  }
+}
+
+Future<void> recordAudio(
+    {required BuildContext context, required Audit audit}) async {
+  final LocationService locationService = LocationService();
+  final bool locationStatus =
+      await locationService.checkLocationStatus(context);
+  bool microphoneStatus = await microphonePermission(context) ?? false;
+  bool storageStatus = await storagePermission(context) ?? false;
+  if (microphoneStatus && storageStatus && locationStatus) {
+    Navigator.pushNamed(
+      context,
+      '/record/audio',
+      arguments: AudioRecordArguments(
+        audit,
+        await locationService.getLocation(context),
+      ),
+    );
+    ScaffoldMessenger.of(context).removeCurrentSnackBar();
+  } else {
+    showInfoSnackBar(
+      context,
+      "Microphone, storage and location permission is required to access this feature.",
+      color: Colors.red,
+    );
+  }
+}
+
+Future<void> recordVideo(
+    {required BuildContext context,
+    required Audit audit,
+    required VideoRecorder videoRecorder}) async {
+  final bool cameraStatus = await cameraPermission(context) ?? false;
+  final bool microphoneStatus = await microphonePermission(context) ?? false;
+  final bool storageStatus = await storagePermission(context) ?? false;
+
+  final LocationService locationService = LocationService();
+  final bool locationStatus =
+      await locationService.checkLocationStatus(context);
+
+  if (cameraStatus && microphoneStatus && storageStatus && locationStatus) {
+    log("Starting meet");
+    videoRecorder.caseLocation = await locationService.getLocation(context);
+    await Navigator.pushNamed(
+      context,
+      '/record/video',
+      arguments: VideoPageConfig(videoRecorder, audit),
+    );
+    ScaffoldMessenger.of(context).removeCurrentSnackBar();
   } else {
     showInfoSnackBar(
       context,
@@ -159,17 +143,40 @@ Future<void> captureImage(BuildContext context, Audit claim) async {
   }
 }
 
-Future<LocationData?> _getLocationData(BuildContext context) async {
-  LocationData? _locationData;
-  LocationService _locationService = LocationService();
-  try {
-    _locationData = await _locationService.getLocation(context);
-  } catch (e) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(e.toString()),
-      ),
+Future<void> captureImage(
+    {required BuildContext context, required Audit audit}) async {
+  final bool cameraStatus = await cameraPermission(context) ?? false;
+  final bool microphoneStatus = await microphonePermission(context) ?? false;
+  final bool storageStatus = await storagePermission(context) ?? false;
+
+  final LocationService locationService = LocationService();
+  final bool locationStatus =
+  await locationService.checkLocationStatus(context);
+
+  if (cameraStatus && microphoneStatus && storageStatus && locationStatus) {
+    WidgetsFlutterBinding.ensureInitialized();
+    List<CameraDescription>? _cameras;
+    try {
+      _cameras = await availableCameras();
+      Navigator.pushNamed(context, '/capture/image',
+        arguments: CameraCaptureArguments(
+            _cameras,
+            await locationService.getLocation(context),
+            audit,
+        ),
+      );
+      ScaffoldMessenger.of(context).removeCurrentSnackBar();
+    } on CameraException catch (e) {
+      showInfoSnackBar(
+        context, "Failed to determine available cameras. (${e.description})",
+        color: Colors.red,
+      );
+    }
+  } else {
+    showInfoSnackBar(
+      context,
+      "Camera, microphone, storage and location permission is required to access this feature.",
+      color: Colors.red,
     );
   }
-  return _locationData;
 }

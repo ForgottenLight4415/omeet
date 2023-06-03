@@ -63,7 +63,7 @@ class DocumentCard extends StatelessWidget {
                   child: Center(
                     child: FaIcon(
                       type == DocumentType.file
-                          ? FontAwesomeIcons.fileAlt
+                          ? FontAwesomeIcons.fileLines
                           : type == DocumentType.video
                               ? FontAwesomeIcons.fileVideo
                               : FontAwesomeIcons.fileAudio,

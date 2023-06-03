@@ -43,14 +43,10 @@ class ClaimProvider extends AppServerProvider {
     return _claims;
   }
 
-  Future<bool> submitConclusion(String claimNumber, String selected, String reason) async {
+  Future<bool> submitConclusion(Map<String, String> data) async {
     await postRequest(
       path: ApiUrl.claimConclusion,
-      data: <String, String> {
-        "Claim_No" : claimNumber,
-        "Selected" : selected,
-        "Conclusion_Reason" : reason
-      },
+      data: data,
     );
     return true;
   }

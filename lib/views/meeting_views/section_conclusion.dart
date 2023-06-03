@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter/services.dart';
 
 import '../../data/providers/claim_provider.dart';
 import '../../utilities/show_snackbars.dart';
@@ -16,112 +15,172 @@ class ConclusionPage extends StatefulWidget {
 }
 
 class _ConclusionPageState extends State<ConclusionPage> {
-  String? _selectedConclusion;
-  TextEditingController? _controller;
+  late final DateTime _today;
+  late final TextEditingController _recoveredAmount;
+  late final TextEditingController _chequeNo;
+  late final TextEditingController _industryAlert;
+  late final TextEditingController _dataUploaded;
+
+  DateTime _selectedDate = DateTime.now();
+
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     super.initState();
-    _selectedConclusion = "Select";
-    _controller = TextEditingController();
+    _today = DateTime.now();
+    _recoveredAmount = TextEditingController();
+    _chequeNo = TextEditingController();
+    _industryAlert = TextEditingController();
+    _dataUploaded = TextEditingController();
   }
 
   @override
   void dispose() {
-    _controller!.dispose();
+    _recoveredAmount.dispose();
+    _chequeNo.dispose();
+    _industryAlert.dispose();
+    _dataUploaded.dispose();
     super.dispose();
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: _selectedDate,
+      firstDate: _today.subtract(const Duration(days: 90)),
+      lastDate: _today.add(const Duration(days: 365)),
+    );
+    if (picked != null && picked != _selectedDate) {
+      setState(() {
+        _selectedDate = picked;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 10.0, top: 10.0, right: 10.0),
-      child: Column(
-        children: <Widget>[
-          Card(
-            child: SizedBox(
-              height: 70.h,
-              child: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: DropdownButton<String>(
-                  value: _selectedConclusion,
-                  isExpanded: true,
-                  icon: const FaIcon(FontAwesomeIcons.chevronDown),
-                  underline: const SizedBox(),
-                  items: const <DropdownMenuItem<String>>[
-                    DropdownMenuItem<String>(
-                      child: Text("Select"),
-                      value: "Select",
+      padding: const EdgeInsets.all(16.0),
+      child: Form(
+        key: _formKey,
+        child: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              CustomTextFormField(
+                textEditingController: _recoveredAmount,
+                label: "Recovered amount (in lakhs)",
+                hintText: "e.g. 2.5",
+                keyboardType:
+                const TextInputType.numberWithOptions(decimal: true),
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp(r"[0-9.]")),
+                ],
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "This is a required field";
+                  } else if (double.parse(value) == 0) {
+                    return "This field cannot be 0";
+                  }
+                  return null;
+                },
+                textInputAction: TextInputAction.next,
+              ),
+              CustomTextFormField(
+                textEditingController: _chequeNo,
+                label: "Cheque/UTR No.",
+                hintText: "Enter cheque or UTR number",
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "This is a required field";
+                  }
+                  return null;
+                },
+                textInputAction: TextInputAction.next,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 7.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      "Date of cheque/UTR",
+                      style: Theme.of(context).textTheme.bodySmall,
                     ),
-                    DropdownMenuItem<String>(
-                      child: Text("Not Paid"),
-                      value: "Not Paid",
-                    ),
-                    DropdownMenuItem<String>(
-                      child: Text("Partially Paid"),
-                      value: "Partially Paid",
-                    ),
-                    DropdownMenuItem<String>(
-                      child: Text("Paid"),
-                      value: "Paid",
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text("${_selectedDate.toLocal()}".split(' ')[0]),
+                        ElevatedButton(
+                          onPressed: () => _selectDate(context),
+                          child: const Text('Select date'),
+                        ),
+                      ],
                     ),
                   ],
-                  onChanged: (conclusion) {
-                    setState(() {
-                      _selectedConclusion = conclusion ?? "Select";
-                    });
-                  },
                 ),
               ),
-            ),
-          ),
-          SizedBox(height: 5.h),
-          CustomTextFormField(
-            textEditingController: _controller,
-            textInputAction: TextInputAction.done,
-            label: "Conclusion reason",
-            hintText: "Enter a reason",
-          ),
-          const Spacer(),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      FocusScope.of(context).unfocus();
-                      final ClaimProvider _provider = ClaimProvider();
-                      if (await _provider.submitConclusion(
-                        widget.claimNumber,
-                        _selectedConclusion!,
-                        _controller!.text,
-                      )) {
-                        _selectedConclusion = "Select";
-                        _controller!.clear();
-                        setState(() {});
-                        showInfoSnackBar(context, "Submitted",
-                            color: Colors.green);
-                      } else {
-                        showInfoSnackBar(context, "Failed to submit conclusion",
-                            color: Colors.red);
-                      }
-                    },
-                    child: const Text("Submit"),
-                    style: ButtonStyle(
-                      padding: MaterialStateProperty.resolveWith(
-                        (states) => EdgeInsets.symmetric(
-                          vertical: 20.h,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
+              CustomTextFormField(
+                textEditingController: _industryAlert,
+                label: "Industry alert given",
+                hintText: "Enter industry alert given",
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "This is a required field";
+                  }
+                  return null;
+                },
+                textInputAction: TextInputAction.next,
+              ),
+              CustomTextFormField(
+                textEditingController: _dataUploaded,
+                label: "Data uploaded in FRMP",
+                hintText: "Enter data uploaded in FRMP",
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "This is a required field";
+                  }
+                  return null;
+                },
+                textInputAction: TextInputAction.done,
+              ),
+              const SizedBox(height: 10),
+              ElevatedButton(
+                onPressed: () async {
+                  if (!(_formKey.currentState?.validate() ?? false)) {
+                    return;
+                  }
+                  FocusScope.of(context).unfocus();
+                  final Map<String, String> submissionData = <String, String> {
+                    "Claim_No" : widget.claimNumber,
+                    "Recovered_Amount" : _recoveredAmount.text,
+                    "Cheque_OR_UTR_NO" : _chequeNo.text,
+                    "Date_Cheque_OR_UTR_NO": _selectedDate.toIso8601String(),
+                    "Industry_Alert_Given": _industryAlert.text,
+                    "Data_Uploaded_in_FRMP": _dataUploaded.text,
+                  };
+                  final ClaimProvider _provider = ClaimProvider();
+                  final bool submissionResult
+                    = await _provider.submitConclusion(submissionData);
+                  if (submissionResult) {
+                    _selectedDate = DateTime.now();
+                    _recoveredAmount.clear();
+                    _chequeNo.clear();
+                    _industryAlert.clear();
+                    _dataUploaded.clear();
+                    setState(() {});
+                    showInfoSnackBar(context, "Submitted", color: Colors.green);
+                  } else {
+                    showInfoSnackBar(context, "Failed to submit conclusion",
+                    color: Colors.red);
+                  }
+                },
+                child: const Text("SAVE"),
               ),
             ],
-          )
-        ],
+          ),
+        ),
       ),
     );
   }

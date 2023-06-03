@@ -11,6 +11,13 @@ class AuthRepository {
     }
   }
 
+  Future<List<String?>> getUserDetails() async {
+    return [
+      await AuthenticationProvider.getEmail(),
+      await AuthenticationProvider.getPhone(),
+    ];
+  }
+
   Future<bool> verifyOtp(String email, String otp) => _provider.verifyOtp(email, otp);
 
   Future<void> signOut() => AuthenticationProvider.signOut();

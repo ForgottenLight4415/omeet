@@ -19,11 +19,12 @@ class HospitalClaimsView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         leading: const AppBackButton(),
-        title: const Text('Claims'),
+        title: Text("Hospital: " + hospitalId),
       ),
       body: BlocProvider<GetClaimsCubit>(
-        create: (context) => _claimsCubit
-          ..getHospitalClaims(context, hospitalId),
+        create: (context) => _claimsCubit..getHospitalClaims(
+            context, hospitalId,
+        ),
         child: BlocBuilder<GetClaimsCubit, GetClaimsState>(
           builder: (context, state) {
             if (state is GetHospitalClaimsSuccess) {
@@ -35,19 +36,15 @@ class HospitalClaimsView extends StatelessWidget {
               }
               return RefreshIndicator(
                 onRefresh: () async {
-                  BlocProvider.of<GetClaimsCubit>(context).getClaims(context);
+                  _claimsCubit.getHospitalClaims(context, hospitalId);
                 },
                 child: ListView.builder(
                   padding: EdgeInsets.only(left: 8.w, top: 8.h, right: 8.w),
                   itemCount: state.claims.length,
-                  itemBuilder: (context, index) => Card(
-                    child: ListTile(
-                      title: Center(
-                        child: Text(
-                          state.claims[index].claimId,
-                          style: Theme.of(context).textTheme.headlineMedium,
-                        ),
-                      ),
+                  itemBuilder: (context, index) => ListTile(
+                    title: Text(
+                      state.claims[index].claimId,
+                      style: Theme.of(context).textTheme.bodyLarge,
                     ),
                   )
                 ),

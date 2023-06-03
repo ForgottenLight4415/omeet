@@ -124,9 +124,10 @@ class _VideoMeetPageState extends State<VideoMeetPage> with AutomaticKeepAliveCl
             fontFamily: 'Open Sans',
           ),
         ),
-        SizedBox(height: 20.h),
-        _cameraPreviewWidget(),
-        SizedBox(height: 20.h),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 20),
+          child: _cameraPreviewWidget(),
+        ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -156,6 +157,7 @@ class _VideoMeetPageState extends State<VideoMeetPage> with AutomaticKeepAliveCl
             ScalingTile(
               onPressed: () async {
                 await _screenRecorder!.startRecord(
+                  context: context,
                   claimNumber: widget.claim.hospital.id,
                 );
                 await _joinMeeting();

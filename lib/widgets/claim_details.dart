@@ -6,31 +6,26 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'card_detail_text.dart';
 
-class ClaimDetails extends StatefulWidget {
+class ClaimDetails extends StatelessWidget {
   final Audit claim;
 
   const ClaimDetails({Key? key, required this.claim}) : super(key: key);
 
   @override
-  State<ClaimDetails> createState() => _ClaimDetailsState();
-}
-
-class _ClaimDetailsState extends State<ClaimDetails> {
-  @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 4.0, top: 10.0, right: 4.0),
+      padding: const EdgeInsets.only(left: 16.0, top: 10.0, right: 16.0),
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: _allDetails(),
+          children: _allDetails(context),
         ),
       ),
     );
   }
 
   List<Widget> _detailsWidget(String key) {
-    Map<String, Map<String, dynamic>> _mainMap = widget.claim.toMap();
+    Map<String, Map<String, dynamic>> _mainMap = claim.toMap();
     List<Widget> detailsWidget = _mainMap[key]!
         .entries
         .map(
@@ -45,13 +40,13 @@ class _ClaimDetailsState extends State<ClaimDetails> {
     return detailsWidget;
   }
 
-  List<Widget> _allDetails() {
-    Map<String, dynamic> _mainMap = widget.claim.toMap();
+  List<Widget> _allDetails(BuildContext context) {
+    Map<String, dynamic> _mainMap = claim.toMap();
     return _mainMap.entries
         .map(
           (entry) => Card(
             child: Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -63,14 +58,7 @@ class _ClaimDetailsState extends State<ClaimDetails> {
                           maxLines: 2,
                           overflow: TextOverflow.fade,
                           textAlign: TextAlign.center,
-                          style: Theme.of(context)
-                              .textTheme
-                              .headlineMedium!
-                              .copyWith(
-                                fontWeight: FontWeight.w700,
-                                color: Theme.of(context).primaryColor,
-                                overflow: TextOverflow.fade,
-                              ),
+                          style: Theme.of(context).textTheme.headlineMedium
                         ),
                       ),
                       SizedBox(height: 10.h),

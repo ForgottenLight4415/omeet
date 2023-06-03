@@ -7,7 +7,12 @@ class ClaimPageTiles extends StatelessWidget {
   final String label;
   final VoidCallback onPressed;
 
-  const ClaimPageTiles({Key? key, required this.faIcon, required this.label, required this.onPressed}) : super(key: key);
+  const ClaimPageTiles({
+    Key? key,
+    required this.faIcon,
+    required this.label,
+    required this.onPressed,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,11 +22,11 @@ class ClaimPageTiles extends StatelessWidget {
         leading: FaIcon(
           faIcon,
           color: Theme.of(context).primaryColor,
-          size: 32.w,
+          size: 28.w,
         ),
         title: Text(
           label,
-          style: Theme.of(context).textTheme.bodyLarge,
+          style: Theme.of(context).textTheme.bodyMedium,
         ),
       ),
     );

@@ -13,54 +13,63 @@ import '../meeting_views/section_documents.dart';
 class DocumentsListView extends StatelessWidget {
   final String claimNumber;
   final bool readOnly;
-  const DocumentsListView({Key? key, required this.claimNumber, this.readOnly = false}) : super(key: key);
+
+  const DocumentsListView({
+    Key? key,
+    required this.claimNumber,
+    this.readOnly = true,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         leading: const AppBackButton(),
-        title: const Text("All documents"),
-        actions: readOnly ? null : [
-          IconButton(
-            onPressed: () async {
-              FilePickerResult? result = await FilePicker.platform.pickFiles();
-              if (result != null) {
-                File file = File(result.files.single.path!);
-                final DataUploadRepository _repository = DataUploadRepository();
-                showSnackBar(
-                  context,
-                  AppStrings.startingUpload,
-                  type: SnackBarType.success,
-                );
-                showProgressDialog(context);
-                bool _result = await _repository.uploadData(
-                  claimNumber: claimNumber,
-                  latitude: 0,
-                  longitude: 0,
-                  file: file,
-                  isDoc: true,
-                );
-                ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                Navigator.pop(context);
-                if (_result) {
-                  showSnackBar(
-                    context,
-                    AppStrings.fileUploaded,
-                    type: SnackBarType.success,
-                  );
-                } else {
-                  showSnackBar(
-                    context,
-                    AppStrings.fileUploadFailed,
-                    type: SnackBarType.error,
-                  );
-                }
-              }
-            },
-            icon: const Icon(Icons.upload),
-          ),
-        ],
+        title: const Text("All Documents"),
+        actions: readOnly
+            ? null
+            : [
+                IconButton(
+                  onPressed: () async {
+                    FilePickerResult? result =
+                        await FilePicker.platform.pickFiles();
+                    if (result != null) {
+                      File file = File(result.files.single.path!);
+                      final DataUploadRepository _repository =
+                          DataUploadRepository();
+                      showSnackBar(
+                        context,
+                        AppStrings.startingUpload,
+                        type: SnackBarType.success,
+                      );
+                      showProgressDialog(context);
+                      bool _result = await _repository.uploadData(
+                        claimNumber: claimNumber,
+                        latitude: 0,
+                        longitude: 0,
+                        file: file,
+                        isDoc: true,
+                      );
+                      ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                      Navigator.pop(context);
+                      if (_result) {
+                        showSnackBar(
+                          context,
+                          AppStrings.fileUploaded,
+                          type: SnackBarType.success,
+                        );
+                      } else {
+                        showSnackBar(
+                          context,
+                          AppStrings.fileUploadFailed,
+                          type: SnackBarType.error,
+                        );
+                      }
+                    }
+                  },
+                  icon: const Icon(Icons.upload),
+                ),
+              ],
       ),
       body: DocumentsView(claimNumber: claimNumber),
     );
