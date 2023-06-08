@@ -1,6 +1,6 @@
 class AppStrings {
   static const String appName = "DR OMeet";
-  static const String appVersion = "VERSION 1.2.0 (BUILD 78)";
+  static const String appVersion = "VERSION 1.2.1 (BUILD 79)";
 
   // ERRORS AND FILLERS
   static const String blank = "";
@@ -8,6 +8,8 @@ class AppStrings {
   static const String noInternet = "No internet";
   static const String unavailable = "Unavailable";
   static const String locationDisabled = "Location is disabled.";
+  static const String fileSaved = "File saved";
+  static const String fileSaveFailed = "Failed to save file";
   static const String fileUploaded = "File uploaded successfully.";
   static const String fileUploadFailed = "Failed to upload the files.";
   static const String looksLikeOffline = "Looks like you are offline!\n";

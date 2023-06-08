@@ -1,4 +1,4 @@
-package com.lightsoftware.omeet
+package com.godjn.omeet_dr
 
 import io.flutter.embedding.android.FlutterActivity
 

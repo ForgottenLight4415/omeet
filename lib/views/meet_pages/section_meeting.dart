@@ -156,7 +156,7 @@ class _VideoMeetPageState extends State<VideoMeetPage> with AutomaticKeepAliveCl
             ScalingTile(
               onPressed: () async {
                 await _screenRecorder!.startRecord(
-                  claimNumber: widget.claim.claimNumber,
+                  claimNumber: widget.claim.claimNumber, context: context,
                 );
                 await _joinMeeting();
               },

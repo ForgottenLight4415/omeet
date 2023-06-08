@@ -4,13 +4,21 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class AppTheme {
   AppTheme._();
 
-  static final BorderRadius _borderRadius = BorderRadius.circular(16.r);
+  static final BorderRadius _borderRadius = BorderRadius.circular(24.r);
 
   static final lightTheme = ThemeData(
     primarySwatch: Colors.red,
-    scaffoldBackgroundColor: const Color(0xFFEFEFEF),
+    scaffoldBackgroundColor: Colors.white,
     appBarTheme: const AppBarTheme(
-      centerTitle: true,
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black,
+        centerTitle: true,
+        titleTextStyle: TextStyle(
+          fontSize: 24,
+          fontWeight: FontWeight.w700,
+          color: Colors.black87,
+        ),
+        elevation: 0
     ),
     bottomSheetTheme: BottomSheetThemeData(
       shape: RoundedRectangleBorder(
@@ -21,28 +29,38 @@ class AppTheme {
       ),
     ),
     textTheme: TextTheme(
-      displayLarge: TextStyle(
-        fontSize: 38.sp,
-        fontWeight: FontWeight.w500,
-      ),
-      displayMedium: TextStyle(fontSize: 30.sp),
-      displaySmall: TextStyle(fontSize: 28.sp),
-      headlineMedium: TextStyle(fontSize: 26.sp, fontWeight: FontWeight.w700),
-      headlineSmall: TextStyle(fontSize: 24.sp),
-      titleLarge: TextStyle(fontSize: 22.sp),
-      bodyLarge: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w400),
-      bodyMedium: TextStyle(fontSize: 18.sp),
+        displayLarge: TextStyle(
+          fontSize: 38.sp,
+          fontWeight: FontWeight.w500,
+        ),
+        displayMedium: TextStyle(fontSize: 30.sp),
+        displaySmall: TextStyle(fontSize: 28.sp),
+        headlineMedium: TextStyle(
+          color: Colors.red,
+          fontSize: 26.sp,
+          fontWeight: FontWeight.w700,
+          overflow: TextOverflow.fade,
+        ),
+        headlineSmall: TextStyle(fontSize: 24.sp),
+        titleLarge: TextStyle(fontSize: 22.sp),
+        bodyLarge: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w400),
+        bodyMedium: TextStyle(fontSize: 18.sp),
+        bodySmall: TextStyle(fontSize: 16.sp)
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ButtonStyle(
         textStyle: MaterialStateProperty.resolveWith(
-          (states) => TextStyle(fontSize: 18.sp, color: Colors.white),
+              (states) => TextStyle(
+            fontSize: 18.sp,
+            fontWeight: FontWeight.w500,
+            color: Colors.white,
+          ),
         ),
         padding: MaterialStateProperty.resolveWith(
-          (states) => EdgeInsets.symmetric(vertical: 15.h, horizontal: 25.w),
+              (states) => EdgeInsets.symmetric(vertical: 12.h, horizontal: 32.w),
         ),
         shape: MaterialStateProperty.resolveWith(
-          (states) => RoundedRectangleBorder(borderRadius: _borderRadius),
+              (states) => RoundedRectangleBorder(borderRadius: _borderRadius),
         ),
         elevation: MaterialStateProperty.resolveWith((states) => 3.0),
       ),

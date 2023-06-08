@@ -13,7 +13,6 @@ import '../data/models/document.dart';
 
 import '../utilities/bridge_call.dart';
 import '../utilities/app_constants.dart';
-import '../utilities/claim_option_functions.dart';
 
 import '../blocs/call_bloc/call_cubit.dart';
 
@@ -31,120 +30,133 @@ class ClaimCard extends StatefulWidget {
 class _ClaimCardState extends State<ClaimCard> {
   @override
   Widget build(BuildContext context) {
-    return BaseCard(
-      onPressed: widget.isEditable ? () async {
-        await _openClaimMenu(context);
-      } : () {},
-      card: Card(
-        child: Container(
-          constraints: BoxConstraints(minHeight: 200.h),
-          padding: EdgeInsets.all(16.w),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(
-                widget.claim.claimNumber,
-                maxLines: 1,
-                softWrap: false,
-                overflow: TextOverflow.fade,
-                style: Theme.of(context).textTheme.headlineMedium!.copyWith(
-                      fontWeight: FontWeight.w700,
-                      color: Theme.of(context).primaryColor,
-                    ),
+    return Theme(
+      data: Theme.of(context).copyWith(
+          elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ButtonStyle(
+              textStyle: MaterialStateProperty.resolveWith(
+                    (states) => TextStyle(
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.white,
+                ),
               ),
-              SizedBox(height: 8.h),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  CardDetailText(
-                    title: AppStrings.patientName,
-                    content: widget.claim.patient.name,
-                  ),
-                  CardDetailText(
-                    title: AppStrings.patientGender,
-                    content: widget.claim.patient.gender,
-                  ),
-                  CardDetailText(
-                    title: AppStrings.patientAge,
-                    content: widget.claim.patient.age,
-                  ),
-                  CardDetailText(
-                    title: AppStrings.phoneNumber,
-                    content: widget.claim.insuredPerson.insuredContactNumber,
-                  ),
-                  SizedBox(height: 15.h),
-                  widget.isEditable
-                    ? Row(
-                    mainAxisAlignment: widget.isEditable
-                        ? MainAxisAlignment.spaceAround
-                        : MainAxisAlignment.start,
-                    children: <Widget>[
-                      BlocProvider<CallCubit>(
-                        create: (callContext) => CallCubit(),
-                        child: BlocConsumer<CallCubit, CallState>(
-                          listener: _callListener,
-                          builder: (context, state) => ElevatedButton(
-                            onPressed: () async {
-                              await widget.claim.call(context);
-                            },
-                            child: const Icon(Icons.phone),
+              padding: MaterialStateProperty.resolveWith(
+                    (states) => EdgeInsets.symmetric(
+                  vertical: 12.h,
+                  horizontal: 16.w,
+                ),
+              ),
+              shape: MaterialStateProperty.resolveWith(
+                    (states) => RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(24.r),
+                ),
+              ),
+              elevation: MaterialStateProperty.resolveWith((states) => 3.0),
+            ),
+          ),
+          iconTheme: IconThemeData(size: 20.w)
+      ),
+      child: BaseCard(
+        onPressed: () async {
+          if (widget.isEditable) {
+            await _openClaimMenu(context);
+          }
+        },
+        card: Card(
+          child: Container(
+            constraints: BoxConstraints(minHeight: 180.h),
+            padding: EdgeInsets.all(12.w),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  widget.claim.claimNumber,
+                  maxLines: 1,
+                  softWrap: false,
+                  overflow: TextOverflow.fade,
+                  style: Theme.of(context).textTheme.headlineMedium
+                ),
+                SizedBox(height: 4.h),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    CardDetailText(
+                      title: AppStrings.patientName,
+                      content: widget.claim.patient.name,
+                    ),
+                    CardDetailText(
+                      title: AppStrings.patientGender,
+                      content: widget.claim.patient.gender,
+                    ),
+                    CardDetailText(
+                      title: AppStrings.patientAge,
+                      content: widget.claim.patient.age,
+                    ),
+                    CardDetailText(
+                      title: AppStrings.phoneNumber,
+                      content: widget.claim.insuredPerson.insuredContactNumber,
+                    ),
+                    SizedBox(height: 4.h),
+                    widget.isEditable
+                      ? Row(
+                      mainAxisAlignment: widget.isEditable
+                          ? MainAxisAlignment.spaceAround
+                          : MainAxisAlignment.start,
+                      children: <Widget>[
+                        BlocProvider<CallCubit>(
+                          create: (callContext) => CallCubit(),
+                          child: BlocConsumer<CallCubit, CallState>(
+                            listener: _callListener,
+                            builder: (context, state) => ElevatedButton(
+                              onPressed: () => widget.claim.call(context),
+                              child: const Icon(Icons.phone),
+                            ),
                           ),
                         ),
-                      ),
-                      ElevatedButton(
-                        onPressed: () async {
-                          await widget.claim.videoCall(context);
-                        },
-                        child: const FaIcon(FontAwesomeIcons.video),
-                      ),
-                      ElevatedButton(
-                        onPressed: () async {
-                          await widget.claim.sendMessageModal(
-                            context,
-                          );
-                        },
-                        child: const Icon(Icons.mail),
-                      ),
-                      ElevatedButton(
-                        onPressed: () async {
-                          await _openClaimMenu(context);
-                        },
-                        child: const Text("More"),
-                      ),
-                    ],
-                  )
-                    : Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.pushNamed(
-                            context,
-                            '/documents',
-                            arguments: DocumentPageArguments(
-                              widget.claim.claimNumber,
-                              !widget.isEditable,
-                            ),
-                          );
-                        },
-                        child: const FaIcon(FontAwesomeIcons.fileLines),
-                      ),
-                      const SizedBox(width: 20),
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.pushNamed(
-                              context,
-                              '/claim/details',
-                              arguments: widget.claim,
-                          );
-                        },
-                        child: const FaIcon(FontAwesomeIcons.circleInfo),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ],
+                        ElevatedButton(
+                          onPressed: () => widget.claim.videoCall(context),
+                          child: const FaIcon(FontAwesomeIcons.video),
+                        ),
+                        ElevatedButton(
+                          onPressed: () => widget.claim.sendMessageModal(context),
+                          child: const Icon(Icons.mail),
+                        ),
+                        ElevatedButton(
+                          onPressed: () => _openClaimMenu(context),
+                          child: const Text("More"),
+                        ),
+                      ],
+                    )
+                      : Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.pushNamed(context, '/documents',
+                              arguments: DocumentPageArguments(
+                                widget.claim.claimNumber,
+                                !widget.isEditable,
+                              ),
+                            );
+                          },
+                          child: const FaIcon(FontAwesomeIcons.fileLines),
+                        ),
+                        const SizedBox(width: 20),
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.pushNamed(context, '/claim/details',
+                                arguments: widget.claim,
+                            );
+                          },
+                          child: const FaIcon(FontAwesomeIcons.circleInfo),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -159,25 +171,6 @@ class _ClaimCardState extends State<ClaimCard> {
       builder: (modalContext) => SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            widget.isEditable
-                ? BlocProvider<CallCubit>(
-                    create: (context) => CallCubit(),
-                    child: BlocConsumer<CallCubit, CallState>(
-                      listener: _callListener,
-                      builder: (context, state) {
-                        return ClaimPageTiles(
-                          faIcon: FontAwesomeIcons.phone,
-                          label: "Voice call",
-                          onPressed: () async {
-                            if (await widget.claim.call(context)) {
-                              Navigator.pop(modalContext);
-                            }
-                          },
-                        );
-                      },
-                    ),
-                  )
-                : const SizedBox(),
             widget.isEditable
               ? BlocProvider<CallCubit>(
               create: (context) => CallCubit(),
@@ -201,16 +194,6 @@ class _ClaimCardState extends State<ClaimCard> {
               ),
             )
               : const SizedBox(),
-            widget.isEditable
-                ? ClaimPageTiles(
-                    faIcon: FontAwesomeIcons.video,
-                    label: "Video call",
-                    onPressed: () {
-                      Navigator.pop(modalContext);
-                      videoCall(context, widget.claim);
-                    },
-                  )
-                : const SizedBox(),
             ClaimPageTiles(
               faIcon: FontAwesomeIcons.fileLines,
               label: "Documents",

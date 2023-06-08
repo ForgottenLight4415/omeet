@@ -30,11 +30,16 @@ class _MeetingMainPageState extends State<MeetingMainPage> {
           title: Text("Meeting with ${widget.claim.insuredPerson.insuredName}"),
           bottom: const TabBar(
             isScrollable: true,
+            unselectedLabelColor: Colors.black,
+            labelColor: Colors.red,
+            indicator: UnderlineTabIndicator(
+                borderSide: BorderSide(color: Colors.red)
+            ),
             tabs: <Widget>[
               Tab(icon: FaIcon(FontAwesomeIcons.video), text: "Meet"),
               Tab(icon: FaIcon(FontAwesomeIcons.question), text: "Q & A"),
               Tab(icon: FaIcon(FontAwesomeIcons.file), text: "Documents"),
-              Tab(icon: FaIcon(FontAwesomeIcons.checkCircle), text: "Conclusion"),
+              Tab(icon: FaIcon(FontAwesomeIcons.circleCheck), text: "Conclusion"),
               Tab(icon: FaIcon(FontAwesomeIcons.info), text: "Details"),
             ],
           ),

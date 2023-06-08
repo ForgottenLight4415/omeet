@@ -5,9 +5,9 @@ import 'package:omeet_motor/data/models/hospital.dart';
 import 'package:omeet_motor/data/models/people.dart';
 import 'package:omeet_motor/utilities/show_snackbars.dart';
 import '../../blocs/call_bloc/call_cubit.dart';
-import '../../utilities/app_constants.dart';
 import '../../utilities/app_permission_manager.dart';
 import '../../utilities/data_cleaner.dart';
+import '../../utilities/location_service.dart';
 import '../../widgets/input_fields.dart';
 import '../repositories/call_repo.dart';
 
@@ -197,15 +197,20 @@ class Claim {
   }
 
   Future<void> videoCall(BuildContext context) async {
-    bool cameraStatus = await cameraPermission();
-    bool microphoneStatus = await microphonePermission();
-    bool storageStatus = await storagePermission();
-    if (cameraStatus && microphoneStatus && storageStatus) {
+    final bool cameraStatus = await cameraPermission(context) ?? false;
+    final bool microphoneStatus = await microphonePermission(context) ?? false;
+
+    final LocationService locationService = LocationService();
+    final bool locationStatus =
+    await locationService.checkLocationStatus(context);
+
+    if (cameraStatus && microphoneStatus && locationStatus) {
       Navigator.pushNamed(context, '/claim/meeting', arguments: this);
+      ScaffoldMessenger.of(context).removeCurrentSnackBar();
     } else {
       showInfoSnackBar(
         context,
-        AppStrings.camMicStoragePerm,
+        "Grant required permissions to access this feature",
         color: Colors.red,
       );
     }

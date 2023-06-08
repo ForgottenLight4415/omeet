@@ -2,28 +2,44 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:ed_screen_recorder/ed_screen_recorder.dart';
+import 'package:location/location.dart';
+import 'package:omeet_motor/utilities/location_service.dart';
+import 'package:path_provider/path_provider.dart';
 
+import '../../utilities/show_snackbars.dart';
+import '../data/repositories/data_upload_repo.dart';
 import 'app_constants.dart';
 
-import '../data/repositories/data_upload_repo.dart';
-import '../utilities/show_snackbars.dart';
-
 class ScreenRecorder {
-  EdScreenRecorder? _edScreenRecorder;
+  final EdScreenRecorder _edScreenRecorder = EdScreenRecorder();
+
   bool _isRecording = false;
   String? _claimNumber;
 
-  ScreenRecorder() {
-    _edScreenRecorder = EdScreenRecorder();
-  }
+  LocationData? _locationData;
 
-  Future<Map<String, dynamic>> startRecord({required String claimNumber}) async {
+  Future<Map<String, dynamic>> startRecord({
+    required BuildContext context,
+    required String claimNumber,
+  }) async {
     log("Starting screen record");
+    if (_isRecording) {
+      return <String, dynamic> {
+        "code": "100",
+        "message": "Recording in progress",
+      };
+    }
+    LocationService locationService = LocationService();
+    _locationData = await locationService.getLocation(context);
+
     Directory? directory = await getExternalStorageDirectory();
-    Directory? _saveDirectory = await Directory("${directory!.path}/ScreenRecordings").create();
-    var response = await _edScreenRecorder!.startRecordScreen(
+    Directory? _saveDirectory = await Directory(
+      "${directory!.path}/ScreenRecordings",
+    ).create();
+
+    final Map<String, dynamic> response =
+    await _edScreenRecorder.startRecordScreen(
       fileName: "${claimNumber}_${DateTime.now().microsecondsSinceEpoch}",
       dirPathToSave: _saveDirectory.path,
       audioEnable: true,
@@ -33,22 +49,24 @@ class ScreenRecorder {
     return response;
   }
 
-  Future<Map<String, dynamic>> stopRecord({required String claimNumber, required BuildContext context}) async {
-    var response = await _edScreenRecorder?.stopRecord();
-    File _videoFile = response!['file'];
+  Future<Map<String, dynamic>> stopRecord(
+      {required String claimNumber, required BuildContext context}) async {
+    Map<String, dynamic> response = await _edScreenRecorder.stopRecord();
+    File videoFile = response['file'];
+
     final DataUploadRepository _repository = DataUploadRepository();
     try {
-      bool _result = await _repository.uploadData(
+      bool result = await _repository.uploadData(
         claimNumber: claimNumber,
-        latitude: 0,
-        longitude: 0,
-        file: _videoFile,
+        latitude: _locationData?.latitude ?? 0,
+        longitude: _locationData?.longitude ?? 0,
+        file: videoFile,
       );
-      if (_result) {
-        showInfoSnackBar(context, AppStrings.fileUploaded, color: Colors.green);
-        _videoFile.delete();
+      if (result) {
+        showInfoSnackBar(context, AppStrings.fileSaved, color: Colors.green);
+        videoFile.delete();
       } else {
-        throw Exception("An unknown error occurred while uploading the file.");
+        throw Exception(AppStrings.fileSaveFailed);
       }
     } on Exception catch (e) {
       showInfoSnackBar(

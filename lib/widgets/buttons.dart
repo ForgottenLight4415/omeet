@@ -8,7 +8,8 @@ import './scaling_tile.dart';
 class PrimaryButton extends StatelessWidget {
   final VoidCallback onPressed;
   final String label;
-  const PrimaryButton({Key? key, required this.onPressed, required this.label}) : super(key: key);
+  const PrimaryButton({Key? key, required this.onPressed, required this.label})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,18 +18,18 @@ class PrimaryButton extends StatelessWidget {
       child: Text(label),
       style: ButtonStyle(
         shape: MaterialStateProperty.resolveWith(
-          (states) => RoundedRectangleBorder(
+              (states) => RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(14.r),
           ),
         ),
         textStyle: MaterialStateProperty.resolveWith(
-          (states) => TextStyle(
+              (states) => TextStyle(
             fontSize: 20.sp,
             fontWeight: FontWeight.w300,
           ),
         ),
         padding: MaterialStateProperty.resolveWith(
-          (states) => EdgeInsets.symmetric(
+              (states) => EdgeInsets.symmetric(
             horizontal: 20.w,
             vertical: 15.h,
           ),

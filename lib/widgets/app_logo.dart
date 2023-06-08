@@ -13,8 +13,10 @@ class AppLogo extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
-        Image.asset(Images.appLogo, height: 170.w, width: 170.w),
-        const SizedBox(height: 10),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 45.0),
+          child: Image.asset(Images.appLogo, height: 170.w, width: 170.w),
+        ),
         Text(
           AppStrings.appName,
           textAlign: TextAlign.center,

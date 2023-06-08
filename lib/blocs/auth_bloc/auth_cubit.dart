@@ -8,24 +8,24 @@ import '../../data/repositories/auth_repo.dart';
 
 part 'auth_state.dart';
 
-class AuthenticationCubit extends Cubit<AuthenticationState> {
+class AuthCubit extends Cubit<AuthState> {
   final AuthRepository _authRepository = AuthRepository();
-  AuthenticationCubit() : super(AuthenticationInitial());
+  AuthCubit() : super(AuthInitial());
 
   Future<void> signIn(String email, String password) async {
-    emit(AuthenticationLoading());
+    emit(AuthLoading());
     try {
       if (await _authRepository.signIn(email: email, password: password)) {
-        emit(AuthenticationSuccess());
+        emit(AuthSuccess());
       } else {
-        emit(AuthenticationFailed(401, "Incorrect email or password"));
+        emit(AuthFailed(401, "Incorrect email or password"));
       }
     } on SocketException {
-      emit(AuthenticationFailed(1000, "Failed to connect the server."));
+      emit(AuthFailed(1000, "Failed to connect the server."));
     } on AppException catch (a) {
-      emit(AuthenticationFailed(a.code, a.cause));
+      emit(AuthFailed(a.code, a.cause));
     } catch (e) {
-      emit(AuthenticationFailed(2000, e.toString()));
+      emit(AuthFailed(2000, e.toString()));
     }
   }
 }

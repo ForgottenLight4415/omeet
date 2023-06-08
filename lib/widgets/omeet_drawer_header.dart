@@ -25,8 +25,7 @@ class OMeetUserDrawerHeader extends StatelessWidget {
           Text(
             AppStrings.appName,
             textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.displaySmall?.copyWith(
-              fontWeight: FontWeight.w600,
+            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
               color: Colors.white,
             ),
           ),

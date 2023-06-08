@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:omeet_motor/data/repositories/auth_repo.dart';
 
-import '../../blocs/authentication_bloc/verification_bloc/verification_cubit.dart';
+import '../../blocs/auth_bloc/verification_bloc/verification_cubit.dart';
+import '../../data/repositories/auth_repo.dart';
 import '../../utilities/show_snackbars.dart';
 import '../../utilities/upload_dialog.dart';
-import '../../widgets/input_fields.dart';
 import '../../widgets/app_logo.dart';
+import '../../widgets/input_fields.dart';
 
 class VerificationView extends StatefulWidget {
   final String emailAddress;
@@ -39,14 +39,13 @@ class _VerificationViewState extends State<VerificationView> {
                 child: BlocConsumer<VerificationCubit, VerificationState>(
                   listener: (context, state) async {
                     if (state is VerificationFailed) {
-                      Navigator.pop(context);
                       showInfoSnackBar(context, state.cause, color: Colors.red);
                     } else if (state is VerificationVerifying) {
                       showProgressDialog(context,
                           label: "Verifying", content: "Verifying OTP...");
                     } else if (state is VerificationSuccess) {
                       List<String?>? userDetails =
-                          await AuthRepository().getUserDetails();
+                      await AuthRepository().getUserDetails();
                       Navigator.pushNamedAndRemoveUntil(
                           context, '/new_landing', (route) => false,
                           arguments: userDetails);
@@ -71,9 +70,8 @@ class _VerificationViewState extends State<VerificationView> {
                         ),
                         ElevatedButton(
                           onPressed: () {
-                            BlocProvider.of<VerificationCubit>(context)
-                                .verifyOtp(
-                                    widget.emailAddress, _controller.text);
+                            BlocProvider.of<VerificationCubit>(context).verifyOtp(
+                                widget.emailAddress, _controller.text);
                           },
                           child: const Text("VERIFY"),
                         )
