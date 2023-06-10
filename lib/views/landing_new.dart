@@ -128,7 +128,7 @@ class ModernLandingPage extends StatelessWidget {
           body: const TabBarView(
             children: [
               ClaimsView(isCompleted: false),
-              ClaimsView(),
+              ClaimsView(isCompleted: true),
             ],
           )),
     );

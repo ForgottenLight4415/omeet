@@ -231,55 +231,52 @@ class Claim {
 
   Future<void> sendMessageModal(BuildContext context) async {
     String? selectedPhone = insuredPerson.insuredContactNumber;
-    if (selectedPhone != "Unavailable") {
-      final TextEditingController _controller =
-      TextEditingController(text: selectedPhone);
-      bool? _result = await showModalBottomSheet<bool?>(
-        context: context,
-        constraints: BoxConstraints(maxHeight: 200.h),
-        builder: (context) => Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: Column(
-            children: <Widget>[
-              CustomTextFormField(
-                textEditingController: _controller,
-                label: "Phone number",
-                hintText: "Enter phone number",
-                keyboardType: TextInputType.phone,
+    final TextEditingController _controller = TextEditingController(
+        text: selectedPhone == "Unavailable" ? "" : selectedPhone,
+    );
+    final bool sendButtonPressed = await showModalBottomSheet<bool?>(
+      context: context,
+      constraints: BoxConstraints(maxHeight: 200.h),
+      builder: (context) => Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: <Widget>[
+            CustomTextFormField(
+              textEditingController: _controller,
+              label: "Phone number",
+              hintText: "Enter phone number",
+              keyboardType: TextInputType.phone,
+            ),
+            const SizedBox(height: 8.0),
+            Align(
+              alignment: Alignment.centerRight,
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context, true);
+                  showInfoSnackBar(context, "Sending message",
+                      color: Colors.orange,
+                  );
+                },
+                child: const Text("SEND"),
               ),
-              const SizedBox(height: 10.0),
-              Align(
-                alignment: Alignment.centerRight,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context, true);
-                    showInfoSnackBar(context, "Sending message",
-                        color: Colors.orange);
-                  },
-                  child: const Text("SEND"),
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
+      ),
+    ) ?? false;
+    if (sendButtonPressed && _controller.text.length == 10) {
+      final CallRepository callRepository = CallRepository();
+      final bool messageRequestStatus = await callRepository.sendMessage(
+        claimNumber: claimNumber,
+        phoneNumber: _controller.text,
       );
-      if (_result == null) {
-        return;
-      } else if (_controller.text.isNotEmpty || _controller.text.length != 10) {
-        if (await CallRepository().sendMessage(
-          claimNumber: claimNumber,
-          phoneNumber: _controller.text,
-        )) {
-          showInfoSnackBar(context, "Message sent", color: Colors.green);
-        } else {
-          showInfoSnackBar(context, "Failed", color: Colors.red);
-        }
+      if (messageRequestStatus) {
+        showInfoSnackBar(context, "Message sent", color: Colors.green);
       } else {
-        showInfoSnackBar(context, "Enter a valid phone number",
-            color: Colors.red);
+        showInfoSnackBar(context, "Failed", color: Colors.red);
       }
-    } else {
-      showInfoSnackBar(context, "Contact details unavailable");
+    } else if (sendButtonPressed && _controller.text.length != 10) {
+      showInfoSnackBar(context, "Enter a valid phone number", color: Colors.red);
     }
   }
 }

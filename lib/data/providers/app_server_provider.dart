@@ -52,6 +52,7 @@ class AppServerProvider {
       );
       return processResponse(_response);
     } catch (e) {
+
       throw AppException(
         code: appError,
         cause: e.toString(),

@@ -1,6 +1,6 @@
 class AppStrings {
   static const String appName = "DR OMeet";
-  static const String appVersion = "VERSION 1.2.2 (BUILD 80)";
+  static const String appVersion = "VERSION 1.2.3 (BUILD 81)";
 
   // ERRORS AND FILLERS
   static const String blank = "";
@@ -30,6 +30,7 @@ class AppStrings {
   static const String recordAudio = "Record audio";
 
   static const String customCall = "Custom call";
+  static const String sms = "SMS";
   static const String uploads = "Uploads";
   static const String signOut = "Sign out";
 
