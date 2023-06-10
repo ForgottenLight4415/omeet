@@ -54,99 +54,125 @@ class _ClaimCardState extends State<ClaimCard> {
 
   @override
   Widget build(BuildContext context) {
-    return BaseCard(
-      onPressed: () async {
-        await _openClaimMenu(context);
-      },
-      card: Card(
-        color: _cardColor,
-        child: Container(
-          constraints: BoxConstraints(minHeight: 250.h),
-          padding: EdgeInsets.all(16.w),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(
-                widget.claim.claimNumber,
-                softWrap: false,
-                style: Theme.of(context).textTheme.headlineMedium!.copyWith(
-                      fontWeight: FontWeight.w700,
-                      color: Theme.of(context).primaryColor,
-                      overflow: TextOverflow.fade,
+    return Theme(
+      data: Theme.of(context).copyWith(
+          elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ButtonStyle(
+              textStyle: MaterialStateProperty.resolveWith(
+                    (states) => TextStyle(
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.white,
+                ),
+              ),
+              padding: MaterialStateProperty.resolveWith(
+                    (states) => EdgeInsets.symmetric(
+                  vertical: 12.h,
+                  horizontal: 16.w,
+                ),
+              ),
+              shape: MaterialStateProperty.resolveWith(
+                    (states) => RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(24.r),
+                ),
+              ),
+              elevation: MaterialStateProperty.resolveWith((states) => 3.0),
+            ),
+          ),
+          iconTheme: IconThemeData(size: 20.w)
+      ),
+      child: BaseCard(
+        onPressed: () async {
+          await _openClaimMenu(context);
+        },
+        card: Card(
+          color: _cardColor,
+          child: Container(
+            constraints: BoxConstraints(minHeight: 180.h),
+            padding: EdgeInsets.all(12.w),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  widget.claim.claimNumber,
+                  maxLines: 1,
+                  softWrap: false,
+                  overflow: TextOverflow.fade,
+                  style: Theme.of(context).textTheme.headlineMedium,
+                ),
+                SizedBox(height: 4.h),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    CardDetailText(
+                      title: AppStrings.customerName,
+                      content: widget.claim.insuredName,
                     ),
-              ),
-              SizedBox(height: 8.h),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  CardDetailText(
-                    title: AppStrings.customerName,
-                    content: widget.claim.insuredName,
-                  ),
-                  CardDetailText(
-                    title: AppStrings.customerAddress,
-                    content: widget.claim.customerAddress,
-                  ),
-                  CardDetailText(
-                    title: AppStrings.phoneNumber,
-                    content: widget.claim.insuredContactNumber,
-                  ),
-                  CardDetailText(
-                    title: AppStrings.phoneNumberAlt,
-                    content:
-                        widget.claim.insuredAltContactNumber != AppStrings.blank
-                            ? widget.claim.insuredAltContactNumber
-                            : AppStrings.unavailable,
-                  ),
-                  SizedBox(height: 15.h),
-                  Row(
-                    mainAxisAlignment: widget.isEditable
-                        ? MainAxisAlignment.spaceAround
-                        : MainAxisAlignment.start,
-                    children: <Widget>[
-                      widget.isEditable
-                          ? BlocProvider<CallCubit>(
-                              create: (callContext) => CallCubit(),
-                              child: BlocConsumer<CallCubit, CallState>(
-                                listener: _callListener,
-                                builder: (context, state) => ElevatedButton(
-                                  onPressed: () async {
-                                    await widget.claim.call(context);
-                                  },
-                                  child: const Icon(Icons.phone),
+                    CardDetailText(
+                      title: AppStrings.customerAddress,
+                      content: widget.claim.customerAddress,
+                    ),
+                    CardDetailText(
+                      title: AppStrings.phoneNumber,
+                      content: widget.claim.insuredContactNumber,
+                    ),
+                    CardDetailText(
+                      title: AppStrings.phoneNumberAlt,
+                      content:
+                          widget.claim.insuredAltContactNumber != AppStrings.blank
+                              ? widget.claim.insuredAltContactNumber
+                              : AppStrings.unavailable,
+                    ),
+                    SizedBox(height: 4.h),
+                    Row(
+                      mainAxisAlignment: widget.isEditable
+                          ? MainAxisAlignment.spaceAround
+                          : MainAxisAlignment.start,
+                      children: <Widget>[
+                        widget.isEditable
+                            ? BlocProvider<CallCubit>(
+                                create: (callContext) => CallCubit(),
+                                child: BlocConsumer<CallCubit, CallState>(
+                                  listener: _callListener,
+                                  builder: (context, state) => ElevatedButton(
+                                    onPressed: () async {
+                                      await widget.claim.call(context);
+                                    },
+                                    child: const Icon(Icons.phone),
+                                  ),
                                 ),
-                              ),
-                            )
-                          : const SizedBox(),
-                      widget.isEditable
-                          ? ElevatedButton(
-                              onPressed: () async {
-                                await widget.claim.videoCall(context);
-                              },
-                              child: const FaIcon(FontAwesomeIcons.video),
-                            )
-                          : const SizedBox(),
-                      widget.isEditable
-                          ? ElevatedButton(
-                              onPressed: () async {
-                                await widget.claim.sendMessageModal(
-                                  context,
-                                );
-                              },
-                              child: const Icon(Icons.mail),
-                            )
-                          : const SizedBox(),
-                      ElevatedButton(
-                        onPressed: () async {
-                          await _openClaimMenu(context);
-                        },
-                        child: const Text("More"),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ],
+                              )
+                            : const SizedBox(),
+                        widget.isEditable
+                            ? ElevatedButton(
+                                onPressed: () async {
+                                  await widget.claim.videoCall(context);
+                                },
+                                child: const FaIcon(FontAwesomeIcons.video),
+                              )
+                            : const SizedBox(),
+                        widget.isEditable
+                            ? ElevatedButton(
+                                onPressed: () async {
+                                  await widget.claim.sendMessageModal(
+                                    context,
+                                  );
+                                },
+                                child: const Icon(Icons.mail),
+                              )
+                            : const SizedBox(),
+                        ElevatedButton(
+                          onPressed: () async {
+                            await _openClaimMenu(context);
+                          },
+                          child: const Text("More"),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -171,32 +197,13 @@ class _ClaimCardState extends State<ClaimCard> {
                     },
                   )
                 : const SizedBox(),
-            widget.isEditable
-                ? BlocProvider<CallCubit>(
-                    create: (context) => CallCubit(),
-                    child: BlocConsumer<CallCubit, CallState>(
-                      listener: _callListener,
-                      builder: (context, state) {
-                        return ClaimPageTiles(
-                          faIcon: FontAwesomeIcons.phoneAlt,
-                          label: "Voice call",
-                          onPressed: () async {
-                            if (await widget.claim.call(context)) {
-                              Navigator.pop(modalContext);
-                            }
-                          },
-                        );
-                      },
-                    ),
-                  )
-                : const SizedBox(),
             BlocProvider<CallCubit>(
               create: (context) => CallCubit(),
               child: BlocConsumer<CallCubit, CallState>(
                 listener: _callListener,
                 builder: (context, state) {
                   return ClaimPageTiles(
-                    faIcon: FontAwesomeIcons.phoneAlt,
+                    faIcon: FontAwesomeIcons.phone,
                     label: "Custom voice call",
                     onPressed: () async {
                       if (await customCallSetup(
@@ -211,16 +218,6 @@ class _ClaimCardState extends State<ClaimCard> {
                 },
               ),
             ),
-            widget.isEditable
-                ? ClaimPageTiles(
-                    faIcon: FontAwesomeIcons.video,
-                    label: "Video call",
-                    onPressed: () {
-                      Navigator.pop(modalContext);
-                      videoCall(context, widget.claim);
-                    },
-                  )
-                : const SizedBox(),
             widget.isEditable
                 ? ClaimPageTiles(
                     faIcon: FontAwesomeIcons.camera,
@@ -259,21 +256,21 @@ class _ClaimCardState extends State<ClaimCard> {
                 : const SizedBox(),
             widget.isEditable
                 ? ClaimPageTiles(
-                    faIcon: FontAwesomeIcons.mobileAlt,
+                    faIcon: FontAwesomeIcons.mobileScreenButton,
                     label: _getScreenshotText(),
                     onPressed: () async {
                       Navigator.pop(modalContext);
                       await handleScreenshotService(
                         context,
-                        widget.screenCapture!,
-                        widget.claim.claimNumber,
+                        screenCapture: widget.screenCapture!,
+                        claimNumber: widget.claim.claimNumber,
                       );
                       _setCardColor();
                     },
                   )
                 : const SizedBox(),
             ClaimPageTiles(
-              faIcon: FontAwesomeIcons.fileAlt,
+              faIcon: FontAwesomeIcons.fileLines,
               label: "Documents",
               onPressed: () {
                 Navigator.pop(modalContext);

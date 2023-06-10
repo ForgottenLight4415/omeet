@@ -57,7 +57,7 @@ class _QuestionsPageState extends State<QuestionsPage> with AutomaticKeepAliveCl
               children: <Widget>[
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
+                    padding: const EdgeInsets.all(8.0),
                     child: ListView.builder(
                       itemCount: state.questions.length,
                       controller: _scrollController,

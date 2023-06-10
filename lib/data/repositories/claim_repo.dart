@@ -5,8 +5,8 @@ class ClaimRepository {
   List<Claim> _claims = [];
   final ClaimProvider _provider = ClaimProvider();
 
-  Future<List<Claim>> getClaims({bool department = false}) async {
-    _claims = await _provider.getClaims(department: department);
+  Future<List<Claim>> getClaims({bool forSelfAssignment = false}) async {
+    _claims = await _provider.getClaims(forSelfAssignment: forSelfAssignment);
     return _claims;
   }
 

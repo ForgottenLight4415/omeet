@@ -16,17 +16,19 @@ class CardDetailText extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 2.h),
       child: RichText(
-          text: TextSpan(
-              text: title + '\n',
-              style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
-              children: <TextSpan>[
+        text: TextSpan(
+          text: title + '\n',
+          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+            fontWeight: FontWeight.w600,
+          ),
+          children: <TextSpan>[
             TextSpan(
               text: content,
-              style: Theme.of(context).textTheme.bodyMedium,
-            )
-          ])),
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

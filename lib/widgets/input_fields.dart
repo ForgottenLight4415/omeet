@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomTextFormField extends StatefulWidget {
   final TextEditingController? textEditingController;
   final TextInputType? keyboardType;
+  final List<TextInputFormatter>? inputFormatters;
   final TextInputAction? textInputAction;
   final String? Function(String?)? validator;
   final String label;
@@ -16,6 +18,7 @@ class CustomTextFormField extends StatefulWidget {
       {Key? key,
         this.textEditingController,
         this.keyboardType,
+        this.inputFormatters,
         this.textInputAction,
         this.validator,
         required this.label,
@@ -39,7 +42,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
   void initState() {
     super.initState();
     _borderColor = Colors.transparent;
-    _borderRadius = 16.r;
+    _borderRadius = 24.r;
 
     _focusNode = FocusNode();
     _focusNode!.addListener(() {
@@ -72,6 +75,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
             controller: widget.textEditingController,
             focusNode: _focusNode,
             keyboardType: widget.keyboardType,
+            inputFormatters: widget.inputFormatters,
             decoration: InputDecoration(
               label: Text(widget.label),
               hintText: widget.hintText,
@@ -137,3 +141,4 @@ class SearchField extends StatelessWidget {
     );
   }
 }
+

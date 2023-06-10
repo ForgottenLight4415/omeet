@@ -15,7 +15,7 @@ class GetClaimsCubit extends Cubit<GetClaimsState> {
   GetClaimsCubit() : super(GetClaimsInitial());
 
   Future<void> getClaims(BuildContext context,
-      {bool department = false}) async {
+      {bool forSelfAssignment = false}) async {
     if (!await checkConnection(context)) {
       emit(GetClaimsFailed(1000, "No internet connection"));
       return;
@@ -24,9 +24,7 @@ class GetClaimsCubit extends Cubit<GetClaimsState> {
     try {
       emit(
         GetClaimsSuccess(
-          await _homeRepository.getClaims(
-            department: department,
-          ),
+          await _homeRepository.getClaims(forSelfAssignment: forSelfAssignment),
         ),
       );
     } on SocketException {
@@ -48,7 +46,14 @@ class GetClaimsCubit extends Cubit<GetClaimsState> {
       List<Claim> _result = [];
       String _searchQuery = searchQuery.trim().toLowerCase();
       for (var claim in _claims) {
-        if (claim.claimNumber.toString().toLowerCase().contains(_searchQuery)) {
+        String insuredName = claim.insuredName.toLowerCase();
+        String phoneNumber = claim.insuredContactNumber;
+        String altContactNumber = claim.insuredAltContactNumber;
+        String claimNumber = claim.claimNumber.toLowerCase();
+        if (insuredName.contains(_searchQuery)
+            || phoneNumber.contains(_searchQuery)
+            || altContactNumber.contains(_searchQuery)
+            || claimNumber.contains(_searchQuery)) {
           _result.add(claim);
         }
       }
