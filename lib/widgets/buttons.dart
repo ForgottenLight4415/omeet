@@ -8,7 +8,8 @@ import './scaling_tile.dart';
 class PrimaryButton extends StatelessWidget {
   final VoidCallback onPressed;
   final String label;
-  const PrimaryButton({Key? key, required this.onPressed, required this.label}) : super(key: key);
+  const PrimaryButton({Key? key, required this.onPressed, required this.label})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,18 +18,18 @@ class PrimaryButton extends StatelessWidget {
       child: Text(label),
       style: ButtonStyle(
         shape: MaterialStateProperty.resolveWith(
-          (states) => RoundedRectangleBorder(
+              (states) => RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(14.r),
           ),
         ),
         textStyle: MaterialStateProperty.resolveWith(
-          (states) => TextStyle(
+              (states) => TextStyle(
             fontSize: 20.sp,
             fontWeight: FontWeight.w300,
           ),
         ),
         padding: MaterialStateProperty.resolveWith(
-          (states) => EdgeInsets.symmetric(
+              (states) => EdgeInsets.symmetric(
             horizontal: 20.w,
             vertical: 15.h,
           ),
@@ -53,10 +54,14 @@ class VideoMeetToggleButton extends StatelessWidget {
     return ScalingTile(
       onPressed: onPressed,
       child: SizedBox(
-        height: 70.h,
-        width: 70.h,
+        height: 80.h,
+        width: 80.h,
         child: Card(
           color: toggleParameter ? Colors.red : Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius:
+            BorderRadius.circular(40.0),
+          ),
           child: Center(
             child: AnimatedCrossFade(
               duration: const Duration(milliseconds: 200),

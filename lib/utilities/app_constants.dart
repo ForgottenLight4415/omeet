@@ -1,5 +1,6 @@
 class AppStrings {
   static const String appName = "BAGIC\nMotor Claim Investigation";
+  static const String appVersion = "VERSION 1.1.7 (BUILD 75)";
 
   // ERRORS AND FILLERS
   static const String blank = "";
@@ -7,6 +8,8 @@ class AppStrings {
   static const String noInternet = "No internet";
   static const String unavailable = "Unavailable";
   static const String locationDisabled = "Location is disabled.";
+  static const String fileSaved = "File saved";
+  static const String fileSaveFailed = "Failed to save file";
   static const String fileUploaded = "File uploaded successfully.";
   static const String fileUploadFailed = "Failed to upload the files.";
   static const String looksLikeOffline = "Looks like you are offline!\n";
@@ -26,10 +29,13 @@ class AppStrings {
   static const String recordVideo = "Record video";
   static const String recordAudio = "Record audio";
 
+  static const String customCall = "Custom call";
+  static const String uploads = "Uploads";
+  static const String signOut = "Sign out";
+
   // LONG INFORMATION TEXT
   static const String locationExplanation = "Location access is needed to access this feature.";
   static const String locationPermExplanation = "Location permission is needed to access this feature.";
-  static const String camMicStoragePerm = "Camera, microphone and storage permission is required to access this feature.";
   static const String offlineSolution = "Check if your WiFi or mobile data is turned on and if you have access to the internet.";
   static const String locationPermExplanationB = "Location permission is needed to access this feature. Grant permission in settings?";
   static const String locationError = "Location is not enabled or permission is not granted";

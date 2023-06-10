@@ -29,6 +29,10 @@ class _MeetingMainPageState extends State<MeetingMainPage> {
           centerTitle: true,
           title: Text("Meeting with ${widget.claim.insuredName}"),
           bottom: const TabBar(
+            labelColor: Colors.black,
+            indicator: UnderlineTabIndicator(
+              borderSide: BorderSide(color: Colors.black),
+            ),
             isScrollable: true,
             tabs: <Widget>[
               Tab(icon: FaIcon(FontAwesomeIcons.video), text: "Meet"),

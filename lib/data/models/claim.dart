@@ -8,8 +8,8 @@ import '../../blocs/call_bloc/call_cubit.dart';
 import '../../blocs/home_bloc/assign_to_self_cubit/assign_self_cubit.dart';
 import '../../utilities/app_constants.dart';
 import '../../utilities/app_permission_manager.dart';
+import '../../utilities/location_service.dart';
 import '../../widgets/input_fields.dart';
-import '../../widgets/phone_list_tile.dart';
 import '../repositories/call_repo.dart';
 
 class Claim {
@@ -417,75 +417,31 @@ class Claim {
   }
 
   Future<void> videoCall(BuildContext context) async {
-    bool cameraStatus = await cameraPermission();
-    bool microphoneStatus = await microphonePermission();
-    bool storageStatus = await storagePermission();
-    if (cameraStatus && microphoneStatus && storageStatus) {
+    final bool cameraStatus = await cameraPermission(context) ?? false;
+    final bool microphoneStatus = await microphonePermission(context) ?? false;
+
+    final LocationService locationService = LocationService();
+    final bool locationStatus =
+    await locationService.checkLocationStatus(context);
+
+    if (cameraStatus && microphoneStatus && locationStatus) {
       Navigator.pushNamed(context, '/claim/meeting', arguments: this);
+      ScaffoldMessenger.of(context).removeCurrentSnackBar();
     } else {
       showInfoSnackBar(
         context,
-        AppStrings.camMicStoragePerm,
+        "Grant required permissions to access this feature",
         color: Colors.red,
       );
     }
   }
 
   Future<bool> call(BuildContext context) async {
-    String? _selectedPhone;
-    if (insuredAltContactNumber != AppStrings.unavailable) {
-      _selectedPhone = await showModalBottomSheet(
-        context: context,
-        constraints: BoxConstraints(maxHeight: 300.h),
-        builder: (context) => Column(
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 16.h),
-              child: Text(
-                AppStrings.voiceCall,
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-            ),
-            Divider(
-              height: 0.5,
-              thickness: 0.5,
-              indent: 50.w,
-              endIndent: 50.w,
-              color: Colors.black54,
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pop<String>(
-                  context,
-                  insuredContactNumber,
-                );
-              },
-              child: PhoneListTile(
-                phoneNumber: insuredContactNumber,
-              ),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pop<String>(
-                  context,
-                  insuredAltContactNumber,
-                );
-              },
-              child: PhoneListTile(
-                phoneNumber: insuredAltContactNumber,
-                primary: false,
-              ),
-            )
-          ],
-        ),
-      );
-    } else {
-      _selectedPhone = insuredContactNumber;
-    }
-    if (_selectedPhone != null) {
+    String? selectedPhone = insuredContactNumber;
+    if (selectedPhone != "Unavailable") {
       BlocProvider.of<CallCubit>(context).callClient(
         claimNumber: claimNumber,
-        phoneNumber: _selectedPhone,
+        phoneNumber: selectedPhone,
       );
       return true;
     } else {
@@ -494,13 +450,15 @@ class Claim {
   }
 
   Future<void> sendMessageModal(BuildContext context) async {
-    final TextEditingController _controller =
-    TextEditingController(text: insuredContactNumber);
-    bool? _result = await showModalBottomSheet<bool?>(
+    String? selectedPhone = insuredContactNumber;
+    final TextEditingController _controller = TextEditingController(
+      text: selectedPhone == "Unavailable" ? "" : selectedPhone,
+    );
+    final bool sendButtonPressed = await showModalBottomSheet<bool?>(
       context: context,
       constraints: BoxConstraints(maxHeight: 200.h),
       builder: (context) => Padding(
-        padding: const EdgeInsets.all(15.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           children: <Widget>[
             CustomTextFormField(
@@ -509,14 +467,15 @@ class Claim {
               hintText: "Enter phone number",
               keyboardType: TextInputType.phone,
             ),
-            const SizedBox(height: 10.0),
+            const SizedBox(height: 8.0),
             Align(
               alignment: Alignment.centerRight,
               child: ElevatedButton(
                 onPressed: () {
                   Navigator.pop(context, true);
                   showInfoSnackBar(context, "Sending message",
-                      color: Colors.orange);
+                    color: Colors.orange,
+                  );
                 },
                 child: const Text("SEND"),
               ),
@@ -524,21 +483,20 @@ class Claim {
           ],
         ),
       ),
-    );
-    if (_result == null) {
-      return;
-    } else if (_controller.text.isNotEmpty || _controller.text.length != 10) {
-      if (await CallRepository().sendMessage(
+    ) ?? false;
+    if (sendButtonPressed && _controller.text.length == 10) {
+      final CallRepository callRepository = CallRepository();
+      final bool messageRequestStatus = await callRepository.sendMessage(
         claimNumber: claimNumber,
         phoneNumber: _controller.text,
-      )) {
+      );
+      if (messageRequestStatus) {
         showInfoSnackBar(context, "Message sent", color: Colors.green);
       } else {
         showInfoSnackBar(context, "Failed", color: Colors.red);
       }
-    } else {
-      showInfoSnackBar(context, "Enter a valid phone number",
-          color: Colors.red);
+    } else if (sendButtonPressed && _controller.text.length != 10) {
+      showInfoSnackBar(context, "Enter a valid phone number", color: Colors.red);
     }
   }
 

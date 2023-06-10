@@ -5,12 +5,12 @@ import '/data/providers/app_server_provider.dart';
 import '/data/providers/authentication_provider.dart';
 
 class ClaimProvider extends AppServerProvider {
-  Future<List<Claim>> getClaims({bool department = false}) async {
+  Future<List<Claim>> getClaims({bool forSelfAssignment = false}) async {
     final Map<String, String> _data = <String, String>{
       "email": await AuthenticationProvider.getEmail(),
     };
     final DecodedResponse _response = await postRequest(
-      path: department
+      path: forSelfAssignment
           ? ApiUrl.getDepartmentClaimsUrl
           : ApiUrl.getClaimsUrl,
       data: _data,
