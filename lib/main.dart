@@ -44,7 +44,7 @@ class _OMeetAppState extends State<OMeetApp> {
       designSize: const Size(412, 915),
       builder: (BuildContext context, Widget? child) => MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'BAGIC MCI',
+        title: 'OMeet ICICI MFI',
         theme: AppTheme.lightTheme,
         builder: (BuildContext? context, Widget? widget) {
           return MediaQuery(

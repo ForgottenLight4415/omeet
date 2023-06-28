@@ -1,5 +1,5 @@
 class ApiUrl {
-  static const String baseUrl = 'https://omeet.in/BAGIC_Motor_Claim_Investigation/';
+  static const String baseUrl = 'https://omeet.in/MOTOR/ICICI/';
 
   static const String loginUrl = "api/loginm.php";
   static const String verifyOtp = "api/verify_otp.php";

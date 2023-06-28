@@ -1,6 +1,6 @@
 class AppStrings {
-  static const String appName = "BAGIC\nMotor Claim Investigation";
-  static const String appVersion = "VERSION 1.1.7 (BUILD 75)";
+  static const String appName = "IL-IBNR";
+  static const String appVersion = "VERSION 1.1.8 (BUILD 76)";
 
   // ERRORS AND FILLERS
   static const String blank = "";

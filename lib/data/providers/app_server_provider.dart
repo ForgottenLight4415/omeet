@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
@@ -75,6 +76,7 @@ class AppServerProvider {
             },
         body: jsonEncode(data),
       );
+      log(_response.body);
       return processResponse(_response);
     } catch (e) {
       throw AppException(
