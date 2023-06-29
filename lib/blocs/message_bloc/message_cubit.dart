@@ -16,7 +16,7 @@ class MessageCubit extends Cubit<MessageState> {
   Future<void> messageClient({required String claimNumber, required String phoneNumber}) async {
     emit(SendingMessage());
     try {
-      if (await _callRepo.sendMessage(claimNumber: claimNumber, phoneNumber: phoneNumber)) {
+      if (await _callRepo.sendMessage(claimId: claimNumber, phoneNumber: phoneNumber)) {
         emit(MessageSent());
       }
     } on SocketException {

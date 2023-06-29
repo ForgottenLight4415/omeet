@@ -531,7 +531,7 @@ class _CaptureImagePageState extends State<CaptureImagePage> with WidgetsBinding
           LocationData _locationData = widget.arguments.locationData;
           final DataUploadRepository _repository = DataUploadRepository();
           bool _result = await _repository.uploadData(
-            claimNumber: widget.arguments.claim.claimNumber,
+            claimId: widget.arguments.claim.claimId,
             latitude: _locationData.latitude ?? 0,
             longitude: _locationData.longitude ?? 0,
             file: _imageFile,

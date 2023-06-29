@@ -56,7 +56,7 @@ class VideoRecorder {
       LocationData _locationData = caseLocation!;
       File _videoFile = File(filePath);
       await _repository.uploadData(
-          claimNumber: caseClaimNumber!,
+          claimId: caseClaimNumber!,
           latitude: _locationData.latitude ?? 0,
           longitude: _locationData.longitude ?? 0,
           file: _videoFile,

@@ -7,7 +7,7 @@ class DataUploadRepository {
   final DataUploadProvider _provider = DataUploadProvider();
 
   Future<bool> uploadData({
-    required String claimNumber,
+    required String claimId,
     required double latitude,
     required double longitude,
     required File file,
@@ -15,7 +15,7 @@ class DataUploadRepository {
     bool uploadNow = false,
   }) =>
       _provider.uploadFiles(
-        claimNumber: claimNumber,
+        claimNumber: claimId,
         latitude: latitude,
         longitude: longitude,
         file: file,

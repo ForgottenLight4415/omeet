@@ -19,27 +19,30 @@ class _ClaimDetailsState extends State<ClaimDetails> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 10.0, top: 10.0, right: 10.0),
+      padding: const EdgeInsets.only(left: 16.0, top: 16.0, right: 16.0),
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Align(
               alignment: Alignment.center,
-              child: Text(
-                widget.claim.claimNumber,
-                softWrap: true,
-                maxLines: 2,
-                overflow: TextOverflow.fade,
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                  fontWeight: FontWeight.w700,
-                  color: Theme.of(context).primaryColor,
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  widget.claim.claimId,
+                  softWrap: true,
+                  maxLines: 2,
                   overflow: TextOverflow.fade,
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                    fontWeight: FontWeight.w700,
+                    color: Theme.of(context).primaryColor,
+                    overflow: TextOverflow.fade,
+                  ),
                 ),
               ),
             ),
-            SizedBox(height: 10.h),
+            SizedBox(height: 16.h),
           ] +
               _allDetails(),
         ),
@@ -51,10 +54,11 @@ class _ClaimDetailsState extends State<ClaimDetails> {
     Map<String, Map<String, dynamic>> _mainMap = widget.claim.toMap();
     return _mainMap[key]!
         .entries
-        .map(
-          (entry) => CardDetailText(
+        .map((entry) => CardDetailText(
         title: entry.key,
-        content: entry.value != AppStrings.blank ? entry.value : AppStrings.unavailable,
+        content: entry.value != AppStrings.blank
+            ? entry.value
+            : AppStrings.unavailable,
       ),
     )
         .toList();

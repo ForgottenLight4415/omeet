@@ -57,7 +57,7 @@ class _UploadsPageState extends State<UploadsPage> {
                   try {
                     File _file = File(value.file);
                     bool _result = await DataUploadRepository().uploadData(
-                      claimNumber: value.claimNo,
+                      claimId: value.claimNo,
                       latitude: value.latitude,
                       longitude: value.longitude,
                       file: _file,
@@ -137,11 +137,11 @@ class _UploadsPageState extends State<UploadsPage> {
         onWillPop: () async {
           return false;
         },
-        child: AlertDialog(
-          title: const Text("Uploading files"),
+        child: const AlertDialog(
+          title: Text("Uploading files"),
           content: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: const <Widget>[
+            children: <Widget>[
               CircularProgressIndicator(),
               Text("Uploading"),
             ],

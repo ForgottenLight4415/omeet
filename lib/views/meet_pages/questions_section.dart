@@ -8,9 +8,9 @@ import '../../utilities/show_snackbars.dart';
 import '../../widgets/question_card.dart';
 
 class QuestionsPage extends StatefulWidget {
-  final String claimNumber;
+  final String claimId;
 
-  const QuestionsPage({Key? key, required this.claimNumber}) : super(key: key);
+  const QuestionsPage({Key? key, required this.claimId}) : super(key: key);
 
   @override
   State<QuestionsPage> createState() => _QuestionsPageState();
@@ -42,7 +42,7 @@ class _QuestionsPageState extends State<QuestionsPage> with AutomaticKeepAliveCl
   Widget build(BuildContext context) {
     super.build(context);
     return BlocProvider<QuestionsBloc>(
-      create: (context) => QuestionsBloc()..add(GetQuestionsEvent(claimNumber: widget.claimNumber)),
+      create: (context) => QuestionsBloc()..add(GetQuestionsEvent(claimNumber: widget.claimId)),
       child: BlocConsumer<QuestionsBloc, QuestionsState>(
         listener: (context, state) {
           if (state is QuestionsReady) {
@@ -111,7 +111,7 @@ class _QuestionsPageState extends State<QuestionsPage> with AutomaticKeepAliveCl
                                     ? null
                                     : () {
                                         BlocProvider.of<SubmitQuestionCubit>(context).submitQuestion(
-                                          widget.claimNumber,
+                                          widget.claimId,
                                           state.questions,
                                         );
                                       },
@@ -145,7 +145,7 @@ class _QuestionsPageState extends State<QuestionsPage> with AutomaticKeepAliveCl
                   ElevatedButton(
                     onPressed: () {
                       BlocProvider.of<QuestionsBloc>(context).add(
-                        GetQuestionsEvent(claimNumber: widget.claimNumber),
+                        GetQuestionsEvent(claimNumber: widget.claimId),
                       );
                     },
                     child: const Text("RETRY"),
@@ -154,10 +154,14 @@ class _QuestionsPageState extends State<QuestionsPage> with AutomaticKeepAliveCl
               ),
             );
           } else {
-            return Center(
+            return const Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const <Widget>[CircularProgressIndicator(), SizedBox(height: 20.0), Text("Fetching details")],
+                children: <Widget>[
+                  CircularProgressIndicator(),
+                  SizedBox(height: 20.0),
+                  Text("Fetching details"),
+                ],
               ),
             );
           }

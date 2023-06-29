@@ -37,7 +37,7 @@ class SoundRecorder {
     int _currentTime = DateTime.now().microsecondsSinceEpoch;
     Directory? directory = await getExternalStorageDirectory();
     Directory? _saveDirectory = await Directory(directory!.path + "/Audio").create();
-    String _fileName = "/${claim.claimNumber}_$_currentTime.aac";
+    String _fileName = "/${claim.claimId}_$_currentTime.aac";
     await _audioRecorder!.startRecorder(toFile: _saveDirectory.path + _fileName, codec: Codec.aacADTS);
   }
 
@@ -48,7 +48,7 @@ class SoundRecorder {
     final DataUploadRepository _repository = DataUploadRepository();
     showProgressDialog(context);
     bool _result = await _repository.uploadData(
-      claimNumber: claim.claimNumber,
+      claimId: claim.claimId,
       latitude: latitude,
       longitude: longitude,
       file: _audioFile,

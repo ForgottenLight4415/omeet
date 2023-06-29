@@ -8,9 +8,9 @@ import '../../widgets/error_widget.dart';
 import '../../widgets/loading_widget.dart';
 
 class DocumentsView extends StatefulWidget {
-  final String claimNumber;
+  final String claimId;
 
-  const DocumentsView({Key? key, required this.claimNumber}) : super(key: key);
+  const DocumentsView({Key? key, required this.claimId}) : super(key: key);
 
   @override
   State<DocumentsView> createState() => _DocumentsViewState();
@@ -29,7 +29,7 @@ class _DocumentsViewState extends State<DocumentsView>
     return BlocProvider<GetDocumentCubit>(
       create: (context) => GetDocumentCubit()
         ..getDocuments(
-          widget.claimNumber,
+          widget.claimId,
           DocumentType.file,
         ),
       child: BlocBuilder<GetDocumentCubit, GetDocumentState>(
@@ -57,7 +57,7 @@ class _DocumentsViewState extends State<DocumentsView>
               errorText: "Exception: ${state.cause} (${state.code})",
               action: () {
                 BlocProvider.of<GetDocumentCubit>(context)
-                    .getDocuments(widget.claimNumber, DocumentType.file);
+                    .getDocuments(widget.claimId, DocumentType.file);
               },
             );
           } else {

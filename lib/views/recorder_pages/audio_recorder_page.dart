@@ -96,7 +96,7 @@ class _AudioRecordPageState extends State<AudioRecordPage> {
                 style: Theme.of(context).textTheme.titleLarge,
               ),
               Text(
-                widget.arguments.claim.claimNumber,
+                widget.arguments.claim.claimId,
                 style: TextStyle(
                   fontSize: 28.sp,
                   color: Theme.of(context).primaryColor,

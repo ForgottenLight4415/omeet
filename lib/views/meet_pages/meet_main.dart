@@ -27,7 +27,10 @@ class _MeetingMainPageState extends State<MeetingMainPage> {
         appBar: AppBar(
           leading: const AppBackButton(),
           centerTitle: true,
-          title: Text("Meeting with ${widget.claim.insuredName}"),
+          title: Text(
+            "Meeting with ${widget.claim.insuredName.split(" ")[0]}",
+            overflow: TextOverflow.fade,
+          ),
           bottom: const TabBar(
             labelColor: Colors.black,
             indicator: UnderlineTabIndicator(
@@ -38,7 +41,7 @@ class _MeetingMainPageState extends State<MeetingMainPage> {
               Tab(icon: FaIcon(FontAwesomeIcons.video), text: "Meet"),
               Tab(icon: FaIcon(FontAwesomeIcons.question), text: "Q & A"),
               Tab(icon: FaIcon(FontAwesomeIcons.file), text: "Documents"),
-              Tab(icon: FaIcon(FontAwesomeIcons.checkCircle), text: "Conclusion"),
+              Tab(icon: FaIcon(FontAwesomeIcons.circleCheck), text: "Conclusion"),
               Tab(icon: FaIcon(FontAwesomeIcons.info), text: "Details"),
             ],
           ),
@@ -46,8 +49,8 @@ class _MeetingMainPageState extends State<MeetingMainPage> {
         body: TabBarView(
           children: [
             VideoMeetPage(claim: widget.claim),
-            QuestionsPage(claimNumber: widget.claim.claimNumber),
-            DocumentsView(claimNumber: widget.claim.claimNumber),
+            QuestionsPage(claimId: widget.claim.claimId),
+            DocumentsView(claimId: widget.claim.claimId),
             ConclusionPage(claim: widget.claim),
             MeetDetails(claim: widget.claim),
           ],

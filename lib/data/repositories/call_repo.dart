@@ -14,9 +14,9 @@ class CallRepository {
       );
 
   Future<bool> sendMessage(
-          {required String claimNumber, required String phoneNumber}) =>
+          {required String claimId, required String phoneNumber}) =>
       _callProvider.sendMessage(
-        claimNumber: claimNumber,
+        claimNumber: claimId,
         phoneNumber: phoneNumber,
       );
 }

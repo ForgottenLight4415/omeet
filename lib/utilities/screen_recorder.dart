@@ -21,7 +21,7 @@ class ScreenRecorder {
 
   Future<Map<String, dynamic>> startRecord({
     required BuildContext context,
-    required String claimNumber,
+    required String claimId,
   }) async {
     log("Starting screen record");
     if (_isRecording) {
@@ -40,24 +40,24 @@ class ScreenRecorder {
 
     final Map<String, dynamic> response =
     await _edScreenRecorder.startRecordScreen(
-      fileName: "${claimNumber}_${DateTime.now().microsecondsSinceEpoch}",
+      fileName: "${claimId}_${DateTime.now().microsecondsSinceEpoch}",
       dirPathToSave: _saveDirectory.path,
       audioEnable: true,
     );
-    _claimNumber = claimNumber;
+    _claimNumber = claimId;
     _isRecording = true;
     return response;
   }
 
   Future<Map<String, dynamic>> stopRecord(
-      {required String claimNumber, required BuildContext context}) async {
+      {required String claimId, required BuildContext context}) async {
     Map<String, dynamic> response = await _edScreenRecorder.stopRecord();
     File videoFile = response['file'];
 
     final DataUploadRepository _repository = DataUploadRepository();
     try {
       bool result = await _repository.uploadData(
-        claimNumber: claimNumber,
+        claimId: claimId,
         latitude: _locationData?.latitude ?? 0,
         longitude: _locationData?.longitude ?? 0,
         file: videoFile,

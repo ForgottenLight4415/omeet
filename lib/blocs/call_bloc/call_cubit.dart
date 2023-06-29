@@ -13,7 +13,7 @@ class CallCubit extends Cubit<CallState> {
   CallCubit() : super(CallInitial());
 
   void callClient(
-      {required String? claimNumber,
+      {required String? claimId,
       required String phoneNumber,
       String? managerNumber}) async {
     emit(CallLoading());
@@ -23,7 +23,7 @@ class CallCubit extends Cubit<CallState> {
       bool _callServiceResponse = await _callRepo.callClient(
         managerNumber: managerNumber ?? _pref.getString("phone")!,
         phoneNumber: phoneNumber,
-        claimNumber: claimNumber ?? "GODJN5432",
+        claimNumber: claimId ?? "GODJN5432",
       );
       if (_callServiceResponse) {
         emit(CallReady());

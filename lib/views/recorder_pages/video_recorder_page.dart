@@ -74,7 +74,7 @@ class _VideoRecordPageState extends State<VideoRecordPage>
                   Text(
                     _video.caseClaimNumber != null
                         ? "Recording in progress for claim number\n${_video.caseClaimNumber}"
-                        : "Start recording for\n${widget.config.claim.claimNumber}",
+                        : "Start recording for\n${widget.config.claim.claimId}",
                     textAlign: TextAlign.center,
                   ),
                   SizedBox(height: 10.h),
@@ -116,7 +116,7 @@ class _VideoRecordPageState extends State<VideoRecordPage>
                   ElevatedButton(
                     onPressed: () async {
                       if (!_isRecording && !_recorderBusy) {
-                        _video.caseClaimNumber = widget.config.claim.claimNumber;
+                        _video.caseClaimNumber = widget.config.claim.claimId;
                         await _video.startVideoRecording(_cameraFacing);
                         setState(() {});
                       } else if (!_isRecording && _recorderBusy) {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:omeet_motor/utilities/show_snackbars.dart';
@@ -6,279 +7,133 @@ import 'package:omeet_motor/utilities/upload_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../blocs/call_bloc/call_cubit.dart';
 import '../../blocs/home_bloc/assign_to_self_cubit/assign_self_cubit.dart';
-import '../../utilities/app_constants.dart';
 import '../../utilities/app_permission_manager.dart';
 import '../../utilities/location_service.dart';
 import '../../widgets/input_fields.dart';
 import '../repositories/call_repo.dart';
 
 class Claim {
-  final int claimID;
-  final String typeOfClaim;
-  final String dateOfTheft;
-  final String dateOfIntimation;
-  final String invReferralDate;
-  final String productType;
-  final String locationCode;
-  final String claimNumber;
+  final String claimId;
+  final String state;
+  final String district;
+  final String policeStation;
+  final String accidentYear;
+  final String firNumber;
+  final String firDate;
+  final String accidentDate;
+  final String section;
+  final String accused;
+  final String victim1;
+  final String victim2;
+  final String lossType;
+  final String accusedInsurer;
+  final String firDelay;
+  final String landlinePhone;
+  final String cugNumber;
+  final String policeStationEmail;
+  final String currentStatus;
   final String policyNumber;
-  final String insuredName;
-  final String insuredContactNumber;
-  final String insuredAltContactNumber;
-  final String email;
   final String policyStartDate;
   final String policyEndDate;
-  final String vehicleRegistrationNumber;
-  final String make;
-  final String model;
-  final String engineNumber;
-  final String chassisNumber;
-  final String reserveAmount;
-  final String prevInsurerName;
-  final String prevPolicyNumber;
-  final String prevPolicyExpDate;
-  final String noClaimBonus;
-  final String imtEndorsement;
-  final String insuredCity;
-  final String insuredState;
-  final String lossLocationCity;
-  final String lossLocationState;
-  final String pastClaimNumber;
-  final String dateOfLoss;
-  final String previousTypeOfClaim;
-  final String autoManualTrigger;
-  final String managerName;
-  final String surveyorName;
-  final String lotNo;
-  final String dateOfAllocation;
-  final String timeOfAllocation;
-  final String currentStatus;
-  final String scheduler;
-  final String videoOps;
-  final String videoOpsStatement;
-  final String finalConclusion;
-  final String videoMeetDate;
-  final String videoMeetTime;
-  final String tat;
-  final String kycStatus;
-  final String kycStatusProof;
-  final String faceMatch;
-
-  final String policeStation;
-  final String firNo;
-  final String firDate;
-  final String firMonth;
-  final String firQuarter;
-  final String firDelay;
-  final String firDelayBucket;
-  final String accidentDateAsPerFir;
-  final String vehicle1Accused;
-  final String engine1Accused;
-  final String chassis1Accused;
-  final String vehicle1AccusedAccidentId;
-  final String rid;
-  final String red;
+  final String insuredName;
+  final String customerMobileNumber;
+  final String email;
+  final String caseUpdatedDate;
 
   Claim.fromJson(Map<String, dynamic> decodedJson)
-      : claimID = decodedJson['id'] != null ? int.parse(decodedJson["id"]) : 0,
-        //  CUSTOMER INFO
-        insuredName = _cleanOrConvert(decodedJson["Insured_Name"]),
-        insuredCity = _cleanOrConvert(decodedJson["Insured_City"]),
-        insuredState = _cleanOrConvert(decodedJson["Insured_State"]),
-        insuredContactNumber = _cleanOrConvert(
-          decodedJson["Insured_Contact_Number"],
-        ),
-        insuredAltContactNumber = _cleanOrConvert(
-          decodedJson["Insured_Alternate_Contact_Number"],
-        ),
-        email =
-            _cleanOrConvert(decodedJson["Insured_Alternate_Contact_Number"]),
-
-        // VEHICLE DETAILS
-        productType = _cleanOrConvert(decodedJson["Product_Type"]),
-        make = _cleanOrConvert(decodedJson["Make"]),
-        model = _cleanOrConvert(decodedJson["Model"]),
-        engineNumber = _cleanOrConvert(decodedJson["Engine_No"]),
-        chassisNumber = _cleanOrConvert(decodedJson["Engine_No"]),
-        vehicleRegistrationNumber =
-            _cleanOrConvert(decodedJson["Vehicle_Reg_No"]),
-
-        // POLICY DETAILS
-        policyNumber = _cleanOrConvert(decodedJson["Policy_Number"]),
-        policyStartDate =
-            _cleanOrConvert(decodedJson["Policy_start_date_From"]),
-        policyEndDate = _cleanOrConvert(decodedJson["Policy_start_date_To"]),
-        prevPolicyNumber =
-            _cleanOrConvert(decodedJson["Previous_Policy_Number"]),
-        prevPolicyExpDate = _cleanOrConvert(
-          decodedJson["Previous_Policy_Expiry_Date"],
-        ),
-
-        // CLAIM DETAILS
-        claimNumber = _cleanOrConvert(decodedJson["Claim_No"]),
-        currentStatus = _cleanOrConvert(decodedJson["Current_Status"]),
-        typeOfClaim = _cleanOrConvert(decodedJson["Type_of_Claim"]),
-        pastClaimNumber = _cleanOrConvert(decodedJson["Past_Claim_Number"]),
-        previousTypeOfClaim = _cleanOrConvert(
-          decodedJson["Previous_Type_of_Claim"],
-        ),
-        dateOfTheft = _cleanOrConvert(decodedJson["Date_of_Theft"]),
-        dateOfLoss = _cleanOrConvert(decodedJson["Date_of_Loss"]),
-        dateOfIntimation = _cleanOrConvert(decodedJson["Date_of_Intimation"]),
-        invReferralDate = _cleanOrConvert(decodedJson["Inv_Referral_Date"]),
-        lossLocationCity = _cleanOrConvert(decodedJson["Loss_Location_City"]),
-        lossLocationState = _cleanOrConvert(decodedJson["Loss_Location_State"]),
-        locationCode = _cleanOrConvert(decodedJson["Location_Code"]),
-
-        // EXTRAS
-        managerName = _cleanOrConvert(decodedJson["Manager_Name"]),
-        surveyorName = _cleanOrConvert(decodedJson["Surveyor_Name"]),
-        dateOfAllocation = _cleanOrConvert(decodedJson["Date_of_Allocation"]),
-        timeOfAllocation = _cleanOrConvert(decodedJson["Time_of_Allocation"]),
-        prevInsurerName = _cleanOrConvert(decodedJson["Previous_Insurer_Name"]),
-        reserveAmount = _cleanOrConvert(decodedJson["Reserve_Amount"]),
-        noClaimBonus = _cleanOrConvert(decodedJson["No_Claim_Bonus"]),
-        imtEndorsement = _cleanOrConvert(decodedJson["IMT_Endorsement"]),
-        autoManualTrigger = _cleanOrConvert(decodedJson["Auto_Manual_Trigger"]),
-        lotNo = _cleanOrConvert(decodedJson["Lot_no"]),
-        scheduler = _cleanOrConvert(decodedJson["Scheduler"]),
-        videoOps = _cleanOrConvert(decodedJson["Video_Ops"]),
-        videoOpsStatement = _cleanOrConvert(decodedJson["Video_Ops_Statement"]),
-        finalConclusion = _cleanOrConvert(decodedJson["Final_Conclusion"]),
-        videoMeetDate = _cleanOrConvert(decodedJson["Video_Meet_Date"]),
-        videoMeetTime = _cleanOrConvert(decodedJson["Video_Meet_Time"]),
-        tat = _cleanOrConvert(decodedJson["TAT"]),
-        kycStatus = _cleanOrConvert(decodedJson["KYC_Status"]),
-        kycStatusProof = _cleanOrConvert(decodedJson["KYC_Status_Proof"]),
-        faceMatch = _cleanOrConvert(decodedJson["Face_Match"]),
-        policeStation = _cleanOrConvert(decodedJson["Police_Station"]),
-        firNo = _cleanOrConvert(decodedJson["FIR_No"]),
-        firDate = _cleanOrConvert(decodedJson["FIR_Date"]),
-        firMonth = _cleanOrConvert(decodedJson["FIR_Month"]),
-        firQuarter = _cleanOrConvert(decodedJson["FIR_Quarter"]),
-        firDelay = _cleanOrConvert(decodedJson["FIR_Delay"]),
-        firDelayBucket = _cleanOrConvert(decodedJson["FIR_Delay_Bucket"]),
-        accidentDateAsPerFir =
-            _cleanOrConvert(decodedJson["Accident_date_as_per_FIR"]),
-        vehicle1Accused = _cleanOrConvert(decodedJson["Vehicle_1_Accused"]),
-        engine1Accused = _cleanOrConvert(decodedJson["Engine_1_Accused"]),
-        chassis1Accused = _cleanOrConvert(decodedJson["Chassis_1_Accused"]),
-        vehicle1AccusedAccidentId =
-            _cleanOrConvert(decodedJson["Vehicle_1_Accused_Accident_ID"]),
-        rid = _cleanOrConvert(decodedJson["RID"]),
-        red = _cleanOrConvert(decodedJson["RED"]);
+      : claimId = _cleanOrConvert(decodedJson['CASE_ID']),
+        state = _cleanOrConvert(decodedJson['STATE']),
+        district = _cleanOrConvert(decodedJson['DISTRICT']),
+        policeStation = _cleanOrConvert(decodedJson['POLICE_STATION']),
+        accidentYear = _cleanOrConvert(decodedJson['ACCIDENT_YEAR']),
+        firNumber = _cleanOrConvert(decodedJson['FIR_NO']),
+        firDate = _cleanOrConvert(decodedJson['FIR_DATE']),
+        accidentDate = _cleanOrConvert(decodedJson['ACCIDENT_DATE']),
+        section = _cleanOrConvert(decodedJson['SECTION']),
+        accused = _cleanOrConvert(decodedJson['ACCUSED']),
+        victim1 = _cleanOrConvert(decodedJson['VICTIM1']),
+        victim2 = _cleanOrConvert(decodedJson['VICTIM2']),
+        lossType = _cleanOrConvert(decodedJson['Loss_Type']),
+        accusedInsurer = _cleanOrConvert(decodedJson['ACUSSED_Insurer']),
+        firDelay = _cleanOrConvert(decodedJson['FIR_Delay']),
+        landlinePhone = _cleanOrConvert(decodedJson['Landline_Phone']),
+        cugNumber = _cleanOrConvert(decodedJson['CUG_NO']),
+        policeStationEmail =
+            _cleanOrConvert(decodedJson['Police_Station_Email_ID']),
+        currentStatus = _cleanOrConvert(decodedJson['CURRENT_STATUS']),
+        policyNumber = _cleanOrConvert(decodedJson['POLICY_NUMBER']),
+        policyStartDate = _cleanOrConvert(decodedJson['POLICY_START_DATE']),
+        policyEndDate = _cleanOrConvert(decodedJson['POLICY_END_DATE']),
+        insuredName = _cleanOrConvert(decodedJson['INSURED_NAME']),
+        customerMobileNumber = _cleanOrConvert(decodedJson['CUST_MOBILE_NO']),
+        email = _cleanOrConvert(decodedJson['EMAIL']),
+        caseUpdatedDate = _cleanOrConvert(decodedJson['Case_Updated_Date']);
 
   Map<String, Map<String, dynamic>> toMap() {
     return <String, Map<String, dynamic>>{
       'Customer Information': <String, dynamic>{
-        'Customer name': insuredName,
-        'Customer address': _createAddress(insuredCity, insuredState),
-        'Phone number': insuredContactNumber,
-        'Alternate phone number': insuredAltContactNumber,
-        'Email address': email,
+        'Insured name': insuredName,
+        'Insured mobile': customerMobileNumber,
+        'Insured email address': email,
       },
       'Policy Details': <String, dynamic>{
         'Policy number': policyNumber,
         'Policy start date': policyStartDate,
         'Policy end date': policyEndDate,
-        'Previous policy number': prevPolicyNumber,
-        'Previous policy expiration date': prevPolicyExpDate,
       },
-      'Vehicle Details': <String, dynamic>{
-        'Type': productType,
-        'Make': make,
-        'Model': model,
-        'Engine number': engineNumber,
-        'Chassis number': chassisNumber,
-      },
-      'Claim Details': <String, dynamic>{
-        'Type': typeOfClaim,
-        'Current status': currentStatus,
-        'Date of theft': dateOfTheft,
-        'Date of loss': dateOfLoss,
-        'Date of intimation': dateOfIntimation,
-        'Invoice referral date': invReferralDate,
+      'Case Details': <String, dynamic>{
+        'Case ID': claimId,
+        'Accident state': state,
+        'Accident district': district,
         'Police station': policeStation,
-        'FIR No.': firNo,
-        'FIR Date': firDate,
-        'Month': firMonth,
-        'Quarter': firQuarter,
+        'Accident year': accidentYear,
+        'Accident date': accidentDate,
+        'FIR number': firNumber,
+        'FIR date': firDate,
         'FIR Delay': firDelay,
-        'FIR Delay Bucket': firDelayBucket,
-        'Accident date (as per FIR)': accidentDateAsPerFir,
-        'Vehicle 1 (Accused)': vehicle1Accused,
-        'Engine 1 (Accused)': engine1Accused,
-        'Chassis 1 (Accused)': chassis1Accused,
-        'Vehicle 1 (Accused) Accident ID': vehicle1AccusedAccidentId,
-        'RID': rid,
-        'RED': red,
-        'Loss location': _createAddress(lossLocationCity, lossLocationState),
-        'Location code': locationCode
+        'Section': section,
+        'Accused vehicle number': accused,
+        'Victim 1 vehicle number': victim1,
+        'Victim 2 vehicle number': victim2,
+        'Loss type': lossType,
+        'Accused insurance company': accusedInsurer,
+        'Police station number 1': landlinePhone,
+        'Police station number 2': cugNumber,
+        'Police station email address': policeStationEmail,
+        'Current status': currentStatus,
+        'Allocation date': caseUpdatedDate,
       }
     };
   }
 
   Map<String, dynamic> toInternetMap() {
     return <String, String>{
-      'Type_of_Claim': typeOfClaim,
-      'Date_of_Theft': dateOfTheft,
-      'Date_of_Intimation': dateOfIntimation,
-      'Inv_Referral_Date': invReferralDate,
-      'Product_Type': productType,
-      'Location_Code': locationCode,
-      'Claim_No': claimNumber,
-      'Policy_Number': policyNumber,
-      'Insured_Name': insuredName,
-      'Insured_Contact_Number': insuredContactNumber,
-      'Insured_Alternate_Contact_Number': insuredAltContactNumber,
-      'Email_Id': email,
-      'Policy_start_date_From': policyStartDate,
-      'Policy_start_date_To': policyEndDate,
-      'Vehicle_Reg_No': vehicleRegistrationNumber,
-      'Make': make,
-      'Model': model,
-      'Engine_No': engineNumber,
-      'Chassis_No': chassisNumber,
-      'Reserve_Amount': reserveAmount,
-      'Previous_Insurer_Name': prevInsurerName,
-      'Previous_Policy_Number': prevPolicyNumber,
-      'Previous_Policy_Expiry_Date': prevPolicyExpDate,
-      'No_Claim_Bonus': noClaimBonus,
-      'IMT_Endorsement': imtEndorsement,
-      'Insured_City': insuredCity,
-      'Insured_State': insuredState,
-      'Loss_Location_City': lossLocationCity,
-      'Loss_Location_State': lossLocationState,
-      'Past_Claim_Number': pastClaimNumber,
-      'Date_of_Loss': dateOfLoss,
-      'Previous_Type_of_Claim': previousTypeOfClaim,
-      'Auto_Manual_Trigger': autoManualTrigger,
-      'Manager_Name': managerName,
-      'Surveyor_Name': surveyorName,
-      'Lot_no': lotNo,
-      'Police_Station': policeStation,
-      'FIR_No': firNo,
-      'FIR_Date': firDate,
-      'FIR_Month': firMonth,
-      'FIR_Quarter': firQuarter,
-      'FIR_Delay': firDelay,
-      'FIR_Delay_Bucket': firDelayBucket,
-      'Accident_date_as_per_FIR': accidentDateAsPerFir,
-      'Vehicle_1_Accused': vehicle1Accused,
-      'Engine_1_Accused': engine1Accused,
-      'Chassis_1_Accused': chassis1Accused,
-      'Vehicle_1_Accused_Accident_ID': vehicle1AccusedAccidentId,
-      'RID': rid,
-      'RED': red,
+      "CASE_ID": claimId,
+      "STATE": state,
+      "DISTRICT": district,
+      "POLICE_STATION": policeStation,
+      "ACCIDENT_YEAR": accidentYear,
+      "FIR_NO": firNumber,
+      "FIR_DATE": firDate,
+      "ACCIDENT_DATE": accidentDate,
+      "SECTION": section,
+      "ACUSSED": accused,
+      "VICTIM1": victim1,
+      "VICTIM2": victim2,
+      "Loss_Type": lossType,
+      "ACUSSED_Insurer": accusedInsurer,
+      "FIR_Delay": firDelay,
+      "Landline_Phone": landlinePhone,
+      "CUG_NO": cugNumber,
+      "Police_Station_Email_ID": policeStationEmail,
+      "CURRENT_STATUS": currentStatus,
+      "POLICY_NUMBER": policyNumber,
+      "POLICY_START_DATE": policyStartDate,
+      "POLICY_END_DATE": policyEndDate,
+      "INSURED_NAME": insuredName,
+      "CUST_MOBILE_NO": customerMobileNumber,
+      "EMAIL": email,
     };
-  }
-
-  String get customerAddress {
-    return _createAddress(insuredCity, insuredState);
-  }
-
-  String get lossAddress {
-    return _createAddress(lossLocationCity, lossLocationState);
   }
 
   static String _cleanStrings(String? string) {
@@ -296,113 +151,70 @@ class Claim {
     return "Unavailable";
   }
 
-  String _createAddress(String city, String state) {
-    if (city != AppStrings.unavailable && state != AppStrings.unavailable) {
-      return "$city, $state";
-    } else if (city != AppStrings.unavailable) {
-      return city;
-    } else if (state != AppStrings.unavailable) {
-      return state;
-    } else {
-      return AppStrings.unavailable;
-    }
-  }
-
   static Map<String, List<String>> get fields {
     return <String, List<String>>{
       'Customer Information': [
-        'Customer name',
-        'Customer city',
-        'Customer state',
-        'Phone number',
-        'Alternate phone number',
-        'Email address',
+        'Insured name',
+        'Insured mobile',
+        'Insured email address',
       ],
       'Policy Details': [
         'Policy number',
         'Policy start date',
         'Policy end date',
-        'Previous policy number',
-        'Previous policy expiration date',
-      ],
-      'Vehicle Details': [
-        'Vehicle Registration Number',
-        'Type',
-        'Make',
-        'Model',
-        'Engine number',
-        'Chassis number',
       ],
       'Claim Details': [
-        'Type of claim',
-        'Claim number',
-        'Date of theft',
-        'Date of loss',
-        'Date of intimation',
-        'Invoice referral date',
+        'Claim ID',
+        'Accident state',
+        'Accident district',
         'Police station',
-        'FIR No.',
-        'FIR Date',
-        'Month',
-        'Quarter',
+        'Accident year',
+        'Accident date',
+        'FIR number',
+        'FIR date',
         'FIR Delay',
-        'FIR Delay Bucket',
-        'Accident date (as per FIR)',
-        'Vehicle 1 (Accused)',
-        'Engine 1 (Accused)',
-        'Chassis 1 (Accused)',
-        'Vehicle 1 (Accused) Accident ID',
-        'RID',
-        'RED',
-        'Loss location city',
-        'Loss location state',
-        'Location code'
-      ]
+        'Section',
+        'Accused vehicle number',
+        'Victim 1 vehicle number',
+        'Victim 2 vehicle number',
+        'Loss type',
+        'Accused insurance company',
+        'Police station number 1',
+        'Police station number 2',
+        'Police station email address',
+        'Current status',
+        'Allocation date',
+      ],
     };
   }
 
   static List<String> get createFields {
     return <String>[
-      'Insured_Name',
-      'Insured_City',
-      'Insured_State',
-      'Insured_Contact_Number',
-      'Insured_Alternate_Contact_Number',
-      'Email_Id',
-      'Policy_Number',
-      'Policy_start_date_From',
-      'Policy_start_date_To',
-      'Previous_Policy_Number',
-      'Previous_Policy_Expiry_Date',
-      'Vehicle_Reg_No',
-      'Product_Type',
-      'Make',
-      'Model',
-      'Engine_No',
-      'Chassis_No',
-      'Type_of_Claim',
-      'Claim_No',
-      'Date_of_Theft',
-      'Date_of_Loss',
-      'Date_of_Intimation',
-      'Inv_Referral_Date',
-      'Police_Station',
-      'FIR_No',
-      'FIR_Date',
-      'FIR_Month',
-      'FIR_Quarter',
-      'FIR_Delay',
-      'FIR_Delay_Bucket',
-      'Accident_date_as_per_FIR',
-      'Vehicle_1_Accused',
-      'Engine_1_Accused',
-      'Chassis_1_Accused',
-      'Vehicle_1_Accused_Accident_ID',
-      'RID',
-      'RED',
-      'Loss_Location_City',
-      'Loss_Location_State',
-      'Location_Code',
+      "CASE_ID",
+      "STATE",
+      "DISTRICT",
+      "POLICE_STATION",
+      "ACCIDENT_YEAR",
+      "FIR_NO",
+      "FIR_DATE",
+      "ACCIDENT_DATE",
+      "SECTION",
+      "ACUSSED",
+      "VICTIM1",
+      "VICTIM2",
+      "Loss_Type",
+      "ACUSSED_Insurer",
+      "FIR_Delay",
+      "Landline_Phone",
+      "CUG_NO",
+      "Police_Station_Email_ID",
+      "CURRENT_STATUS",
+      "POLICY_NUMBER",
+      "POLICY_START_DATE",
+      "POLICY_END_DATE",
+      "INSURED_NAME",
+      "CUST_MOBILE_NO",
+      "EMAIL",
     ];
   }
 
@@ -422,7 +234,7 @@ class Claim {
 
     final LocationService locationService = LocationService();
     final bool locationStatus =
-    await locationService.checkLocationStatus(context);
+        await locationService.checkLocationStatus(context);
 
     if (cameraStatus && microphoneStatus && locationStatus) {
       Navigator.pushNamed(context, '/claim/meeting', arguments: this);
@@ -437,10 +249,10 @@ class Claim {
   }
 
   Future<bool> call(BuildContext context) async {
-    String? selectedPhone = insuredContactNumber;
+    String? selectedPhone = customerMobileNumber;
     if (selectedPhone != "Unavailable") {
       BlocProvider.of<CallCubit>(context).callClient(
-        claimNumber: claimNumber,
+        claimId: claimId,
         phoneNumber: selectedPhone,
       );
       return true;
@@ -450,53 +262,61 @@ class Claim {
   }
 
   Future<void> sendMessageModal(BuildContext context) async {
-    String? selectedPhone = insuredContactNumber;
+    String? selectedPhone = customerMobileNumber;
     final TextEditingController _controller = TextEditingController(
       text: selectedPhone == "Unavailable" ? "" : selectedPhone,
     );
-    final bool sendButtonPressed = await showModalBottomSheet<bool?>(
-      context: context,
-      constraints: BoxConstraints(maxHeight: 200.h),
-      builder: (context) => Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: <Widget>[
-            CustomTextFormField(
-              textEditingController: _controller,
-              label: "Phone number",
-              hintText: "Enter phone number",
-              keyboardType: TextInputType.phone,
+    final bool? sendButtonPressed = await showModalBottomSheet<bool?>(
+          context: context,
+          constraints: BoxConstraints(maxHeight: 200.h),
+          builder: (context) => Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: <Widget>[
+                CustomTextFormField(
+                  textEditingController: _controller,
+                  label: "Phone number",
+                  hintText: "Enter phone number",
+                  keyboardType: TextInputType.phone,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                  ],
+                ),
+                const SizedBox(height: 8.0),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context, true);
+                      showInfoSnackBar(
+                        context,
+                        "Sending message",
+                        color: Colors.orange,
+                      );
+                    },
+                    child: const Text("SEND"),
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 8.0),
-            Align(
-              alignment: Alignment.centerRight,
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context, true);
-                  showInfoSnackBar(context, "Sending message",
-                    color: Colors.orange,
-                  );
-                },
-                child: const Text("SEND"),
-              ),
-            ),
-          ],
-        ),
-      ),
-    ) ?? false;
-    if (sendButtonPressed && _controller.text.length == 10) {
-      final CallRepository callRepository = CallRepository();
-      final bool messageRequestStatus = await callRepository.sendMessage(
-        claimNumber: claimNumber,
-        phoneNumber: _controller.text,
-      );
-      if (messageRequestStatus) {
-        showInfoSnackBar(context, "Message sent", color: Colors.green);
-      } else {
-        showInfoSnackBar(context, "Failed", color: Colors.red);
+          ),
+        );
+    if (sendButtonPressed != null && sendButtonPressed) {
+      if (_controller.text.length == 10) {
+        final CallRepository callRepository = CallRepository();
+        final bool messageRequestStatus = await callRepository.sendMessage(
+          claimId: claimId,
+          phoneNumber: _controller.text,
+        );
+        if (messageRequestStatus) {
+          showInfoSnackBar(context, "Message sent", color: Colors.green);
+        } else {
+          showInfoSnackBar(context, "Failed", color: Colors.red);
+        }
+      } else if (sendButtonPressed && _controller.text.length != 10) {
+        showInfoSnackBar(context, "Enter a valid phone number",
+            color: Colors.red);
       }
-    } else if (sendButtonPressed && _controller.text.length != 10) {
-      showInfoSnackBar(context, "Enter a valid phone number", color: Colors.red);
     }
   }
 
@@ -507,7 +327,7 @@ class Claim {
       builder: (context) => Column(
         children: <Widget>[
           Padding(
-            padding: EdgeInsets.symmetric(vertical: 16.h),
+            padding: const EdgeInsets.symmetric(vertical: 16.0),
             child: Text(
               "Are you sure?",
               style: Theme.of(context).textTheme.titleLarge,
@@ -523,51 +343,53 @@ class Claim {
           BlocProvider<AssignSelfCubit>(
             create: (context) => AssignSelfCubit(),
             child: BlocConsumer<AssignSelfCubit, AssignSelfState>(
-                listener: (context, state) {
-                  if (state is AssignSelfLoading) {
-                    showProgressDialog(context, label: "Assigning", content: "Assigning this claim to you...",);
-                  } else if (state is AssignSelfSuccess) {
-                    Navigator.pop(context);
-                    showInfoSnackBar(context, "Assigned", color: Colors.green);
-                  } else if (state is AssignSelfFailed) {
-                    Navigator.pop(context);
-                    showInfoSnackBar(context, "Failed to assign", color: Colors.red);
-                  }
-                }, builder: (context, snapshot) {
-              return TextButton(
-                onPressed: () async {
-                  final SharedPreferences _prefs =
-                  await SharedPreferences.getInstance();
-                  await BlocProvider.of<AssignSelfCubit>(context).assignToSelf(
+              listener: (context, state) {
+                if (state is AssignSelfLoading) {
+                  showProgressDialog(
                     context,
-                    claimNumber,
-                    _prefs.getString("email") ?? "",
+                    label: "Assigning",
+                    content: "Assigning this claim to you...",
                   );
+                } else if (state is AssignSelfSuccess) {
                   Navigator.pop(context);
-                },
-                child: ListTile(
-                  leading: Padding(
-                    padding: EdgeInsets.only(left: 12.w, top: 8.h),
-                    child: Icon(Icons.check,
-                        size: 30.w, color: Theme.of(context).primaryColor),
+                  showInfoSnackBar(context, "Assigned", color: Colors.green);
+                } else if (state is AssignSelfFailed) {
+                  Navigator.pop(context);
+                  showInfoSnackBar(context, "Failed to assign",
+                      color: Colors.red);
+                }
+              },
+              builder: (context, snapshot) {
+                return TextButton(
+                  onPressed: () async {
+                    final SharedPreferences _prefs = await SharedPreferences.getInstance();
+                    await BlocProvider.of<AssignSelfCubit>(context).assignToSelf(context, claimId, _prefs.getString("email") ?? "");
+                    Navigator.pop(context);
+                  },
+                  child: ListTile(
+                    leading: Padding(
+                      padding: const EdgeInsets.only(left: 12.0, top: 8.0),
+                      child: Icon(
+                          Icons.check,
+                          size: 30.w,
+                          color: Theme.of(context).primaryColor,
+                      ),
+                    ),
+                    title: const Text("Assign this claim to me"),
                   ),
-                  title: const Text("Assign this claim to me"),
-                ),
               );
             }),
           ),
           TextButton(
-            onPressed: () {
-              Navigator.pop<String>(
-                context,
-                insuredAltContactNumber,
-              );
-            },
+            onPressed: () => Navigator.pop(context),
             child: ListTile(
               leading: Padding(
-                padding: EdgeInsets.only(left: 12.w, top: 8.h),
-                child: Icon(Icons.close,
-                    size: 30.w, color: Theme.of(context).primaryColor),
+                padding: const EdgeInsets.only(left: 12.0, top: 8.0),
+                child: Icon(
+                  Icons.close,
+                  size: 30.w,
+                  color: Theme.of(context).primaryColor,
+                ),
               ),
               title: const Text("Cancel"),
             ),

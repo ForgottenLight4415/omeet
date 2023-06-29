@@ -43,7 +43,7 @@ class OMeetDatabase {
 
   Future<Database> get database async {
     if (_database != null) return _database!;
-    _database = await _initDB('omeet.db');
+    _database = await _initDB('icici_ibnr.db');
     return _database!;
   }
 
@@ -102,7 +102,12 @@ class OMeetDatabase {
   
   Future<int> exists(String file) async {
     final db = await instance.database;
-    List<Map<String, Object?>> list = await db.query("uploads", columns: ["id"], where: "file = ?", whereArgs: [file]);
+    List<Map<String, Object?>> list = await db.query(
+      "uploads",
+      columns: ["id"],
+      where: "file = ?",
+      whereArgs: [file],
+    );
     if (list.isNotEmpty) {
       return list[0]['id'] as int;
     }

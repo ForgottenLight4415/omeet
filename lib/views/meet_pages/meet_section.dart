@@ -156,7 +156,7 @@ class _VideoMeetPageState extends State<VideoMeetPage> with AutomaticKeepAliveCl
             ScalingTile(
               onPressed: () async {
                 await _screenRecorder!.startRecord(
-                  claimNumber: widget.claim.claimNumber, context: context,
+                  claimId: widget.claim.claimId, context: context,
                 );
                 await _joinMeeting();
               },
@@ -351,7 +351,7 @@ class _VideoMeetPageState extends State<VideoMeetPage> with AutomaticKeepAliveCl
     setState(() {
       _status = VideoMeetStatus.terminated;
     });
-    await _screenRecorder!.stopRecord(claimNumber: widget.claim.claimNumber, context: context);
+    await _screenRecorder!.stopRecord(claimId: widget.claim.claimId, context: context);
   }
 
   void _onClose() async {
@@ -368,7 +368,7 @@ class _VideoMeetPageState extends State<VideoMeetPage> with AutomaticKeepAliveCl
         FeatureFlag.isLiveStreamingEnabled: false,
         FeatureFlag.isRecordingEnabled: false,
       };
-      final String meetId = widget.claim.insuredContactNumber;
+      final String meetId = widget.claim.customerMobileNumber;
       var options = JitsiMeetingOptions(
           roomNameOrUrl: meetId,
           serverUrl: "https://hi.omeet.in/$meetId",
@@ -398,7 +398,7 @@ class _VideoMeetPageState extends State<VideoMeetPage> with AutomaticKeepAliveCl
     setState(() {
       _status = VideoMeetStatus.terminated;
     });
-    await _screenRecorder!.stopRecord(claimNumber: widget.claim.claimNumber, context: context);
+    await _screenRecorder!.stopRecord(claimId: widget.claim.claimId, context: context);
   }
 
   @override

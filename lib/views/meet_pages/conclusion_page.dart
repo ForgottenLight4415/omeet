@@ -95,7 +95,7 @@ class _ConclusionPageState extends State<ConclusionPage> {
                       FocusScope.of(context).unfocus();
                       final ClaimProvider _provider = ClaimProvider();
                       if (await _provider.submitConclusion(
-                        widget.claim.claimNumber,
+                        widget.claim.claimId,
                         _selectedConclusion!,
                         _controller!.text,
                       )) {

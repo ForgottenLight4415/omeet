@@ -7,14 +7,14 @@ import '../blocs/call_bloc/call_cubit.dart';
 import '../widgets/input_fields.dart';
 
 Future<bool> customCallSetup(BuildContext context,
-    {String? claimNumber, String? insuredContactNumber}) async {
+    {String? claimId, String? customerMobileNumber}) async {
   final SharedPreferences _pref = await SharedPreferences.getInstance();
   final TextEditingController _claimNumberController =
-      TextEditingController(text: claimNumber ?? "GODJN5432");
+      TextEditingController(text: claimId ?? "GODJN5432");
   final TextEditingController _managerPhoneController =
       TextEditingController(text: _pref.getString("phone") ?? "");
   final TextEditingController _customerPhoneController =
-      TextEditingController(text: insuredContactNumber ?? "");
+      TextEditingController(text: customerMobileNumber ?? "");
 
   final GlobalKey<FormState> _key = GlobalKey<FormState>();
 
@@ -99,7 +99,7 @@ Future<bool> customCallSetup(BuildContext context,
 
   if (result != null && result) {
     BlocProvider.of<CallCubit>(context).callClient(
-      claimNumber: _claimNumberController.text,
+      claimId: _claimNumberController.text,
       phoneNumber: _customerPhoneController.text,
       managerNumber: _managerPhoneController.text,
     );

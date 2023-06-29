@@ -37,7 +37,7 @@ class VideosPage extends StatelessWidget {
                 );
                 showProgressDialog(context);
                 bool _result = await _repository.uploadData(
-                  claimNumber: claimNumber,
+                  claimId: claimNumber,
                   latitude: 0,
                   longitude: 0,
                   file: file,

@@ -14,11 +14,11 @@ import 'show_snackbars.dart';
 import '../views/recorder_pages/audio_recorder_page.dart';
 
 Future<bool> handleScreenshotService(BuildContext context,
-    {required ScreenCapture screenCapture, required String claimNumber}) async {
+    {required ScreenCapture screenCapture, required String claimId}) async {
   if (!screenCapture.isServiceRunning) {
     bool storageStatus = await storagePermission(context) ?? false;
     if (storageStatus) {
-      return await screenCapture.startService(claimNumber: claimNumber);
+      return await screenCapture.startService(claimNumber: claimId);
     } else {
       showInfoSnackBar(
         context,
@@ -52,7 +52,7 @@ Future<bool> _startScreenRecord(BuildContext context,
   if (microphoneStatus && storageStatus) {
     await screenRecorder.startRecord(
       context: context,
-      claimNumber: claimNumber,
+      claimId: claimNumber,
     );
     return true;
   } else {
@@ -69,7 +69,7 @@ Future<bool> _startScreenRecord(BuildContext context,
 
 Future<bool> _stopScreenRecord(BuildContext context,
     ScreenRecorder screenRecorder, String claimNumber) async {
-  await screenRecorder.stopRecord(claimNumber: claimNumber, context: context);
+  await screenRecorder.stopRecord(claimId: claimNumber, context: context);
   return true;
 }
 

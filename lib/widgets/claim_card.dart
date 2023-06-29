@@ -89,41 +89,65 @@ class _ClaimCardState extends State<ClaimCard> {
           color: _cardColor,
           child: Container(
             constraints: BoxConstraints(minHeight: 180.h),
-            padding: EdgeInsets.all(12.w),
+            padding: const EdgeInsets.all(16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text(
-                  widget.claim.claimNumber,
-                  maxLines: 1,
-                  softWrap: false,
-                  overflow: TextOverflow.fade,
-                  style: Theme.of(context).textTheme.headlineMedium,
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    widget.claim.claimId,
+                    maxLines: 1,
+                    softWrap: false,
+                    overflow: TextOverflow.fade,
+                    style: Theme.of(context).textTheme.headlineMedium,
+                  ),
                 ),
-                SizedBox(height: 4.h),
+                const SizedBox(height: 8.0),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     CardDetailText(
-                      title: AppStrings.customerName,
+                      title: AppStrings.district,
+                      content: widget.claim.district,
+                    ),
+                    CardDetailText(
+                      title: AppStrings.policeStation,
+                      content: widget.claim.policeStation,
+                    ),
+                    CardDetailText(
+                      title: AppStrings.accidentYear,
+                      content: widget.claim.accidentYear,
+                    ),
+                    CardDetailText(
+                      title: AppStrings.firNumber,
+                      content: widget.claim.firNumber,
+                    ),
+                    CardDetailText(
+                      title: AppStrings.firDate,
+                      content: widget.claim.firDate,
+                    ),
+                    CardDetailText(
+                      title: AppStrings.accidentDate,
+                      content: widget.claim.accidentDate,
+                    ),
+                    CardDetailText(
+                      title: AppStrings.section,
+                      content: widget.claim.section,
+                    ),
+                    CardDetailText(
+                      title: AppStrings.accusedVehicleNumber,
+                      content: widget.claim.accused,
+                    ),
+                    CardDetailText(
+                      title: AppStrings.policyNumber,
+                      content: widget.claim.policyNumber,
+                    ),
+                    CardDetailText(
+                      title: AppStrings.insuredName,
                       content: widget.claim.insuredName,
                     ),
-                    CardDetailText(
-                      title: AppStrings.customerAddress,
-                      content: widget.claim.customerAddress,
-                    ),
-                    CardDetailText(
-                      title: AppStrings.phoneNumber,
-                      content: widget.claim.insuredContactNumber,
-                    ),
-                    CardDetailText(
-                      title: AppStrings.phoneNumberAlt,
-                      content:
-                          widget.claim.insuredAltContactNumber != AppStrings.blank
-                              ? widget.claim.insuredAltContactNumber
-                              : AppStrings.unavailable,
-                    ),
-                    SizedBox(height: 4.h),
+                    const SizedBox(height: 8.0),
                     Row(
                       mainAxisAlignment: widget.isEditable
                           ? MainAxisAlignment.spaceAround
@@ -206,11 +230,12 @@ class _ClaimCardState extends State<ClaimCard> {
                     faIcon: FontAwesomeIcons.phone,
                     label: "Custom voice call",
                     onPressed: () async {
-                      if (await customCallSetup(
+                      final bool result = await customCallSetup(
                         context,
-                        claimNumber: widget.claim.claimNumber,
-                        insuredContactNumber: widget.claim.insuredContactNumber,
-                      )) {
+                        claimId: widget.claim.claimId,
+                        customerMobileNumber: widget.claim.customerMobileNumber,
+                      );
+                      if (result) {
                         Navigator.pop(modalContext);
                       }
                     },
@@ -263,7 +288,7 @@ class _ClaimCardState extends State<ClaimCard> {
                       await handleScreenshotService(
                         context,
                         screenCapture: widget.screenCapture!,
-                        claimNumber: widget.claim.claimNumber,
+                        claimId: widget.claim.claimId,
                       );
                       _setCardColor();
                     },
@@ -278,7 +303,7 @@ class _ClaimCardState extends State<ClaimCard> {
                   context,
                   '/documents',
                   arguments: DocumentPageArguments(
-                    widget.claim.claimNumber,
+                    widget.claim.claimId,
                     !widget.isEditable,
                   ),
                 );
@@ -293,7 +318,7 @@ class _ClaimCardState extends State<ClaimCard> {
                   context,
                   '/audio',
                   arguments: DocumentPageArguments(
-                    widget.claim.claimNumber,
+                    widget.claim.claimId,
                     !widget.isEditable,
                   ),
                 );
@@ -308,7 +333,7 @@ class _ClaimCardState extends State<ClaimCard> {
                   context,
                   '/videos',
                   arguments: DocumentPageArguments(
-                    widget.claim.claimNumber,
+                    widget.claim.claimId,
                     !widget.isEditable,
                   ),
                 );
@@ -364,7 +389,7 @@ class _ClaimCardState extends State<ClaimCard> {
 
   String _getScreenshotText() {
     if (widget.screenCapture!.isServiceRunning) {
-      if (widget.screenCapture!.claimNumber != widget.claim.claimNumber) {
+      if (widget.screenCapture!.claimNumber != widget.claim.claimId) {
         return "Stop screenshot service for ${widget.screenCapture!.claimNumber}";
       } else {
         return "Stop screenshot service";
@@ -380,12 +405,12 @@ class _ClaimCardState extends State<ClaimCard> {
         _cardColor = Colors.red.shade100;
       });
     } else if (_screenshotClaim != null &&
-        _screenshotClaim == widget.claim.claimNumber) {
+        _screenshotClaim == widget.claim.claimId) {
       setState(() {
         _cardColor = Colors.red.shade100;
       });
     } else if (widget.videoRecorder!.caseClaimNumber != null &&
-        widget.videoRecorder!.caseClaimNumber == widget.claim.claimNumber) {
+        widget.videoRecorder!.caseClaimNumber == widget.claim.claimId) {
       setState(() {
         _cardColor = Colors.red.shade100;
       });

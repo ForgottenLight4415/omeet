@@ -13,7 +13,7 @@ class DetailsPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         leading: const AppBackButton(),
-        title: const Text('Claim details'),
+        title: const Text('Case details'),
       ),
       body: ClaimDetails(claim: claim)
     );

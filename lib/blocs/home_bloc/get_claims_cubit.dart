@@ -47,13 +47,15 @@ class GetClaimsCubit extends Cubit<GetClaimsState> {
       String _searchQuery = searchQuery.trim().toLowerCase();
       for (var claim in _claims) {
         String insuredName = claim.insuredName.toLowerCase();
-        String phoneNumber = claim.insuredContactNumber;
-        String altContactNumber = claim.insuredAltContactNumber;
-        String claimNumber = claim.claimNumber.toLowerCase();
+        String phoneNumber = claim.customerMobileNumber;
+        String claimId = claim.claimId.toLowerCase();
+        String state = claim.state;
+        String district = claim.district;
         if (insuredName.contains(_searchQuery)
             || phoneNumber.contains(_searchQuery)
-            || altContactNumber.contains(_searchQuery)
-            || claimNumber.contains(_searchQuery)) {
+            || state.contains(_searchQuery)
+            || district.contains(_searchQuery)
+            || claimId.contains(_searchQuery)) {
           _result.add(claim);
         }
       }

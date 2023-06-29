@@ -73,10 +73,10 @@ class _LoginViewState extends State<LoginView> {
                           const SizedBox(height: 10.0),
                           CustomTextFormField(
                             textEditingController: _emailController,
-                            keyboardType: TextInputType.emailAddress,
+                            keyboardType: TextInputType.phone,
                             textInputAction: TextInputAction.next,
-                            label: "Email address",
-                            hintText: "Enter registered email address",
+                            label: "Email or Phone",
+                            hintText: "Enter registered email or phone number",
                             validator: _isEmailValid,
                           ),
                           CustomTextFormField(
@@ -152,12 +152,14 @@ class _LoginViewState extends State<LoginView> {
 
   String? _isEmailValid(String? email) {
     String _pattern =
-        r'^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+      r'^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+    String _patternPhone = r'^\d{10}$';
     RegExp _regex = RegExp(_pattern);
-    if (_regex.hasMatch(email!)) {
+    RegExp _regexPhone = RegExp(_patternPhone);
+    if (_regex.hasMatch(email!) || _regexPhone.hasMatch(email)) {
       return null;
     }
-    return "Invalid email address";
+    return "Invalid email or phone";
   }
 
   String? _isPasswordValid(String? password) {
