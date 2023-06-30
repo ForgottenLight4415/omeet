@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:omeet_motor/utilities/api_urls.dart';
@@ -29,21 +30,27 @@ class DataUploadProvider extends AppServerProvider {
 
     if (uploadNow) {
       final Map<String, String> _data = <String, String>{
-        'Claim_No': claimNumber,
+        'CASE_ID': claimNumber,
         'lat': latitude.toString(),
         'long': longitude.toString(),
       };
       final Map<String, String> _files = <String, String>{
         'anyfile': file.path,
       };
-      final DecodedResponse _requestResponse = await multiPartRequest(
-          data: _data,
-          files: _files,
-          path: isDoc ? ApiUrl.uploadDocUrl : ApiUrl.uploadVideoUrl
-      );
-      if (_requestResponse.statusCode == successCode) {
-        await OMeetDatabase.instance.delete(uploadId);
-        return true;
+      try {
+        final DecodedResponse _requestResponse = await multiPartRequest(
+            baseUrl: "https://omeet.in/MOTOR/",
+            data: _data,
+            files: _files,
+            path: isDoc ? ApiUrl.uploadDocUrl : ApiUrl.uploadVideoUrl
+        );
+        log(_requestResponse.statusCode.toString());
+        if (_requestResponse.statusCode == successCode) {
+          await OMeetDatabase.instance.delete(uploadId);
+          return true;
+        }
+      } catch (e) {
+        log(e.toString());
       }
       return false;
     }

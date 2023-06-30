@@ -12,7 +12,7 @@ class ApiUrl {
   static const String claimConclusion = "api/conclusion.php";
 
   // DATA UPLOAD
-  static const String uploadVideoUrl = "admin/meet/video_meet/s3upload/upload.php";
+  static const String uploadVideoUrl = "ICICI_Motor/meet/video_meet/s3upload/upload.php";
   static const String uploadDocUrl = "documents/s3jaya/mobupload.php";
 
   //  VOICE CALL AND MESSAGES

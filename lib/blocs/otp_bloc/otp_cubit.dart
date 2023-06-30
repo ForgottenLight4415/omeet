@@ -12,10 +12,10 @@ class OtpCubit extends Cubit<OtpState> {
   final AuthRepository _authRepository = AuthRepository();
   OtpCubit() : super(OtpInitial());
 
-  Future<void> verifyOtp(String email, String otp) async {
+  Future<void> verifyOtp(String phoneNumber, String otp) async {
     emit(OtpLoading());
     try {
-      if (await _authRepository.verifyOtp(email,otp)) {
+      if (await _authRepository.verifyOtp(phoneNumber,otp)) {
         emit(OtpSuccess());
       } else {
         emit(OtpFailed(401, "Incorrect OTP"));

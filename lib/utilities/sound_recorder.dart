@@ -61,7 +61,6 @@ class SoundRecorder {
           backgroundColor: Colors.green,
         ),
       );
-      _audioFile.delete();
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(

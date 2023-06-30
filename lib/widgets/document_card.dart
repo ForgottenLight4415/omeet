@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:omeet_motor/views/documents/doc_viewer.dart';
+import 'package:omeet_motor/views/documents/video_player.dart';
 
 import '../widgets/scaling_tile.dart';
 import '../data/models/document.dart';
@@ -34,9 +35,12 @@ class DocumentCard extends StatelessWidget {
             Navigator.pushNamed(
               context,
               '/view/audio-video',
-              arguments: type == DocumentType.video
-                  ? document.fileUrl
-                  : document.callUrl,
+              arguments: VideoWebViewArguments(
+                  type == DocumentType.video
+                    ? document.fileUrl
+                    : document.callUrl,
+                  type,
+              )
             );
           }
         },

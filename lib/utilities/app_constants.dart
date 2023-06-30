@@ -1,6 +1,6 @@
 class AppStrings {
   static const String appName = "IL-IBNR";
-  static const String appVersion = "VERSION 1.2.0 (BUILD 78)";
+  static const String appVersion = "VERSION 1.2.1 (BUILD 79)";
 
   // ERRORS AND FILLERS
   static const String blank = "";
@@ -40,9 +40,9 @@ class AppStrings {
   static const String secondaryFontFam = "Nunito";
 
   // APP TEXT
-  static const String claimsLoading = "Getting claims...";
+  static const String claimsLoading = "Getting cases...";
   static const String connecting = "Connecting to call service...";
-  static const String noClaims = "No claims";
+  static const String noClaims = "No cases";
 
   static const String receiveCall = "You'll receive a call soon.";
   static const String startingUpload = "Starting upload";

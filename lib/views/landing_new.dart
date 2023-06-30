@@ -25,7 +25,7 @@ class ModernLandingPage extends StatelessWidget {
       key: _scaffoldKey,
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Claims'),
+        title: const Text('Cases'),
         leading: IconButton(
           onPressed: () => _scaffoldKey.currentState?.openDrawer(),
           icon: const Icon(Icons.menu),

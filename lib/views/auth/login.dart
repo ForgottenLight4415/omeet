@@ -75,8 +75,8 @@ class _LoginViewState extends State<LoginView> {
                             textEditingController: _emailController,
                             keyboardType: TextInputType.phone,
                             textInputAction: TextInputAction.next,
-                            label: "Email or Phone",
-                            hintText: "Enter registered email or phone number",
+                            label: "Phone",
+                            hintText: "Enter registered phone number",
                             validator: _isEmailValid,
                           ),
                           CustomTextFormField(
@@ -151,15 +151,12 @@ class _LoginViewState extends State<LoginView> {
   }
 
   String? _isEmailValid(String? email) {
-    String _pattern =
-      r'^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
     String _patternPhone = r'^\d{10}$';
-    RegExp _regex = RegExp(_pattern);
     RegExp _regexPhone = RegExp(_patternPhone);
-    if (_regex.hasMatch(email!) || _regexPhone.hasMatch(email)) {
+    if (email != null && _regexPhone.hasMatch(email)) {
       return null;
     }
-    return "Invalid email or phone";
+    return "Invalid phone";
   }
 
   String? _isPasswordValid(String? password) {

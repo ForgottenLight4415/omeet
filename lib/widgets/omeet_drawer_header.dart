@@ -4,13 +4,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../utilities/app_constants.dart';
 
 class OMeetUserDrawerHeader extends StatelessWidget {
-  final String email;
-  final String phone;
+  final String? email;
+  final String? phone;
 
   const OMeetUserDrawerHeader({
     Key? key,
-    required this.email,
-    required this.phone,
+    this.email,
+    this.phone,
   }) : super(key: key);
 
   @override
@@ -33,21 +33,24 @@ class OMeetUserDrawerHeader extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
-          Text(
-            email,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 18.0,
-            ),
-          ),
+          email != null
+              ? Text(
+                  email!,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 18.0,
+                  ),
+                )
+              : const SizedBox(),
           const SizedBox(height: 3),
-          Text(
-            phone,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 18.0,
-            ),
-          ),
+          phone != null
+            ? Text(
+                phone!,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 18.0,
+                ),
+              ) : const SizedBox(),
         ],
       ),
     );

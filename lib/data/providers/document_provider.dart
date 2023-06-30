@@ -9,7 +9,7 @@ import '../providers/app_server_provider.dart';
 
 class DocumentProvider extends AppServerProvider {
 
-  Future<List> getDocuments(String claimNumber, DocumentType type) async {
+  Future<List> getDocuments(String caseId, DocumentType type) async {
     String urlPath;
 
     switch (type) {
@@ -29,30 +29,34 @@ class DocumentProvider extends AppServerProvider {
     final DecodedResponse _response = await getRequest(
       path: urlPath,
       data: <String, String> {
-        "Claim_No": claimNumber,
+        "CASE_ID": caseId,
       },
     );
     Map<String, dynamic> _rData = _response.data!;
-    if (type != DocumentType.audio && _rData["allpost"] != null) {
-      final List<Document> _documents = [];
-      for (var document in _rData["allpost"]) {
-        _documents.add(Document.fromJson(document, type));
+    if (type == DocumentType.audio) {
+      if (_rData["allpost"] != null) {
+        final List<AudioRecordings> _recordings = [];
+        for (var document in _rData["allpost"]) {
+          _recordings.add(AudioRecordings.fromJson(document));
+        }
+        return _recordings;
       }
-      return _documents;
-    } else if (type == DocumentType.audio) {
-      final List<AudioRecordings> _recordings = [];
-      for (var document in _rData["allpost"]) {
-        _recordings.add(AudioRecordings.fromJson(document));
-      }
-      return _recordings;
+      throw const AppException(code: 204, cause: "No data");
     } else {
-      throw AppException(code: error, cause: "Unknown format");
+      if (_rData["allpost"] != null) {
+        final List<Document> _documents = [];
+        for (var document in _rData["allpost"]) {
+          _documents.add(Document.fromJson(document, type));
+        }
+        return _documents;
+      }
+      throw const AppException(code: 204, cause: "No data");
     }
   }
 
   Future<List<Document>> getVideosList(String claimNumber) async {
     final Map<String, String> _data = <String, String>{
-      "cnum": claimNumber,
+      "CASE_ID": claimNumber,
     };
     final DecodedResponse _response = await getRequest(
       path: ApiUrl.getVideosUrl,

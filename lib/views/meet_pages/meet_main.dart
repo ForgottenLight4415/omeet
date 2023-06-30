@@ -28,7 +28,7 @@ class _MeetingMainPageState extends State<MeetingMainPage> {
           leading: const AppBackButton(),
           centerTitle: true,
           title: Text(
-            "Meeting with ${widget.claim.insuredName.split(" ")[0]}",
+            "Meeting with ${widget.claim.insuredName}",
             overflow: TextOverflow.fade,
           ),
           bottom: const TabBar(
@@ -50,7 +50,7 @@ class _MeetingMainPageState extends State<MeetingMainPage> {
           children: [
             VideoMeetPage(claim: widget.claim),
             QuestionsPage(claimId: widget.claim.claimId),
-            DocumentsView(claimId: widget.claim.claimId),
+            DocumentsView(caseId: widget.claim.claimId),
             ConclusionPage(claim: widget.claim),
             MeetDetails(claim: widget.claim),
           ],

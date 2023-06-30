@@ -7,7 +7,7 @@ import '/data/providers/authentication_provider.dart';
 class ClaimProvider extends AppServerProvider {
   Future<List<Claim>> getClaims({bool forSelfAssignment = false}) async {
     final Map<String, String> _data = <String, String>{
-      "email": await AuthenticationProvider.getEmail(),
+      "phone_no": await AuthenticationProvider.getPhone(),
     };
     final DecodedResponse _response = await postRequest(
       path: forSelfAssignment
@@ -37,7 +37,7 @@ class ClaimProvider extends AppServerProvider {
     await postRequest(
       path: ApiUrl.claimConclusion,
       data: <String, String> {
-        "Claim_No" : claimNumber,
+        "CASE_ID" : claimNumber,
         "Selected" : selected,
         "Conclusion_Reason" : reason
       },

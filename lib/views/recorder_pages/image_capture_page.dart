@@ -5,6 +5,8 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:location/location.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart' as path;
 
 import '../../widgets/buttons.dart';
 import '../../widgets/snack_bar.dart';
@@ -515,27 +517,27 @@ class _CaptureImagePageState extends State<CaptureImagePage> with WidgetsBinding
   }
 
   void onTakePictureButtonPressed() {
+    _showLoading(context);
     takePicture().then((XFile? file) async {
       if (mounted) {
         setState(() {
           imageFile = file;
         });
+        log("Captured");
         if (file != null) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text(AppStrings.startingUpload),
-              backgroundColor: Colors.green,
-            ),
-          );
           File _imageFile = File(imageFile!.path);
+          final directory = await getApplicationDocumentsDirectory();
+          final file = File('${directory.path}/${path.basename(_imageFile.path)}');
+          await _imageFile.rename(file.path);
           LocationData _locationData = widget.arguments.locationData;
           final DataUploadRepository _repository = DataUploadRepository();
           bool _result = await _repository.uploadData(
             claimId: widget.arguments.claim.claimId,
             latitude: _locationData.latitude ?? 0,
             longitude: _locationData.longitude ?? 0,
-            file: _imageFile,
+            file: file,
             isDoc: true,
+            uploadNow: true,
           );
           if (_result) {
             showSnackBar(context, AppStrings.fileUploaded, type: SnackBarType.success);
@@ -543,7 +545,7 @@ class _CaptureImagePageState extends State<CaptureImagePage> with WidgetsBinding
           }
         }
       }
-    });
+    }).then((_) => Navigator.pop(context));
   }
 
   void onFlashModeButtonPressed() {
@@ -557,6 +559,7 @@ class _CaptureImagePageState extends State<CaptureImagePage> with WidgetsBinding
   }
 
   void onExposureModeButtonPressed() {
+    log("Exposure button clicked");
     if (_exposureModeControlRowAnimationController.value == 1) {
       _exposureModeControlRowAnimationController.reverse();
     } else {
@@ -680,7 +683,7 @@ class _CaptureImagePageState extends State<CaptureImagePage> with WidgetsBinding
   }
 
   void _showCameraException(CameraException e) {
-    log("${e.code}, ${e.description}");
+    log("ERROR: ${e.code}, ${e.description}");
     showSnackBar(context, 'Error: ${e.code}\n${e.description}');
   }
 
@@ -699,4 +702,26 @@ class _CaptureImagePageState extends State<CaptureImagePage> with WidgetsBinding
   }
 
   T? _ambiguate<T>(T? value) => value;
+
+  void _showLoading(BuildContext context) async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => WillPopScope(
+        onWillPop: () async {
+          return false;
+        },
+        child: const AlertDialog(
+          title: Text("Uploading"),
+          content: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              CircularProgressIndicator(),
+              Text("Please wait"),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 }
