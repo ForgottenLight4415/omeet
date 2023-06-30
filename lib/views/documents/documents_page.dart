@@ -40,6 +40,7 @@ class DocumentsPage extends StatelessWidget {
                   longitude: 0,
                   file: file,
                   isDoc: true,
+                  uploadNow: true
                 );
                 ScaffoldMessenger.of(context).removeCurrentSnackBar();
                 Navigator.pop(context);
@@ -62,7 +63,7 @@ class DocumentsPage extends StatelessWidget {
           ),
         ],
       ),
-      body: DocumentsView(claimId: claimNumber),
+      body: DocumentsView(caseId: claimNumber),
     );
   }
 }

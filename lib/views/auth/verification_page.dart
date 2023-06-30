@@ -9,9 +9,9 @@ import '../../widgets/app_logo.dart';
 import '../../widgets/input_fields.dart';
 
 class VerificationView extends StatefulWidget {
-  final String emailAddress;
+  final String phoneNumber;
 
-  const VerificationView({Key? key, required this.emailAddress})
+  const VerificationView({Key? key, required this.phoneNumber})
       : super(key: key);
 
   @override
@@ -48,7 +48,8 @@ class _VerificationViewState extends State<VerificationView> {
                       await AuthRepository().getUserDetails();
                       Navigator.pushNamedAndRemoveUntil(
                           context, '/new_landing', (route) => false,
-                          arguments: userDetails);
+                          arguments: userDetails,
+                      );
                     }
                   },
                   builder: (context, state) {
@@ -66,12 +67,13 @@ class _VerificationViewState extends State<VerificationView> {
                           onPressed: () {
                             Navigator.pop(context);
                           },
-                          child: Text("Not ${widget.emailAddress}?"),
+                          child: Text("Not ${widget.phoneNumber}?"),
                         ),
                         ElevatedButton(
                           onPressed: () {
                             BlocProvider.of<OtpCubit>(context).verifyOtp(
-                                widget.emailAddress, _controller.text);
+                                widget.phoneNumber, _controller.text,
+                            );
                           },
                           child: const Text("VERIFY"),
                         )

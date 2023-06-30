@@ -69,13 +69,11 @@ class _UploadsPageState extends State<UploadsPage> {
                         AppStrings.fileUploaded + "($i/${state.uploads.length})",
                         color: Colors.green,
                       );
-
                       _file.delete();
                     } else {
                       throw Exception("An unknown error occurred while uploading the file.");
                     }
                   } on Exception catch (e) {
-                    log(e.toString());
                     showInfoSnackBar(
                       context,
                       AppStrings.fileUploadFailed + "(${e.toString()})",

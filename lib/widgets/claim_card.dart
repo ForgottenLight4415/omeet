@@ -326,7 +326,7 @@ class _ClaimCardState extends State<ClaimCard> {
             ),
             ClaimPageTiles(
               faIcon: FontAwesomeIcons.fileVideo,
-              label: "Videos",
+              label: "Video recordings",
               onPressed: () {
                 Navigator.pop(modalContext);
                 Navigator.pushNamed(

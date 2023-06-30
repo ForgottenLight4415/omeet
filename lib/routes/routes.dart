@@ -34,7 +34,7 @@ class RouteGenerator {
       case '/otp':
         final String email = args as String;
         return _platformDependentRouting(
-          VerificationView(emailAddress: email),
+          VerificationView(phoneNumber: email),
         );
 
       case '/new_landing':
@@ -116,8 +116,8 @@ class RouteGenerator {
         );
 
       case '/view/audio-video':
-        final String _pageUrl = args as String;
-        return _platformDependentRouting(VideoWebView(pageUrl: _pageUrl));
+        final VideoWebViewArguments _args = args as VideoWebViewArguments;
+        return _platformDependentRouting(VideoWebView(arguments: _args));
 
       default:
         return _platformDependentRouting(const InvalidRoute());

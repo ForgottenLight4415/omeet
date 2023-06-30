@@ -19,6 +19,10 @@ class GetDocumentCubit extends Cubit<GetDocumentState> {
     try {
       emit(GetDocumentReady(await _repository.getDocuments(claimNumber, type)));
     } on AppException catch (a) {
+      if (a.code == 204) {
+        emit(GetDocumentReady(const []));
+        return;
+      }
       emit(GetDocumentFailed(a.code, a.cause));
     } catch (b) {
       log("Caught: " + b.toString());

@@ -64,7 +64,6 @@ class ScreenRecorder {
       );
       if (result) {
         showInfoSnackBar(context, AppStrings.fileSaved, color: Colors.green);
-        videoFile.delete();
       } else {
         throw Exception(AppStrings.fileSaveFailed);
       }

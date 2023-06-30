@@ -6,7 +6,7 @@ import 'app_server_provider.dart';
 class MeetQuestionsProvider extends AppServerProvider {
   Future<List<Question>> getQuestions(String claimNumber) async {
     final Map<String, String> _data = <String, String>{
-      "Claim_No": claimNumber,
+      "CASE_ID": claimNumber,
     };
     final DecodedResponse _response = await postRequest(
       path: ApiUrl.getQuestionsUrl,
@@ -22,12 +22,12 @@ class MeetQuestionsProvider extends AppServerProvider {
     return _modelQuestions;
   }
 
-  Future<bool> submitQuestions(String claimNumber, List<Question> questions) async {
+  Future<bool> submitQuestions(String caseId, List<Question> questions) async {
     List<String> _questions = [];
     for (var question in questions) {
       _questions.add(question.toJson());
     }
-    final Map<String, dynamic> _data = <String, dynamic>{"claim": claimNumber, "qa": _questions};
+    final Map<String, dynamic> _data = <String, dynamic>{"CASE_ID": caseId, "qa": _questions};
     await postRequest(
       path: ApiUrl.submitAnswersUrl,
       data: _data,

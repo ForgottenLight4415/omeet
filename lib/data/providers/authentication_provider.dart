@@ -6,7 +6,7 @@ import 'app_server_provider.dart';
 class AuthenticationProvider extends AppServerProvider {
   Future<bool> signIn(String email, String password) async {
     final Map<String, String> _data = <String, String>{
-      "email": email.trim(),
+      "phone_no": email.trim(),
       "password": password,
     };
     final DecodedResponse _response = await postRequest(
@@ -24,9 +24,9 @@ class AuthenticationProvider extends AppServerProvider {
     return false;
   }
 
-  Future<bool> verifyOtp(String email, String otp) async {
+  Future<bool> verifyOtp(String phoneNumber, String otp) async {
     final Map<String, String> _data = <String, String>{
-      "email": email.trim(),
+      "phone_no": phoneNumber.trim(),
       "otp": otp,
     };
     final DecodedResponse _response = await postRequest(
@@ -34,7 +34,7 @@ class AuthenticationProvider extends AppServerProvider {
       data: _data,
     );
     final Map<String, dynamic> _rData = _response.data!;
-    return _setLoginStatus(_rData["code"] == successCode, email: email);
+    return _setLoginStatus(_rData["code"] == successCode, email: phoneNumber);
   }
 
   static Future<void> signOut() async {
@@ -58,11 +58,16 @@ class AuthenticationProvider extends AppServerProvider {
 
   static Future<bool> _setLoginStatus(bool status, {String? email, String? phone}) async {
     final SharedPreferences _pref = await SharedPreferences.getInstance();
-    if (email != null) {
-      _pref.setString("email", email);
-    }
-    if (phone != null) {
-      _pref.setString("phone", phone);
+    if (status) {
+      if (email != null) {
+        _pref.setString("email", email);
+      }
+      if (phone != null) {
+        _pref.setString("phone", phone);
+      }
+    } else {
+      _pref.remove("email");
+      _pref.remove("phone");
     }
     _pref.setBool("isLoggedIn", status);
     return status;

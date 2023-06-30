@@ -348,13 +348,25 @@ class _VideoMeetPageState extends State<VideoMeetPage> with AutomaticKeepAliveCl
   }
 
   void _onConferenceTerminated(url, error) async {
+    log("Meeting  terminated");
     setState(() {
       _status = VideoMeetStatus.terminated;
     });
-    await _screenRecorder!.stopRecord(claimId: widget.claim.claimId, context: context);
+    await _screenRecorder!.stopRecord(
+        claimId: widget.claim.claimId,
+        context: context,
+    );
   }
 
   void _onClose() async {
+    if (_status != VideoMeetStatus.inProgress) {
+      setState(() {
+        _status = VideoMeetStatus.terminated;
+      });
+      await _screenRecorder!.stopRecord(
+          claimId: widget.claim.claimId, context: context,
+      );
+    }
     log("Meeting Closed");
   }
 
