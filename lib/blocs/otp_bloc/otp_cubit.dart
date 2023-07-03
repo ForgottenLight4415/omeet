@@ -12,20 +12,48 @@ class OtpCubit extends Cubit<OtpState> {
   final AuthRepository _authRepository = AuthRepository();
   OtpCubit() : super(OtpInitial());
 
-  Future<void> verifyOtp(String phoneNumber, String otp) async {
+  void verifyOtp(String phoneNumber, String otp) async {
     emit(OtpLoading());
     try {
-      if (await _authRepository.verifyOtp(phoneNumber,otp)) {
+      if (await _authRepository.verifyOtp(phoneNumber, otp)) {
         emit(OtpSuccess());
       } else {
-        emit(OtpFailed(401, "Incorrect OTP"));
+        emit(OtpVerificationFailureState(code: 401, cause: "Incorrect OTP"));
       }
     } on SocketException {
-      emit(OtpFailed(1000, "Failed to connect the server."));
+      emit(
+        OtpVerificationFailureState(
+          code: 1000,
+          cause: "Connection to OMeet servers has failed. Try again later.",
+        ),
+      );
     } on AppException catch (a) {
-      emit(OtpFailed(a.code, a.cause));
+      emit(
+        OtpVerificationFailureState(
+          code: a.code,
+          cause: a.cause,
+        ),
+      );
     } catch (e) {
-      emit(OtpFailed(2000, e.toString()));
+      emit(
+        OtpVerificationFailureState(
+          code: 2000,
+          cause: e.toString(),
+        ),
+      );
+    }
+  }
+
+  void resendOtp(String phoneNumber, String password) async {
+    emit(RequestingNewOtp());
+    try {
+      if (await _authRepository.resendOtp(phoneNumber, password)) {
+        emit(RequestedNewOtp());
+      } else {
+        emit(RequestOtpFailure());
+      }
+    } catch (e) {
+      emit(RequestOtpFailure());
     }
   }
 }

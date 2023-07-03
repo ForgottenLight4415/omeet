@@ -3,13 +3,10 @@ import '../providers/authentication_provider.dart';
 class AuthRepository {
   final AuthenticationProvider _provider = AuthenticationProvider();
 
-  Future<bool> signIn({String? email, String? password}) async {
-    if (email == null && password == null) {
-      return await AuthenticationProvider.isLoggedIn();
-    } else {
-      return await _provider.signIn(email!, password!);
-    }
-  }
+  Future<bool> signIn({String? email, String? password}) => _provider.signIn(
+      phoneNumber: email,
+      password: password,
+  );
 
   Future<List<String?>> getUserDetails() async {
     return [
@@ -17,6 +14,9 @@ class AuthRepository {
       await AuthenticationProvider.getPhone(),
     ];
   }
+
+  Future<bool> resendOtp(String phoneNumber, String password) => _provider
+      .resendOtp(phoneNumber, password);
 
   Future<bool> verifyOtp(String phoneNumber, String otp) => _provider
       .verifyOtp(phoneNumber, otp);

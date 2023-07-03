@@ -9,9 +9,15 @@ class OtpLoading extends OtpState {}
 
 class OtpSuccess extends OtpState {}
 
-class OtpFailed extends OtpState {
+class OtpVerificationFailureState extends OtpState {
   final int code;
   final String cause;
 
-  OtpFailed(this.code, this.cause);
+  OtpVerificationFailureState({required this.code, required this.cause});
 }
+
+class RequestingNewOtp extends OtpState {}
+
+class RequestedNewOtp extends OtpState {}
+
+class RequestOtpFailure extends OtpState {}

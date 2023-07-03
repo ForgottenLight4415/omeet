@@ -66,22 +66,12 @@ class Claim {
         policyEndDate = _cleanOrConvert(decodedJson['POLICY_END_DATE']),
         insuredName = _cleanOrConvert(decodedJson['INSURED_NAME']),
         customerMobileNumber = _cleanOrConvert(decodedJson['INSURED_MOBILE_NO']),
-        email = _cleanOrConvert(decodedJson['INSURED_E-EMAIL_ID']),
+        email = _cleanOrConvert(decodedJson['INSURED_EMAIL_ID']),
         caseUpdatedDate = _cleanOrConvert(decodedJson['ALLOCATION_DATE']);
 
   Map<String, Map<String, dynamic>> toMap() {
     return <String, Map<String, dynamic>>{
-      'Customer Information': <String, dynamic>{
-        'Insured name': insuredName,
-        'Insured mobile': customerMobileNumber,
-        'Insured email address': email,
-      },
-      'Policy Details': <String, dynamic>{
-        'Policy number': policyNumber,
-        'Policy start date': policyStartDate,
-        'Policy end date': policyEndDate,
-      },
-      'Case Details': <String, dynamic>{
+      'Accident Details': <String, dynamic>{
         'Case ID': claimId,
         'Accident state': state,
         'Accident district': district,
@@ -96,12 +86,18 @@ class Claim {
         'Victim 1 vehicle number': victim1,
         'Victim 2 vehicle number': victim2,
         'Loss type': lossType,
-        'Accused insurance company': accusedInsurer,
         'Police station number 1': landlinePhone,
         'Police station number 2': cugNumber,
+      },
+      'Policy Details': <String, dynamic> {
         'Police station email address': policeStationEmail,
-        'Current status': currentStatus,
-        'Allocation date': caseUpdatedDate,
+        'Accused insurance company': accusedInsurer,
+        'Policy number': policyNumber,
+        'Policy start date': policyStartDate,
+        'Policy end date': policyEndDate,
+        'Insured name': insuredName,
+        'Insured mobile': customerMobileNumber,
+        'Insured email address': email,
       }
     };
   }
@@ -132,7 +128,7 @@ class Claim {
       "POLICY_END_DATE": policyEndDate,
       "INSURED_NAME": insuredName,
       "INSURED_MOBILE_NO": customerMobileNumber,
-      "INSURED_E-EMAIL_ID": email,
+      "INSURED_EMAIL_ID": email,
       "ALLOCATION_DATE": caseUpdatedDate
     };
   }
@@ -164,8 +160,8 @@ class Claim {
         'Policy start date',
         'Policy end date',
       ],
-      'Claim Details': [
-        'Claim ID',
+      'Case Details': [
+        'Case ID',
         'Accident state',
         'Accident district',
         'Police station',
@@ -215,7 +211,7 @@ class Claim {
       "POLICY_END_DATE",
       "INSURED_NAME",
       "INSURED_MOBILE_NO",
-      "INSURED_E-EMAIL_ID",
+      "INSURED_EMAIL_ID",
       "ALLOCATION_DATE"
     ];
   }

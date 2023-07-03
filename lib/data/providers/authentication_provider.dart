@@ -4,24 +4,47 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'app_server_provider.dart';
 
 class AuthenticationProvider extends AppServerProvider {
-  Future<bool> signIn(String email, String password) async {
-    final Map<String, String> _data = <String, String>{
-      "phone_no": email.trim(),
-      "password": password,
-    };
-    final DecodedResponse _response = await postRequest(
-      path: ApiUrl.loginUrl,
-      data: _data,
-    );
-    final Map<String, dynamic>? _rData = _response.data;
-    if (_rData != null) {
-      _setLoginStatus(
-        await AuthenticationProvider.isLoggedIn(),
-        phone: _rData["phone_no"],
+  Future<bool> signIn({String? phoneNumber, String? password}) async {
+    final bool isLoggedIn = await AuthenticationProvider.isLoggedIn();
+    if (isLoggedIn) {
+      return true;
+    } else if (phoneNumber != null && password != null) {
+      final Map<String, String> data = <String, String> {
+        "phone_no": phoneNumber.trim(),
+        "password": password,
+      };
+      final DecodedResponse response = await postRequest(
+        path: ApiUrl.loginUrl,
+        data: data,
       );
-      return _rData["code"] == successCode;
+      if (response.statusCode == 200) {
+        final Map<String, dynamic>? responseData = response.data;
+        if (responseData != null && responseData["code"] != null) {
+          if (responseData["code"] == 200) {
+            _setLoginStatus(false, phone: responseData["phone_no"]);
+            // Redirects to OTP Page
+            return true;
+          } else if (responseData["code"] == 400) {
+            throw const AppException(code: 400, cause: "Bad Credentials");
+          } else {
+            throw const AppException(code: 500, cause: "Server side failure");
+          }
+        } else {
+          throw const AppException(code: 204, cause: "No response received from server");
+        }
+      } else {
+        throw AppException(
+          code: response.statusCode, 
+          cause: "The service is temporarily down or unavailable. We are working to get it up and running as soon as possible.",
+        );
+      }
+    } else {
+      return false;
     }
-    return false;
+  }
+
+  Future<bool> resendOtp(String phoneNumber, String password) async {
+    return await signIn(phoneNumber: phoneNumber, password: password);
   }
 
   Future<bool> verifyOtp(String phoneNumber, String otp) async {

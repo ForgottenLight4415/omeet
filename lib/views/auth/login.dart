@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/auth_bloc/auth_cubit.dart';
@@ -16,16 +17,18 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> {
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  late final TextEditingController _emailController;
+  late final TextEditingController _passwordController;
+  AuthCubit? _authCubit;
 
   CrossFadeState _crossFadeState = CrossFadeState.showFirst;
-  AuthCubit? _authCubit;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     super.initState();
+    _emailController = TextEditingController();
+    _passwordController = TextEditingController();
     _authCubit = AuthCubit();
   }
 
@@ -70,14 +73,17 @@ class _LoginViewState extends State<LoginView> {
                               ),
                             ),
                           ),
-                          const SizedBox(height: 10.0),
+                          const SizedBox(height: 12.0),
                           CustomTextFormField(
                             textEditingController: _emailController,
                             keyboardType: TextInputType.phone,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly,
+                            ],
                             textInputAction: TextInputAction.next,
                             label: "Phone",
-                            hintText: "Enter registered phone number",
-                            validator: _isEmailValid,
+                            hintText: "e.g., 9876543210",
+                            validator: _isPhoneValid,
                           ),
                           CustomTextFormField(
                               textEditingController: _passwordController,
@@ -86,10 +92,8 @@ class _LoginViewState extends State<LoginView> {
                               hintText: "Enter your password",
                               validator: _isPasswordValid,
                               obscureText: true,
-                              onFieldSubmitted: (value) {
-                                _signIn();
-                              }),
-                          const SizedBox(height: 18.0),
+                              onFieldSubmitted: (value) => _signIn()),
+                          const SizedBox(height: 24.0),
                           BlocProvider<AuthCubit>.value(
                             value: _authCubit!,
                             child: BlocListener<AuthCubit, AuthState>(
@@ -150,7 +154,7 @@ class _LoginViewState extends State<LoginView> {
     }
   }
 
-  String? _isEmailValid(String? email) {
+  String? _isPhoneValid(String? email) {
     String _patternPhone = r'^\d{10}$';
     RegExp _regexPhone = RegExp(_patternPhone);
     if (email != null && _regexPhone.hasMatch(email)) {
@@ -167,12 +171,9 @@ class _LoginViewState extends State<LoginView> {
   }
 
   void _authListener(BuildContext context, AuthState state) {
+    List<String> args = [_emailController.text, _passwordController.text];
     if (state is AuthSuccess) {
-      Navigator.pushNamed(
-        context,
-        '/otp',
-        arguments: _emailController.text,
-      );
+      Navigator.pushNamed(context, '/otp', arguments: args);
       _emailController.clear();
       _passwordController.clear();
       setState(() {

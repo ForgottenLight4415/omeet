@@ -32,9 +32,9 @@ class RouteGenerator {
       case '/login':
         return _platformDependentRouting(const LoginView());
       case '/otp':
-        final String email = args as String;
+        final List<String> loginDetails = args as List<String>;
         return _platformDependentRouting(
-          VerificationView(phoneNumber: email),
+          VerificationView(loginDetails: loginDetails),
         );
 
       case '/new_landing':
