@@ -18,11 +18,11 @@ class Document {
 
   Document.fromJson(Map<String, dynamic> decodedJson, this.type)
       : id = int.parse(decodedJson["id"]),
-        claimNumber = decodedJson['claim_no'] ?? decodedJson['Claim_No'],
+        claimNumber = decodedJson['CASE_ID'] ?? decodedJson['CASE_ID'],
         fileUrl = decodedJson["targetfolder"] != null
             ? ApiUrl.actualDocBaseUrl + decodedJson["targetfolder"].replaceAll(' ', '%20')
             : ApiUrl.actualVideoBaseUrl + decodedJson["videourl"].replaceAll(' ', '%20'),
-        uploadDateTime = decodedJson['uploaddatetime'] ?? decodedJson['updateddate'] + decodedJson['updatedtime'];
+        uploadDateTime = decodedJson['uploaddatetime'] ?? decodedJson['updateddate'] + " " + decodedJson['updatedtime'];
 }
 
 class AudioRecordings {

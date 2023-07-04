@@ -66,11 +66,7 @@ class DocumentCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(14.r)),
                   child: Center(
                     child: FaIcon(
-                      type == DocumentType.file
-                          ? FontAwesomeIcons.fileLines
-                          : type == DocumentType.video
-                              ? FontAwesomeIcons.fileVideo
-                              : FontAwesomeIcons.fileAudio,
+                      _getCardIcon(),
                       size: 50.sp,
                       color: Colors.white,
                     ),
@@ -81,11 +77,7 @@ class DocumentCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      type == DocumentType.file
-                          ? "PDF Document"
-                          : type == DocumentType.video
-                              ? "Video file"
-                              : "Audio file",
+                      _getCardTitle(),
                       textAlign: TextAlign.left,
                       overflow: TextOverflow.fade,
                       maxLines: 2,
@@ -133,5 +125,37 @@ class DocumentCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  IconData _getCardIcon() {
+    switch (type) {
+      case DocumentType.file:
+        if (document.fileUrl.split(".").last == "pdf") {
+          return FontAwesomeIcons.fileLines;
+        }
+        return FontAwesomeIcons.fileImage;
+      case DocumentType.audio:
+        return FontAwesomeIcons.fileAudio;
+      case DocumentType.video:
+        return FontAwesomeIcons.fileVideo;
+      case DocumentType.image:
+        return FontAwesomeIcons.fileImage;
+    }
+  }
+
+  String _getCardTitle() {
+    switch (type) {
+      case DocumentType.file:
+        if (document.fileUrl.split(".").last == "pdf") {
+          return "Document";
+        }
+        return "Image";
+      case DocumentType.audio:
+        return "Audio";
+      case DocumentType.video:
+        return "Video";
+      case DocumentType.image:
+        return "Image";
+    }
   }
 }

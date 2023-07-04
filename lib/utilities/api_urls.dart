@@ -1,5 +1,6 @@
 class ApiUrl {
   static const String baseUrl = 'https://omeet.in/MOTOR/ICICI/';
+  static const String secondaryBaseUrl = "https://omeet.in/MOTOR/";
 
   static const String loginUrl = "api/loginm.php";
   static const String verifyOtp = "api/verify_otp.php";
@@ -27,8 +28,8 @@ class ApiUrl {
   static const String smsSenderId = "GODJNO";
 
   // MEET DOCUMENTS SECTION
-  static const String actualDocBaseUrl = "$baseUrl/documents/s3jaya/displaydocs.php?vurl=";
-  static const String actualVideoBaseUrl = "$baseUrl/admin/meet/video_meet/s3upload/displayvideo.php?vurl=";
+  static const String actualDocBaseUrl = "$secondaryBaseUrl/documents/s3jaya/displaydocs.php?vurl=";
+  static const String actualVideoBaseUrl = "$secondaryBaseUrl/ICICI_Motor/meet/video_meet/s3upload/displayvideo.php?vurl=";
   static const String getDocumentsUrl = "api/documents.php";
   static const String getVideosUrl = "api/videos.php";
   static const String getAudioUrl = "api/audiolist.php";

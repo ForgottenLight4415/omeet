@@ -1,4 +1,4 @@
-import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -13,31 +13,44 @@ class VideoWebViewArguments {
   VideoWebViewArguments(this.pageUrl, this.type);
 }
 
-class VideoWebView extends StatelessWidget {
+class VideoWebView extends StatefulWidget {
   final VideoWebViewArguments arguments;
 
-  final Completer<WebViewController> _controller = Completer<WebViewController>();
 
-  VideoWebView({Key? key, required this.arguments}) : super(key: key);
+  const VideoWebView({Key? key, required this.arguments}) : super(key: key);
+
+  @override
+  State<VideoWebView> createState() => _VideoWebViewState();
+}
+
+class _VideoWebViewState extends State<VideoWebView> {
+  late final WebViewController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = WebViewController.fromPlatformCreationParams(
+      const PlatformWebViewControllerCreationParams()
+    );
+    _controller
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setBackgroundColor(Colors.white)
+      ..loadRequest(Uri.parse(widget.arguments.pageUrl));
+    log("URL: ${widget.arguments.pageUrl}");
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          arguments.type == DocumentType.video
+          widget.arguments.type == DocumentType.video
             ? "Video"
             : "Audio",
         ),
         leading: const AppBackButton(),
       ),
-      body: WebView(
-        initialUrl: arguments.pageUrl,
-        javascriptMode: JavascriptMode.unrestricted,
-        onWebViewCreated: (WebViewController controller) {
-          _controller.complete(controller);
-        },
-      ),
+      body: WebViewWidget(controller: _controller),
     );
   }
 }

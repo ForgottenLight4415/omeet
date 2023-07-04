@@ -54,26 +54,6 @@ class DocumentProvider extends AppServerProvider {
     }
   }
 
-  Future<List<Document>> getVideosList(String claimNumber) async {
-    final Map<String, String> _data = <String, String>{
-      "CASE_ID": claimNumber,
-    };
-    final DecodedResponse _response = await getRequest(
-      path: ApiUrl.getVideosUrl,
-      data: _data,
-    );
-    Map<String, dynamic> _rData = _response.data!;
-    List<Document> _documents = [];
-    if (_rData["allpost"] != null) {
-      for (var document in _rData["allpost"]) {
-        _documents.add(Document.fromJson(document, DocumentType.file));
-      }
-    } else {
-      throw const AppException(code: 500, cause: "Unknown format");
-    }
-    return _documents;
-  }
-
   Future<String> getDocument(String documentUrl) async {
     final Response _response = await get(Uri.parse(documentUrl));
     final dom.Document htmlDocument = parse(_response.body);

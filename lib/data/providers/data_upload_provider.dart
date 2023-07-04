@@ -39,7 +39,7 @@ class DataUploadProvider extends AppServerProvider {
       };
       try {
         final DecodedResponse _requestResponse = await multiPartRequest(
-            baseUrl: "https://omeet.in/MOTOR/",
+            baseUrl: ApiUrl.secondaryBaseUrl,
             data: _data,
             files: _files,
             path: isDoc ? ApiUrl.uploadDocUrl : ApiUrl.uploadVideoUrl

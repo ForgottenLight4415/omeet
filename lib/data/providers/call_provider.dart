@@ -41,11 +41,11 @@ class CallProvider extends AppServerProvider {
       "callbackUrl": "http://localhost:9898/events",
       "extraParams": {
         "cmnumber": claimNumber,
-        "servicetype": "BAGIC_MOTOR_FFRM",
+        "servicetype": "ICICI_MOTOR_FFRM",
       }
     };
-    final DecodedResponse _requestResponse = await callRequest(_data);
-    return _requestResponse.statusCode == successCode;
+    final DecodedResponse response = await callRequest(_data);
+    return response.statusCode == successCode;
   }
 
   Future<bool> sendMessage({
@@ -62,7 +62,7 @@ class CallProvider extends AppServerProvider {
       "senderid" : ApiUrl.smsSenderId,
       "msg" : "Kindly join the video meet by clicking on https//omeet.in/video_link/index.php?id=$claimNumber GODJNO"
     };
-    final DecodedResponse _requestResponse = await messageRequest(_data);
-    return _requestResponse.statusCode == successCode;
+    final DecodedResponse response = await messageRequest(_data);
+    return response.statusCode == successCode;
   }
 }
