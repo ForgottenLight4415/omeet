@@ -18,12 +18,84 @@ class ConclusionPage extends StatefulWidget {
 
 class _ConclusionPageState extends State<ConclusionPage> {
   String? _selectedConclusion;
+  String? _selectedGroundOfDefense;
+
   TextEditingController? _controller;
+
+  final List<String> conclusionOptions = [
+    "Select",
+    "Fraud",
+    "Suspected Fraud",
+    "Other Defence",
+    "Suspected Other Defence",
+    "Out of Court Settlement",
+    "Genuine",
+    "Non Conclusive",
+  ];
+
+  final List<String> fraudOptions = [
+    "Select Ground Of Defense",
+    "Driver Implant or Swapping",
+    "Multiple Claim petition filed by same petitioner",
+    "Misrepresentation Of Facts",
+    "Formal Party",
+    "Non-RTA",
+    "Petitioner Implant",
+    "Vehicle Implant",
+    "Segment Change",
+    "Fake PYP",
+    "WC Claims Related Fraud",
+  ];
+
+  final List<String> otherDefenseOptions = [
+    "Select Ground Of Defense",
+    "Unauthorized passengers or Grattitious Passenger",
+    "Petition Not Maintainable",
+    "Invalid Driving License",
+    "Self-Negligence or Unpaid Driver",
+    "Pillion Rider Not Covered",
+    "Contributory Negligence TP Chargesheeted",
+    "Hire and Reward",
+    "No Driving License",
+    "No permit and fitness",
+    "Check bounce go case",
+    "No policy and policy of other insurer or DOL out of policy period",
+    "Drunk and Drive",
+    "Invalid Permit Hazardous only",
+    "No Dependency Major son or Petitioner died",
+    "Income of victim",
+    "Dependency unit comedown",
+    "No future loss of income in case of injured or amputation",
+    "No loss of dependency in case of Business ongoing",
+    "Medical bills reimbursement",
+    "Duplicate claim",
+    "Monetary loss of dependency in case of pvt or govt employee death",
+    "Fake or inflated income proof",
+    "Contributory Negligence",
+    "Remarried of deceased wife",
+    "No Disability Minor Disability",
+  ];
+
+  final List<String> genuineOptions = [
+    "Select Ground Of Defense",
+    "Non Discrepancy",
+  ];
+
+  final List<String> outOfCourtSettlementOptions = [
+    "Select Ground Of Defense",
+    "Out of Court Settlement",
+  ];
+
+  final List<String> nonConclusiveOptions = [
+    "Select Ground Of Defense",
+    "Non Conclusive",
+  ];
 
   @override
   void initState() {
     super.initState();
-    _selectedConclusion = "Select";
+    _selectedConclusion = conclusionOptions[0];
+    _selectedGroundOfDefense = fraudOptions[0];
     _controller = TextEditingController();
   }
 
@@ -49,27 +121,37 @@ class _ConclusionPageState extends State<ConclusionPage> {
                   isExpanded: true,
                   icon: const FaIcon(FontAwesomeIcons.chevronDown),
                   underline: const SizedBox(),
-                  items: const <DropdownMenuItem<String>>[
-                    DropdownMenuItem<String>(
-                      child: Text("Select"),
-                      value: "Select",
-                    ),
-                    DropdownMenuItem<String>(
-                      child: Text("Positive"),
-                      value: "Positive",
-                    ),
-                    DropdownMenuItem<String>(
-                      child: Text("Neutral"),
-                      value: "Neutral",
-                    ),
-                    DropdownMenuItem<String>(
-                      child: Text("Negative"),
-                      value: "Negative",
+                  items: <DropdownMenuItem<String>>[
+                    ...conclusionOptions.map(
+                          (option) => DropdownMenuItem<String>(
+                        child: Text(option),
+                        value: option,
+                      ),
                     ),
                   ],
                   onChanged: (conclusion) {
                     setState(() {
-                      _selectedConclusion = conclusion ?? "Select";
+                      _selectedConclusion = conclusion ?? conclusionOptions[0];
+                    });
+                  },
+                ),
+              ),
+            ),
+          ),
+          Card(
+            child: SizedBox(
+              height: 70.h,
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: DropdownButton<String>(
+                  value: _selectedGroundOfDefense,
+                  isExpanded: true,
+                  icon: const FaIcon(FontAwesomeIcons.chevronDown),
+                  underline: const SizedBox(),
+                  items: getItems(_selectedConclusion!),
+                  onChanged: (conclusion) {
+                    setState(() {
+                      _selectedGroundOfDefense = conclusion ?? fraudOptions[0];
                     });
                   },
                 ),
@@ -80,8 +162,8 @@ class _ConclusionPageState extends State<ConclusionPage> {
           CustomTextFormField(
             textEditingController: _controller,
             textInputAction: TextInputAction.done,
-            label: "Conclusion reason",
-            hintText: "Enter a reason",
+            label: "Observation",
+            hintText: "Enter a observation",
           ),
           const Spacer(),
           Row(
@@ -97,9 +179,11 @@ class _ConclusionPageState extends State<ConclusionPage> {
                       if (await _provider.submitConclusion(
                         widget.claim.claimId,
                         _selectedConclusion!,
+                        _selectedGroundOfDefense!,
                         _controller!.text,
                       )) {
-                        _selectedConclusion = "Select";
+                        _selectedConclusion = conclusionOptions[0];
+                        _selectedGroundOfDefense = fraudOptions[0];
                         _controller!.clear();
                         setState(() {});
                         showInfoSnackBar(context, "Submitted",
@@ -125,5 +209,63 @@ class _ConclusionPageState extends State<ConclusionPage> {
         ],
       ),
     );
+  }
+
+  List<DropdownMenuItem<String>> getItems(String option) {
+    if (option == conclusionOptions[0]) {
+      return const <DropdownMenuItem<String>>[
+        DropdownMenuItem<String>(
+          child: Text("Select Ground Of Defense"),
+          value: "Select Ground Of Defense",
+        ),
+      ];
+    } else if (option == conclusionOptions[1] ||
+        option == conclusionOptions[2]) {
+      return <DropdownMenuItem<String>>[
+        ...fraudOptions.map(
+          (option) => DropdownMenuItem<String>(
+            child: Text(option),
+            value: option,
+          ),
+        ),
+      ];
+    } else if (option == conclusionOptions[3] ||
+        option == conclusionOptions[4]) {
+      return <DropdownMenuItem<String>>[
+        ...otherDefenseOptions.map(
+          (option) => DropdownMenuItem<String>(
+            child: Text(option),
+            value: option,
+          ),
+        ),
+      ];
+    } else if (option == conclusionOptions[5]) {
+      return <DropdownMenuItem<String>>[
+        ...outOfCourtSettlementOptions.map(
+          (option) => DropdownMenuItem<String>(
+            child: Text(option),
+            value: option,
+          ),
+        ),
+      ];
+    } else if (option == conclusionOptions[6]) {
+      return <DropdownMenuItem<String>>[
+        ...genuineOptions.map(
+          (option) => DropdownMenuItem<String>(
+            child: Text(option),
+            value: option,
+          ),
+        ),
+      ];
+    } else {
+      return <DropdownMenuItem<String>>[
+        ...nonConclusiveOptions.map(
+          (option) => DropdownMenuItem<String>(
+            child: Text(option),
+            value: option,
+          ),
+        ),
+      ];
+    }
   }
 }

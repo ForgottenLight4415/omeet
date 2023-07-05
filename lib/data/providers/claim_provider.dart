@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import '../../utilities/api_urls.dart';
 
 import '/data/models/claim.dart';
@@ -9,6 +11,7 @@ class ClaimProvider extends AppServerProvider {
     final Map<String, String> _data = <String, String>{
       "phone_no": await AuthenticationProvider.getPhone(),
     };
+    log(_data.toString());
     final DecodedResponse _response = await postRequest(
       path: forSelfAssignment
           ? ApiUrl.getDepartmentClaimsUrl
@@ -33,16 +36,17 @@ class ClaimProvider extends AppServerProvider {
     return true;
   }
 
-  Future<bool> submitConclusion(String claimNumber, String selected, String reason) async {
-    await postRequest(
+  Future<bool> submitConclusion(String claimNumber, String conclusion, String groundOfDefense, String observation) async {
+    final DecodedResponse response = await postRequest(
       path: ApiUrl.claimConclusion,
       data: <String, String> {
         "CASE_ID" : claimNumber,
-        "Selected" : selected,
-        "Conclusion_Reason" : reason
+        "Conclusion" : conclusion,
+        "Ground_Of_Defence" : groundOfDefense,
+        "Observation" : observation,
       },
     );
-    return true;
+    return response.data?["code"] == 200;
   }
 
   Future<bool> assignToSelf(String claimNumber, String surveyor) async {
