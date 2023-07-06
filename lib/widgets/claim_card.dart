@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:omeet_motor/blocs/home_bloc/get_claims_cubit.dart';
 import 'package:omeet_motor/utilities/bridge_call.dart';
+import 'package:omeet_motor/views/call_conclusion.dart';
 
 import 'allocate_case_dialog.dart';
 import 'base_card.dart';
