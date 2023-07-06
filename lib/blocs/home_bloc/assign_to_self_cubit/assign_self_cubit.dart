@@ -13,7 +13,7 @@ class AssignSelfCubit extends Cubit<AssignSelfState> {
   final ClaimRepository _homeRepository = ClaimRepository();
   AssignSelfCubit() : super(AssignSelfInitial());
 
-  Future<void> assignToSelf(BuildContext context, String claimNumber, String surveyor) async {
+  Future<void> assignToSelf(BuildContext context, Map<String, String> payload) async {
     if (!await checkConnection(context)) {
       emit(AssignSelfFailed(1000, "No internet connection"));
       return;
@@ -22,10 +22,7 @@ class AssignSelfCubit extends Cubit<AssignSelfState> {
     try {
       emit(
         AssignSelfSuccess(
-          await _homeRepository.assignToSelf(
-            claimNumber,
-            surveyor
-          ),
+          await _homeRepository.assignToSelf(payload),
         ),
       );
     } on SocketException {

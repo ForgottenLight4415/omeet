@@ -4,15 +4,12 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:location/location.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:path/path.dart' as path;
 
+import '../../data/models/document.dart';
+import '../../utilities/document_utilities.dart';
 import '../../widgets/buttons.dart';
 import '../../widgets/snack_bar.dart';
-import '../../utilities/app_constants.dart';
 import '../../utilities/camera_utility.dart';
-import '../../data/repositories/data_upload_repo.dart';
 
 class CaptureImagePage extends StatefulWidget {
   final CameraCaptureArguments arguments;
@@ -517,35 +514,22 @@ class _CaptureImagePageState extends State<CaptureImagePage> with WidgetsBinding
   }
 
   void onTakePictureButtonPressed() {
-    _showLoading(context);
     takePicture().then((XFile? file) async {
       if (mounted) {
         setState(() {
           imageFile = file;
         });
         log("Captured");
-        if (file != null) {
-          File _imageFile = File(imageFile!.path);
-          final directory = await getApplicationDocumentsDirectory();
-          final file = File('${directory.path}/${path.basename(_imageFile.path)}');
-          await _imageFile.rename(file.path);
-          LocationData _locationData = widget.arguments.locationData;
-          final DataUploadRepository _repository = DataUploadRepository();
-          bool _result = await _repository.uploadData(
-            claimId: widget.arguments.claim.claimId,
-            latitude: _locationData.latitude ?? 0,
-            longitude: _locationData.longitude ?? 0,
-            file: file,
-            isDoc: true,
-            uploadNow: true,
+        if (imageFile != null) {
+          await DocumentUtilities.documentUploadDialog(
+            context,
+            widget.arguments.claim.claimId,
+            DocumentType.image,
+            file: File(imageFile!.path),
           );
-          if (_result) {
-            showSnackBar(context, AppStrings.fileUploaded, type: SnackBarType.success);
-            _imageFile.delete();
-          }
         }
       }
-    }).then((_) => Navigator.pop(context));
+    });
   }
 
   void onFlashModeButtonPressed() {

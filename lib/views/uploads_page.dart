@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:omeet_motor/data/databases/database.dart';
 
 import '../blocs/uploads_bloc/pending_uploads_cubit.dart';
 import '../data/repositories/data_upload_repo.dart';
@@ -49,42 +50,7 @@ class _UploadsPageState extends State<UploadsPage> {
               child: const Center(
                 child: Icon(Icons.upload),
               ),
-              onPressed: () async {
-                _showLoading(context);
-                int i = 1;
-                for (var value in state.uploads) {
-                  try {
-                    File _file = File(value.file);
-                    bool _result = await DataUploadRepository().uploadData(
-                      claimId: value.claimNo,
-                      latitude: value.latitude,
-                      longitude: value.longitude,
-                      file: _file,
-                      uploadNow: true,
-                    );
-                    if (_result) {
-                      showInfoSnackBar(
-                        context,
-                        AppStrings.fileUploaded + "($i/${state.uploads.length})",
-                        color: Colors.green,
-                      );
-                      _file.delete();
-                    } else {
-                      throw Exception("An unknown error occurred while uploading the file.");
-                    }
-                  } on Exception catch (e) {
-                    showInfoSnackBar(
-                      context,
-                      AppStrings.fileUploadFailed + "(${e.toString()})",
-                      color: Colors.red,
-                    );
-                    break;
-                  }
-                }
-                Navigator.pop(context);
-                BlocProvider.of<PendingUploadsCubit>(context)
-                    .getPendingUploads();
-              },
+              onPressed: () => _uploadButton(context, state),
             );
           }
           return const SizedBox();
@@ -146,5 +112,44 @@ class _UploadsPageState extends State<UploadsPage> {
         ),
       ),
     );
+  }
+
+  void _uploadButton(BuildContext context, FetchedPendingUploads state) async {
+    _showLoading(context);
+    int i = 0;
+    for (UploadObject object in state.uploads) {
+      try {
+        final File file = File(object.file);
+        bool result = await DataUploadRepository().uploadData(
+          claimId: object.claimNo,
+          latitude: object.latitude,
+          longitude: object.longitude,
+          file: file,
+          uploadNow: true,
+        );
+        if (result) {
+          i++;
+          if (!object.directUpload) {
+            file.delete();
+          }
+        } else {
+          throw Exception("An unknown error occurred while uploading the file.");
+        }
+      } on Exception catch (e) {
+        showInfoSnackBar(
+          context,
+          AppStrings.fileUploadFailed + "(${e.toString()})",
+          color: Colors.red,
+        );
+        break;
+      }
+    }
+    showInfoSnackBar(
+      context,
+      AppStrings.fileUploaded + "($i/${state.uploads.length})",
+      color: Colors.green,
+    );
+    Navigator.pop(context);
+    BlocProvider.of<PendingUploadsCubit>(context).getPendingUploads();
   }
 }

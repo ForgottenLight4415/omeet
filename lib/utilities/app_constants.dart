@@ -1,6 +1,6 @@
 class AppStrings {
   static const String appName = "IL-IBNR";
-  static const String appVersion = "VERSION 1.2.5 (BUILD 83)";
+  static const String appVersion = "VERSION 1.3.0 (BUILD 88)";
 
   // ERRORS AND FILLERS
   static const String blank = "";
@@ -12,6 +12,8 @@ class AppStrings {
   static const String fileSaveFailed = "Failed to save file";
   static const String fileUploaded = "File uploaded successfully.";
   static const String fileUploadFailed = "Failed to upload the files.";
+  static const String unsupportedFile = "Unsupported file type";
+  static const String noFileSelected = "No file selected";
   static const String looksLikeOffline = "Looks like you are offline!\n";
 
   // BUTTON TEXT
@@ -62,7 +64,7 @@ class AppStrings {
   static const String firDate = "FIR date";
   static const String accidentDate = "Accident date";
   static const String section = "Section";
-  static const String accusedVehicleNumber = "Accused vehicle number";
+  static const String accusedVehicleNumber = "Accused veh no.";
   static const String policyNumber = "Policy number";
   static const String insuredName = "Insured name";
 }

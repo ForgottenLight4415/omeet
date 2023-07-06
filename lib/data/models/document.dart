@@ -9,6 +9,7 @@ class DocumentPageArguments {
 
 enum DocumentType { file, audio, video, image }
 
+// This class is for PDF,Image and video documents
 class Document {
   final int id;
   final String claimNumber;
@@ -18,25 +19,42 @@ class Document {
 
   Document.fromJson(Map<String, dynamic> decodedJson, this.type)
       : id = int.parse(decodedJson["id"]),
-        claimNumber = decodedJson['CASE_ID'] ?? decodedJson['CASE_ID'],
-        fileUrl = decodedJson["targetfolder"] != null
-            ? ApiUrl.actualDocBaseUrl + decodedJson["targetfolder"].replaceAll(' ', '%20')
-            : ApiUrl.actualVideoBaseUrl + decodedJson["videourl"].replaceAll(' ', '%20'),
-        uploadDateTime = decodedJson['uploaddatetime'] ?? decodedJson['updateddate'] + " " + decodedJson['updatedtime'];
+        claimNumber = decodedJson['CASE_ID'] ?? "Unavailable",
+        fileUrl = _getDocumentUrl(decodedJson, type),
+        uploadDateTime = _getDocumentDateTime(decodedJson, type);
+
+  static String _getDocumentUrl(Map<String, dynamic> decodedJson, DocumentType type) {
+      switch (type) {
+        case DocumentType.file:
+        case DocumentType.image:
+          return ApiUrl.actualDocBaseUrl + decodedJson["targetfolder"].replaceAll(' ', '%20');
+        case DocumentType.video:
+          return ApiUrl.actualVideoBaseUrl + decodedJson["videourl"].replaceAll(' ', '%20');
+        case DocumentType.audio:
+          return decodedJson['callRecordingLocation'];
+      }
+  }
+
+  static String _getDocumentDateTime(Map<String, dynamic> decodedJson, DocumentType type) {
+    if (type == DocumentType.audio) {
+      return decodedJson["callDateTime"];
+    } else if (decodedJson['uploaddatetime'] != null) {
+      return decodedJson['uploaddatetime'];
+    } else {
+      return decodedJson['updateddate'] + " " + decodedJson['updatedtime'];
+    }
+  }
 }
 
-class AudioRecordings {
-  final int id;
+class AudioRecordings extends Document {
   final String callFrom;
   final String callTo;
   final String callUrl;
-  final String uploadDateTime;
 
   AudioRecordings.fromJson(Map<String, dynamic> decodedJson)
-      : id = int.parse(decodedJson["id"]),
-        callFrom = decodedJson['callFrom'],
+      : callFrom = decodedJson['callFrom'],
         callTo = decodedJson['callTo'],
-        uploadDateTime = decodedJson['callDateTime'],
-        callUrl = decodedJson['callRecordingLocation'];
+        callUrl = decodedJson['callRecordingLocation'],
+        super.fromJson(decodedJson, DocumentType.audio);
 }
 

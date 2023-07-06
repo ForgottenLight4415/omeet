@@ -7,15 +7,17 @@ import '/data/providers/app_server_provider.dart';
 import '/data/providers/authentication_provider.dart';
 
 class ClaimProvider extends AppServerProvider {
-  Future<List<Claim>> getClaims({bool forSelfAssignment = false}) async {
+  Future<List<Claim>> getClaims({bool forSelfAssignment = false, bool rejected = false}) async {
     final Map<String, String> _data = <String, String>{
       "phone_no": await AuthenticationProvider.getPhone(),
     };
     log(_data.toString());
     final DecodedResponse _response = await postRequest(
       path: forSelfAssignment
-          ? ApiUrl.getDepartmentClaimsUrl
-          : ApiUrl.getClaimsUrl,
+          ? ApiUrl.getClaimsUrl
+          : rejected
+            ? ApiUrl.rejectedClaimsUrl
+            : ApiUrl.acceptedClaimsUrl,
       data: _data,
     );
     final Map<String, dynamic> _rData = _response.data!;
@@ -49,14 +51,13 @@ class ClaimProvider extends AppServerProvider {
     return response.data?["code"] == 200;
   }
 
-  Future<bool> assignToSelf(String claimNumber, String surveyor) async {
-    await postRequest(
+  Future<bool> assignToSelf(Map<String, String> payload) async {
+    final DecodedResponse response = await postRequest(
       path: ApiUrl.assignToSelfUrl,
-      data: <String, String> {
-        "Claim_No" : claimNumber,
-        "Surveyor_Name" : surveyor,
-      },
+      data: payload,
     );
+    final Map<String, dynamic> responseData = response.data!;
+    log(responseData.toString());
     return true;
   }
 }

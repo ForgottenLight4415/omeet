@@ -110,6 +110,7 @@ class AppServerProvider {
     Response _multipartResponse = await Response.fromStream(
       await _request.send(),
     );
+    log(_multipartResponse.body);
     return DecodedResponse(
       statusCode: _multipartResponse.statusCode,
       reasonPhrase: _multipartResponse.reasonPhrase,

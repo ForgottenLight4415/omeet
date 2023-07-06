@@ -65,4 +65,12 @@ class CallProvider extends AppServerProvider {
     final DecodedResponse response = await messageRequest(_data);
     return response.statusCode == successCode;
   }
+
+  Future<bool> submitConclusion(Map<String, Object?> conclusion) async {
+    final DecodedResponse response = await postRequest(
+      path: ApiUrl.callConclusion,
+      data: conclusion,
+    );
+    return response.data?["code"] == 200;
+  }
 }

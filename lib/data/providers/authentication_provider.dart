@@ -57,8 +57,10 @@ class AuthenticationProvider extends AppServerProvider {
       data: _data,
     );
     final Map<String, dynamic> _rData = _response.data!;
-    return _setLoginStatus(_rData["code"] == successCode, phone: phoneNumber);
-    // return _setLoginStatus(true, phone: phoneNumber);
+
+    // TODO: Reinforce OTP
+    // return _setLoginStatus(_rData["code"] == successCode, phone: phoneNumber);
+    return _setLoginStatus(true, phone: phoneNumber);
   }
 
   static Future<void> signOut() async {

@@ -25,9 +25,7 @@ class DocumentCard extends StatelessWidget {
               context,
               '/view/document',
               arguments: DocumentViewPageArguments(
-                type == DocumentType.audio
-                    ? document.callUrl
-                    : document.fileUrl,
+                document.fileUrl,
                 type,
               ),
             );
@@ -54,7 +52,7 @@ class DocumentCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Container(
-                  margin: EdgeInsets.only(right: 10.w),
+                  margin: const EdgeInsets.only(right: 10.0),
                   constraints: BoxConstraints(
                     maxHeight: 150.h,
                     minHeight: 150.h,
@@ -63,7 +61,8 @@ class DocumentCard extends StatelessWidget {
                   ),
                   decoration: BoxDecoration(
                       color: Theme.of(context).primaryColor,
-                      borderRadius: BorderRadius.circular(14.r)),
+                      borderRadius: BorderRadius.circular(14.0),
+                  ),
                   child: Center(
                     child: FaIcon(
                       _getCardIcon(),
@@ -151,7 +150,7 @@ class DocumentCard extends StatelessWidget {
         }
         return "Image";
       case DocumentType.audio:
-        return "Audio";
+        return "Call Recording";
       case DocumentType.video:
         return "Video";
       case DocumentType.image:

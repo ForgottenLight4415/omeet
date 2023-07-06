@@ -7,14 +7,12 @@ class ApiUrl {
 
   // CLAIMS
   static const String getClaimsUrl = "api/allclaims.php";
-  static const String getDepartmentClaimsUrl = "api/alldepartmentclaims.php";
-  static const String assignToSelfUrl = "api/assigntome.php";
+  static const String acceptedClaimsUrl = "api/acceptedcases.php";
+  static const String rejectedClaimsUrl = "api/rejectedcases.php";
+  static const String assignToSelfUrl = "api/reviewandaccept.php";
   static const String newClaim = "api/addnewcase.php";
   static const String claimConclusion = "api/conclusion.php";
-
-  // DATA UPLOAD
-  static const String uploadVideoUrl = "ICICI_Motor/meet/video_meet/s3upload/upload.php";
-  static const String uploadDocUrl = "documents/s3jaya/mobupload.php";
+  static const String callConclusion = "api/call_conclusion.php";
 
   //  VOICE CALL AND MESSAGES
   static const String bridgeCallUrl = "https://dashboard.hellotubelight.com/tenant/v1/cpaas/calls";
@@ -33,6 +31,10 @@ class ApiUrl {
   static const String getDocumentsUrl = "api/documents.php";
   static const String getVideosUrl = "api/videos.php";
   static const String getAudioUrl = "api/audiolist.php";
+
+  // DATA UPLOAD
+  static const String uploadVideoUrl = "ICICI_Motor/meet/video_meet/s3upload/upload.php";
+  static const String uploadDocUrl = "documents/s3jaya/mobupload.php";
 
   // MEET QUESTIONS SECTION
   static const String getQuestionsUrl = "api/allquestions.php";
