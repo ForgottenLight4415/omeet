@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:omeet_motor/data/models/document.dart';
+import 'package:omeet_motor/views/call_conclusion.dart';
 import 'package:omeet_motor/views/documents/video_player.dart';
 import 'package:omeet_motor/views/documents/videos_page.dart';
 
@@ -10,6 +11,7 @@ import '../data/models/claim.dart';
 import '../utilities/camera_utility.dart';
 import '../views/auth/verification_page.dart';
 import '../views/claims/create_claim_page.dart';
+import '../views/conclusion_page_main.dart';
 import '../views/documents/audio_page.dart';
 import '../views/documents/doc_viewer.dart';
 import '../views/documents/documents_page.dart';
@@ -85,7 +87,7 @@ class RouteGenerator {
         final DocumentPageArguments _arguments = args as DocumentPageArguments;
         return _platformDependentRouting(
           DocumentsPage(
-            claimNumber: _arguments.claimNumber,
+            caseId: _arguments.claimNumber,
             readOnly: _arguments.readOnly,
           ),
         );
@@ -93,7 +95,7 @@ class RouteGenerator {
         final DocumentPageArguments _arguments = args as DocumentPageArguments;
         return _platformDependentRouting(
           VideosPage(
-            claimNumber: _arguments.claimNumber,
+            caseId: _arguments.claimNumber,
             readOnly: _arguments.readOnly,
           ),
         );
@@ -101,7 +103,7 @@ class RouteGenerator {
         final DocumentPageArguments _arguments = args as DocumentPageArguments;
         return _platformDependentRouting(
           AudioPage(
-            claimNumber: _arguments.claimNumber,
+            caseId: _arguments.claimNumber,
             readOnly: _arguments.readOnly,
           ),
         );
@@ -118,6 +120,18 @@ class RouteGenerator {
       case '/view/audio-video':
         final VideoWebViewArguments _args = args as VideoWebViewArguments;
         return _platformDependentRouting(VideoWebView(arguments: _args));
+
+      case '/call_conclusion':
+        final List<String> _args = args as List<String>;
+        return _platformDependentRouting(CallConclusionPage(
+          managerPhoneNumber: _args[0],
+          customerPhoneNumber: _args[1],
+          caseId: _args[2],
+        ));
+
+      case '/final_conclusion':
+        final Claim _args = args as Claim;
+        return _platformDependentRouting(ConclusionPageMain(claim: _args));
 
       default:
         return _platformDependentRouting(const InvalidRoute());

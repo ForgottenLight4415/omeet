@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../blocs/call_bloc/call_cubit.dart';
 import '../widgets/input_fields.dart';
 
-Future<bool> customCallSetup(BuildContext context,
+Future<List<String>?> customCallSetup(BuildContext context,
     {String? claimId, String? customerMobileNumber}) async {
   final SharedPreferences _pref = await SharedPreferences.getInstance();
   final TextEditingController _claimNumberController =
@@ -18,7 +16,7 @@ Future<bool> customCallSetup(BuildContext context,
 
   final GlobalKey<FormState> _key = GlobalKey<FormState>();
 
-  bool? result = await showModalBottomSheet<bool?>(
+  return await showModalBottomSheet<List<String>?>(
     context: context,
     isScrollControlled: true,
     builder: (context) => Padding(
@@ -26,7 +24,7 @@ Future<bool> customCallSetup(BuildContext context,
         left: 15.w,
         top: 15.h,
         right: 15.w,
-        bottom: MediaQuery.of(context).viewInsets.bottom + 15.h,
+        bottom: MediaQuery.of(context).viewInsets.bottom,
       ),
       child: Form(
         key: _key,
@@ -85,7 +83,12 @@ Future<bool> customCallSetup(BuildContext context,
               child: ElevatedButton(
                 onPressed: () {
                   if (_key.currentState!.validate()) {
-                    Navigator.pop(context, true);
+                    List<String> modalResult = [
+                      _claimNumberController.text,
+                      _managerPhoneController.text,
+                      _customerPhoneController.text,
+                    ];
+                    Navigator.pop<List<String>?>(context, modalResult);
                   }
                 },
                 child: const Text("Set call"),
@@ -96,15 +99,4 @@ Future<bool> customCallSetup(BuildContext context,
       ),
     ),
   );
-
-  if (result != null && result) {
-    BlocProvider.of<CallCubit>(context).callClient(
-      claimId: _claimNumberController.text,
-      phoneNumber: _customerPhoneController.text,
-      managerNumber: _managerPhoneController.text,
-    );
-    return true;
-  } else {
-    return false;
-  }
 }

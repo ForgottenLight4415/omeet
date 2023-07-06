@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:omeet_motor/utilities/document_utilities.dart';
+
 import '../databases/database.dart';
 import '../providers/data_upload_provider.dart';
 
@@ -11,16 +13,19 @@ class DataUploadRepository {
     required double latitude,
     required double longitude,
     required File file,
-    bool isDoc = false,
     bool uploadNow = false,
+    bool directUpload = false,
+    Map<String, Object?>? extraParams,
   }) =>
       _provider.uploadFiles(
         claimNumber: claimId,
         latitude: latitude,
         longitude: longitude,
         file: file,
-        isDoc: isDoc,
-        uploadNow: uploadNow
+        type: DocumentUtilities.getDocumentType(file.path),
+        uploadNow: uploadNow,
+        directUpload: directUpload,
+        extraParams: extraParams,
       );
 
   Future<List<Map<String, Object?>>> getPendingUploads() async {

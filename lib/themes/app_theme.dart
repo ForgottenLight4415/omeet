@@ -1,13 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+
+
 class AppTheme {
   AppTheme._();
+
+  static const MaterialColor themeColor = MaterialColor(
+    _primaryShade,
+    <int, Color>{
+      50: Color(0xFFF3BC8B),
+      100: Color(0xFFF1AE74),
+      200: Color(0xFFEEA15D),
+      300: Color(0xFFEC9345),
+      400: Color(0xFFE9862E),
+      500: Color(_primaryShade),
+      600: Color(0xFFD06C15),
+      700: Color(0xFFB96012),
+      800: Color(0xFFA25410),
+      900: Color(0xFF8B480E),
+    },
+  );
+  static const int _primaryShade = 0xFFE77817;
 
   static final BorderRadius _borderRadius = BorderRadius.circular(24.r);
 
   static final lightTheme = ThemeData(
-    primarySwatch: Colors.red,
+    primarySwatch: themeColor,
     scaffoldBackgroundColor: Colors.white,
     appBarTheme: const AppBarTheme(
         backgroundColor: Colors.white,
@@ -36,7 +55,7 @@ class AppTheme {
         displayMedium: TextStyle(fontSize: 30.sp),
         displaySmall: TextStyle(fontSize: 28.sp),
         headlineMedium: TextStyle(
-          color: Colors.red,
+          color: const Color(_primaryShade),
           fontSize: 26.sp,
           fontWeight: FontWeight.w700,
           overflow: TextOverflow.fade,

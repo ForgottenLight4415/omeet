@@ -1,14 +1,10 @@
 import 'dart:io';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_sound_lite/flutter_sound.dart';
-import 'package:omeet_motor/utilities/upload_dialog.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:wakelock/wakelock.dart';
 
 import '../data/models/claim.dart';
-import '../utilities/app_constants.dart';
-import '../data/repositories/data_upload_repo.dart';
 
 class SoundRecorder {
   final Claim claim;
@@ -41,43 +37,21 @@ class SoundRecorder {
     await _audioRecorder!.startRecorder(toFile: _saveDirectory.path + _fileName, codec: Codec.aacADTS);
   }
 
-  Future<void> _stop(BuildContext context, double latitude, double longitude) async {
-    if (!_isRecorderInitialized) return;
+  Future<File?> _stop() async {
+    if (!_isRecorderInitialized) return null;
     String? _path = await _audioRecorder!.stopRecorder();
-    File _audioFile = File(_path!);
-    final DataUploadRepository _repository = DataUploadRepository();
-    showProgressDialog(context);
-    bool _result = await _repository.uploadData(
-      claimId: claim.claimId,
-      latitude: latitude,
-      longitude: longitude,
-      file: _audioFile,
-    );
-    Navigator.pop(context);
-    if (_result) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(AppStrings.fileUploaded),
-          backgroundColor: Colors.green,
-        ),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(AppStrings.fileUploadFailed),
-          backgroundColor: Colors.red,
-        ),
-      );
-    }
+    return File(_path!);
   }
 
-  Future<void> toggleRecording(BuildContext context, double latitude, double longitude) async {
+  Future<File?> toggleRecording() async {
     if (_audioRecorder!.isStopped) {
       Wakelock.enable();
       await _record();
     } else {
-      await _stop(context, latitude, longitude);
+      File? file = await _stop();
       Wakelock.disable();
+      return file;
     }
+    return null;
   }
 }

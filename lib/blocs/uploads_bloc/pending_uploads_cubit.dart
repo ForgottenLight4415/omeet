@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import '../../data/databases/database.dart';
@@ -23,6 +25,7 @@ class PendingUploadsCubit extends Cubit<PendingUploadsState> {
     } on AppException catch (a) {
       emit(FailedPendingUploads(a.code, a.cause));
     } on Exception catch (e) {
+      log(e.toString());
       emit(FailedPendingUploads(1000, e.toString()));
     }
   }

@@ -15,7 +15,7 @@ class GetClaimsCubit extends Cubit<GetClaimsState> {
   GetClaimsCubit() : super(GetClaimsInitial());
 
   Future<void> getClaims(BuildContext context,
-      {bool forSelfAssignment = false}) async {
+      {bool forSelfAssignment = false, bool rejected = false}) async {
     if (!await checkConnection(context)) {
       emit(GetClaimsFailed(1000, "No internet connection"));
       return;
@@ -24,7 +24,7 @@ class GetClaimsCubit extends Cubit<GetClaimsState> {
     try {
       emit(
         GetClaimsSuccess(
-          await _homeRepository.getClaims(forSelfAssignment: forSelfAssignment),
+          await _homeRepository.getClaims(forSelfAssignment: forSelfAssignment, rejected: rejected),
         ),
       );
     } on SocketException {

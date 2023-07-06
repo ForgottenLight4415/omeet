@@ -5,13 +5,13 @@ class ClaimRepository {
   List<Claim> _claims = [];
   final ClaimProvider _provider = ClaimProvider();
 
-  Future<List<Claim>> getClaims({bool forSelfAssignment = false}) async {
-    _claims = await _provider.getClaims(forSelfAssignment: forSelfAssignment);
+  Future<List<Claim>> getClaims({bool forSelfAssignment = false, bool rejected = false}) async {
+    _claims = await _provider.getClaims(forSelfAssignment: forSelfAssignment, rejected: rejected);
     return _claims;
   }
 
-  Future<bool> assignToSelf(String claimNumber, String surveyor) async {
-    return await _provider.assignToSelf(claimNumber, surveyor);
+  Future<bool> assignToSelf(Map<String, String> payload) async {
+    return await _provider.assignToSelf(payload);
   }
 
   List<Claim> getClaimList() {

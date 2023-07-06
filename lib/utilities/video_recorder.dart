@@ -8,8 +8,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_background_video_recorder/flutter_bvr.dart';
 import 'package:flutter_background_video_recorder/flutter_bvr_platform_interface.dart';
 
-import '../data/repositories/data_upload_repo.dart';
-import '../widgets/snack_bar.dart';
+import '../data/models/document.dart';
+import 'document_utilities.dart';
 
 class VideoRecorder {
   XFile? outputFile;
@@ -52,17 +52,12 @@ class VideoRecorder {
     String? filePath = await _recorder.stopVideoRecording();
     if (filePath != null) {
       final SharedPreferences _pref = await SharedPreferences.getInstance();
-      final DataUploadRepository _repository = DataUploadRepository();
-      LocationData _locationData = caseLocation!;
-      File _videoFile = File(filePath);
-      await _repository.uploadData(
-          claimId: caseClaimNumber!,
-          latitude: _locationData.latitude ?? 0,
-          longitude: _locationData.longitude ?? 0,
-          file: _videoFile,
-          uploadNow: false,
+      await DocumentUtilities.documentUploadDialog(
+        context,
+        caseClaimNumber!,
+        DocumentType.video,
+        file: File(filePath),
       );
-      showSnackBar(context, AppStrings.videoSaved, type: SnackBarType.success);
       caseClaimNumber = null;
       outputFile = null;
       _pref.remove("video-recording-cn");

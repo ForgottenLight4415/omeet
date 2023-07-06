@@ -26,7 +26,7 @@ class CallCubit extends Cubit<CallState> {
         claimNumber: claimId ?? "GODJN5432",
       );
       if (_callServiceResponse) {
-        emit(CallReady());
+        emit(CallReady(claimId!, managerNumber!, phoneNumber));
       }
     } on SocketException {
       emit(CallFailed(1000, "Couldn't connect to server"));

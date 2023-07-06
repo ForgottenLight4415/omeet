@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:sqflite/sqflite.dart';
@@ -8,6 +9,8 @@ class UploadObject {
   final double latitude;
   final double longitude;
   final String file;
+  final bool directUpload;
+  final Map<String, dynamic>? extraParams;
   final DateTime time;
 
   UploadObject({
@@ -15,7 +18,9 @@ class UploadObject {
     required this.latitude,
     required this.longitude,
     required this.file,
+    required this.directUpload,
     required this.time,
+    this.extraParams,
   });
 
   UploadObject.fromJson(Map<String, dynamic> object)
@@ -23,14 +28,18 @@ class UploadObject {
         latitude = object['latitude'],
         longitude = object['longitude'],
         file = object['file'],
-        time = DateTime.parse(object['time']);
+        directUpload = object['direct_upload'] == 1,
+        time = DateTime.parse(object['time']),
+        extraParams = jsonDecode(object['extra_params']);
 
   Map<String, Object?> toJson() => {
         'claim_no': claimNo,
         'latitude': latitude,
         'longitude': longitude,
         'file': file,
+        'direct_upload': directUpload == true ? 1 : 0,
         'time': time.toIso8601String(),
+        'extra_params': extraParams != null ? jsonEncode(extraParams) : jsonEncode({}),
       };
 }
 
@@ -61,9 +70,12 @@ class OMeetDatabase {
     const String latitude = 'latitude';
     const String longitude = 'longitude';
     const String file = 'file';
+    const String directUpload = 'direct_upload';
+    const String extraParams = 'extra_params';
     const String time = 'time';
 
     const String idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
+    const String booleanType = 'BOOLEAN NOT NULL DEFAULT 0';
     const String doubleType = 'DOUBLE NOT NULL';
     const String textType = 'TEXT NOT NULL';
     const String timeType = 'DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL';
@@ -75,6 +87,8 @@ class OMeetDatabase {
       $latitude $doubleType,
       $longitude $doubleType,
       $file $textType UNIQUE,
+      $directUpload $booleanType,
+      $extraParams $textType,
       $time $timeType
     )''');
   }

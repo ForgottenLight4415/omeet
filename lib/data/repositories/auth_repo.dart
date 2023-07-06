@@ -15,6 +15,10 @@ class AuthRepository {
     ];
   }
 
+  static Future<String> getPhone() async {
+    return await AuthenticationProvider.getPhone();
+  }
+
   Future<bool> resendOtp(String phoneNumber, String password) => _provider
       .resendOtp(phoneNumber, password);
 

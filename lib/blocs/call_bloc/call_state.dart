@@ -7,7 +7,13 @@ class CallInitial extends CallState {}
 
 class CallLoading extends CallState {}
 
-class CallReady extends CallState {}
+class CallReady extends CallState {
+  final String caseId;
+  final String managerPhoneNumber;
+  final String customerPhoneNumber;
+
+  CallReady(this.caseId, this.managerPhoneNumber, this.customerPhoneNumber);
+}
 
 class CallFailed extends CallState {
   final int code;

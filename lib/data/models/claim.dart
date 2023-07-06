@@ -1,12 +1,11 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:omeet_motor/utilities/show_snackbars.dart';
-import 'package:omeet_motor/utilities/upload_dialog.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../../blocs/call_bloc/call_cubit.dart';
-import '../../blocs/home_bloc/assign_to_self_cubit/assign_self_cubit.dart';
 import '../../utilities/app_permission_manager.dart';
 import '../../utilities/location_service.dart';
 import '../../widgets/input_fields.dart';
@@ -255,6 +254,7 @@ class Claim {
       );
       return true;
     } else {
+      log("Unavailable");
       return false;
     }
   }
@@ -316,84 +316,5 @@ class Claim {
             color: Colors.red);
       }
     }
-  }
-
-  Future<void> assignToSelf(BuildContext context) async {
-    await showModalBottomSheet(
-      context: context,
-      constraints: BoxConstraints(maxHeight: 250.h),
-      builder: (context) => Column(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16.0),
-            child: Text(
-              "Are you sure?",
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-          ),
-          Divider(
-            height: 0.5,
-            thickness: 0.5,
-            indent: 50.w,
-            endIndent: 50.w,
-            color: Colors.black54,
-          ),
-          BlocProvider<AssignSelfCubit>(
-            create: (context) => AssignSelfCubit(),
-            child: BlocConsumer<AssignSelfCubit, AssignSelfState>(
-              listener: (context, state) {
-                if (state is AssignSelfLoading) {
-                  showProgressDialog(
-                    context,
-                    label: "Assigning",
-                    content: "Assigning this claim to you...",
-                  );
-                } else if (state is AssignSelfSuccess) {
-                  Navigator.pop(context);
-                  showInfoSnackBar(context, "Assigned", color: Colors.green);
-                } else if (state is AssignSelfFailed) {
-                  Navigator.pop(context);
-                  showInfoSnackBar(context, "Failed to assign",
-                      color: Colors.red);
-                }
-              },
-              builder: (context, snapshot) {
-                return TextButton(
-                  onPressed: () async {
-                    final SharedPreferences _prefs = await SharedPreferences.getInstance();
-                    await BlocProvider.of<AssignSelfCubit>(context).assignToSelf(context, claimId, _prefs.getString("email") ?? "");
-                    Navigator.pop(context);
-                  },
-                  child: ListTile(
-                    leading: Padding(
-                      padding: const EdgeInsets.only(left: 12.0, top: 8.0),
-                      child: Icon(
-                          Icons.check,
-                          size: 30.w,
-                          color: Theme.of(context).primaryColor,
-                      ),
-                    ),
-                    title: const Text("Assign this claim to me"),
-                  ),
-              );
-            }),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: ListTile(
-              leading: Padding(
-                padding: const EdgeInsets.only(left: 12.0, top: 8.0),
-                child: Icon(
-                  Icons.close,
-                  size: 30.w,
-                  color: Theme.of(context).primaryColor,
-                ),
-              ),
-              title: const Text("Cancel"),
-            ),
-          )
-        ],
-      ),
-    );
   }
 }

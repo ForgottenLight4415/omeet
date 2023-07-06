@@ -1,11 +1,14 @@
 import 'dart:async';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../data/models/claim.dart';
+import '../../data/models/document.dart';
+import '../../utilities/document_utilities.dart';
 import '../../utilities/show_snackbars.dart';
 import '../../utilities/sound_recorder.dart';
 import '../../widgets/buttons.dart';
@@ -126,20 +129,24 @@ class _AudioRecordPageState extends State<AudioRecordPage> {
 
     return ElevatedButton.icon(
       onPressed: () async {
-        LocationData _locationData = widget.arguments.locationData;
-        await _recorder!.toggleRecording(
-          context,
-          _locationData.latitude ?? 0,
-          _locationData.longitude ?? 0,
-        );
+        File? file = await _recorder!.toggleRecording();
         if (!_isRecording) {
-          _resetTimer();
           _startTimer();
         } else {
           _stopTimer();
+          _resetTimer();
+          setState(() {});
+          log("Recorder state changed");
+          if (file != null) {
+            log(file.path);
+            await DocumentUtilities.documentUploadDialog(
+              context,
+              widget.arguments.claim.claimId,
+              DocumentType.audio,
+              file: file,
+            );
+          }
         }
-        setState(() {});
-        log("Recorder state changed");
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: _primary,

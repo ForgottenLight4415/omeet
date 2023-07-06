@@ -28,7 +28,6 @@ class _ConclusionPageState extends State<ConclusionPage> {
     "Suspected Fraud",
     "Other Defence",
     "Suspected Other Defence",
-    "Out of Court Settlement",
     "Genuine",
     "Non Conclusive",
   ];
@@ -79,11 +78,6 @@ class _ConclusionPageState extends State<ConclusionPage> {
   final List<String> genuineOptions = [
     "Select Ground Of Defense",
     "Non Discrepancy",
-  ];
-
-  final List<String> outOfCourtSettlementOptions = [
-    "Select Ground Of Defense",
-    "Out of Court Settlement",
   ];
 
   final List<String> nonConclusiveOptions = [
@@ -240,15 +234,6 @@ class _ConclusionPageState extends State<ConclusionPage> {
         ),
       ];
     } else if (option == conclusionOptions[5]) {
-      return <DropdownMenuItem<String>>[
-        ...outOfCourtSettlementOptions.map(
-          (option) => DropdownMenuItem<String>(
-            child: Text(option),
-            value: option,
-          ),
-        ),
-      ];
-    } else if (option == conclusionOptions[6]) {
       return <DropdownMenuItem<String>>[
         ...genuineOptions.map(
           (option) => DropdownMenuItem<String>(

@@ -1,9 +1,13 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:omeet_motor/blocs/home_bloc/get_claims_cubit.dart';
 import 'package:omeet_motor/utilities/bridge_call.dart';
 
+import 'allocate_case_dialog.dart';
 import 'base_card.dart';
 import 'card_detail_text.dart';
 import 'claim_options_tile.dart';
@@ -22,18 +26,22 @@ import '../blocs/call_bloc/call_cubit.dart';
 
 class ClaimCard extends StatefulWidget {
   final Claim claim;
+  final GetClaimsCubit cubit;
   final ScreenRecorder? screenRecorder;
   final ScreenCapture? screenCapture;
   final VideoRecorder? videoRecorder;
   final bool isEditable;
+  final bool isRejected;
 
   const ClaimCard({
     Key? key,
     required this.claim,
+    required this.cubit,
     this.screenRecorder,
     this.screenCapture,
     this.videoRecorder,
     this.isEditable = true,
+    this.isRejected = false,
   }) : super(key: key);
 
   @override
@@ -107,67 +115,111 @@ class _ClaimCardState extends State<ClaimCard> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    CardDetailText(
-                      title: AppStrings.district,
-                      content: widget.claim.district,
+                    Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: CardDetailText(
+                            title: AppStrings.district,
+                            content: widget.claim.district,
+                          ),
+                        ),
+                        Expanded(
+                          child: CardDetailText(
+                            title: AppStrings.policeStation,
+                            content: widget.claim.policeStation,
+                          ),
+                        ),
+                      ],
                     ),
-                    CardDetailText(
-                      title: AppStrings.policeStation,
-                      content: widget.claim.policeStation,
+                    Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: CardDetailText(
+                            title: AppStrings.firNumber,
+                            content: widget.claim.firNumber,
+                          ),
+                        ),
+                        Expanded(
+                          child: CardDetailText(
+                            title: AppStrings.firDate,
+                            content: widget.claim.firDate,
+                          ),
+                        ),
+                      ],
                     ),
-                    CardDetailText(
-                      title: AppStrings.accidentYear,
-                      content: widget.claim.accidentYear,
+                    Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: CardDetailText(
+                            title: AppStrings.accidentYear,
+                            content: widget.claim.accidentYear,
+                          ),
+                        ),
+                        Expanded(
+                          child: CardDetailText(
+                            title: AppStrings.accidentDate,
+                            content: widget.claim.accidentDate,
+                          ),
+                        ),
+                      ],
                     ),
-                    CardDetailText(
-                      title: AppStrings.firNumber,
-                      content: widget.claim.firNumber,
+                    Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: CardDetailText(
+                            title: AppStrings.section,
+                            content: widget.claim.section,
+                          ),
+                        ),
+                        Expanded(
+                          child: CardDetailText(
+                            title: AppStrings.accusedVehicleNumber,
+                            content: widget.claim.accused,
+                          ),
+                        ),
+                      ],
                     ),
-                    CardDetailText(
-                      title: AppStrings.firDate,
-                      content: widget.claim.firDate,
-                    ),
-                    CardDetailText(
-                      title: AppStrings.accidentDate,
-                      content: widget.claim.accidentDate,
-                    ),
-                    CardDetailText(
-                      title: AppStrings.section,
-                      content: widget.claim.section,
-                    ),
-                    CardDetailText(
-                      title: AppStrings.accusedVehicleNumber,
-                      content: widget.claim.accused,
-                    ),
-                    CardDetailText(
-                      title: AppStrings.policyNumber,
-                      content: widget.claim.policyNumber,
-                    ),
-                    CardDetailText(
-                      title: AppStrings.insuredName,
-                      content: widget.claim.insuredName,
+                    Row(
+                      children: [
+                        Expanded(
+                          child: CardDetailText(
+                            title: AppStrings.insuredName,
+                            content: widget.claim.insuredName,
+                          ),
+                        ),
+                        Expanded(
+                          child: CardDetailText(
+                            title: AppStrings.policyNumber,
+                            content: widget.claim.policyNumber,
+                          ),
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 8.0),
                     Row(
-                      mainAxisAlignment: widget.isEditable
+                      mainAxisAlignment: widget.isEditable && !widget.isRejected
                           ? MainAxisAlignment.spaceAround
                           : MainAxisAlignment.start,
                       children: <Widget>[
-                        widget.isEditable
+                        widget.isEditable && !widget.isRejected
                             ? BlocProvider<CallCubit>(
                                 create: (callContext) => CallCubit(),
                                 child: BlocConsumer<CallCubit, CallState>(
                                   listener: _callListener,
                                   builder: (context, state) => ElevatedButton(
                                     onPressed: () async {
-                                      await widget.claim.call(context);
+                                      log("Calling");
+                                      bool result = await widget.claim.call(context);
+                                      if (!result) {
+                                        showSnackBar(context, "Phone number not available.", type: SnackBarType.error);
+                                      }
                                     },
                                     child: const Icon(Icons.phone),
                                   ),
                                 ),
                               )
                             : const SizedBox(),
-                        widget.isEditable
+                        widget.isEditable && !widget.isRejected
                             ? ElevatedButton(
                                 onPressed: () async {
                                   await widget.claim.videoCall(context);
@@ -175,7 +227,7 @@ class _ClaimCardState extends State<ClaimCard> {
                                 child: const FaIcon(FontAwesomeIcons.video),
                               )
                             : const SizedBox(),
-                        widget.isEditable
+                        widget.isEditable && !widget.isRejected
                             ? ElevatedButton(
                                 onPressed: () async {
                                   await widget.claim.sendMessageModal(
@@ -214,36 +266,41 @@ class _ClaimCardState extends State<ClaimCard> {
             !widget.isEditable
                 ? ClaimPageTiles(
                     faIcon: FontAwesomeIcons.plus,
-                    label: "Assign to self",
-                    onPressed: () {
+                    label: "Allocate case",
+                    onPressed: () async {
                       Navigator.pop(modalContext);
-                      widget.claim.assignToSelf(context);
+                      _allocateDialog(context);
                     },
                   )
                 : const SizedBox(),
-            BlocProvider<CallCubit>(
-              create: (context) => CallCubit(),
-              child: BlocConsumer<CallCubit, CallState>(
-                listener: _callListener,
-                builder: (context, state) {
-                  return ClaimPageTiles(
-                    faIcon: FontAwesomeIcons.phone,
-                    label: "Custom voice call",
-                    onPressed: () async {
-                      final bool result = await customCallSetup(
-                        context,
-                        claimId: widget.claim.claimId,
-                        customerMobileNumber: widget.claim.customerMobileNumber,
-                      );
-                      if (result) {
-                        Navigator.pop(modalContext);
-                      }
-                    },
-                  );
-                },
-              ),
-            ),
-            widget.isEditable
+            widget.isEditable && !widget.isRejected
+              ? BlocProvider<CallCubit>(
+                create: (context) => CallCubit(),
+                child: BlocConsumer<CallCubit, CallState>(
+                  listener: _callListener,
+                  builder: (context, state) {
+                    return ClaimPageTiles(
+                      faIcon: FontAwesomeIcons.phone,
+                      label: "Custom voice call",
+                      onPressed: () async {
+                        final List<String>? result = await customCallSetup(
+                          context,
+                          claimId: widget.claim.claimId,
+                          customerMobileNumber: widget.claim.customerMobileNumber,
+                        );
+                        if (result != null) {
+                          BlocProvider.of<CallCubit>(context).callClient(
+                            claimId: result[0],
+                            phoneNumber: result[2],
+                            managerNumber: result[1],
+                          );
+                        }
+                      },
+                    );
+                  },
+                ),
+            ) : const SizedBox(),
+            widget.isEditable && !widget.isRejected
                 ? ClaimPageTiles(
                     faIcon: FontAwesomeIcons.camera,
                     label: "Capture image",
@@ -253,7 +310,7 @@ class _ClaimCardState extends State<ClaimCard> {
                     },
                   )
                 : const SizedBox(),
-            widget.isEditable
+            widget.isEditable && !widget.isRejected
                 ? ClaimPageTiles(
                     faIcon: FontAwesomeIcons.film,
                     label: AppStrings.recordVideo,
@@ -269,7 +326,7 @@ class _ClaimCardState extends State<ClaimCard> {
                     },
                   )
                 : const SizedBox(),
-            widget.isEditable
+            widget.isEditable && !widget.isRejected
                 ? ClaimPageTiles(
                     faIcon: FontAwesomeIcons.microphone,
                     label: AppStrings.recordAudio,
@@ -279,21 +336,21 @@ class _ClaimCardState extends State<ClaimCard> {
                     },
                   )
                 : const SizedBox(),
-            widget.isEditable
-                ? ClaimPageTiles(
-                    faIcon: FontAwesomeIcons.mobileScreenButton,
-                    label: _getScreenshotText(),
-                    onPressed: () async {
-                      Navigator.pop(modalContext);
-                      await handleScreenshotService(
-                        context,
-                        screenCapture: widget.screenCapture!,
-                        claimId: widget.claim.claimId,
-                      );
-                      _setCardColor();
-                    },
-                  )
-                : const SizedBox(),
+            // widget.isEditable && !widget.isRejected
+            //     ? ClaimPageTiles(
+            //         faIcon: FontAwesomeIcons.mobileScreenButton,
+            //         label: _getScreenshotText(),
+            //         onPressed: () async {
+            //           Navigator.pop(modalContext);
+            //           await handleScreenshotService(
+            //             context,
+            //             screenCapture: widget.screenCapture!,
+            //             claimId: widget.claim.claimId,
+            //           );
+            //           _setCardColor();
+            //         },
+            //       )
+            //     : const SizedBox(),
             ClaimPageTiles(
               faIcon: FontAwesomeIcons.fileLines,
               label: "Documents",
@@ -304,7 +361,7 @@ class _ClaimCardState extends State<ClaimCard> {
                   '/documents',
                   arguments: DocumentPageArguments(
                     widget.claim.claimId,
-                    !widget.isEditable,
+                    widget.isRejected || !widget.isEditable,
                   ),
                 );
               },
@@ -319,7 +376,7 @@ class _ClaimCardState extends State<ClaimCard> {
                   '/audio',
                   arguments: DocumentPageArguments(
                     widget.claim.claimId,
-                    !widget.isEditable,
+                    widget.isRejected || !widget.isEditable,
                   ),
                 );
               },
@@ -334,11 +391,20 @@ class _ClaimCardState extends State<ClaimCard> {
                   '/videos',
                   arguments: DocumentPageArguments(
                     widget.claim.claimId,
-                    !widget.isEditable,
+                    widget.isRejected || !widget.isEditable,
                   ),
                 );
               },
             ),
+            widget.isEditable && !widget.isRejected
+                ? ClaimPageTiles(
+              faIcon: FontAwesomeIcons.circleCheck,
+              label: "Final Conclusion",
+              onPressed: () {
+                Navigator.pop(modalContext);
+                Navigator.pushNamed(context, "/final_conclusion", arguments: widget.claim);
+              },
+            ) : const SizedBox(),
             ClaimPageTiles(
                 faIcon: FontAwesomeIcons.info,
                 label: "Details",
@@ -377,26 +443,47 @@ class _ClaimCardState extends State<ClaimCard> {
   //   return "Record screen";
   // }
 
+  Future<void> _allocateDialog(BuildContext context) async {
+    bool? result = await showModalBottomSheet<bool?>(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) => AllocateCaseDialog(caseId: widget.claim.claimId),
+    );
+
+    if (result != null && result) {
+      widget.cubit.getClaims(context, forSelfAssignment: true);
+    }
+  }
+
   void _callListener(BuildContext context, CallState state) {
     if (state is CallLoading) {
       showSnackBar(context, AppStrings.connecting);
     } else if (state is CallReady) {
       showSnackBar(context, AppStrings.receiveCall, type: SnackBarType.success);
+      Navigator.popAndPushNamed(
+        context,
+        "/call_conclusion",
+        arguments: [
+          state.managerPhoneNumber,
+          state.customerPhoneNumber,
+          state.caseId,
+        ]
+      );
     } else if (state is CallFailed) {
       showSnackBar(context, state.cause, type: SnackBarType.error);
     }
   }
 
-  String _getScreenshotText() {
-    if (widget.screenCapture!.isServiceRunning) {
-      if (widget.screenCapture!.claimNumber != widget.claim.claimId) {
-        return "Stop screenshot service for ${widget.screenCapture!.claimNumber}";
-      } else {
-        return "Stop screenshot service";
-      }
-    }
-    return "Start screenshot service";
-  }
+  // String _getScreenshotText() {
+  //   if (widget.screenCapture!.isServiceRunning) {
+  //     if (widget.screenCapture!.claimNumber != widget.claim.claimId) {
+  //       return "Stop screenshot service for ${widget.screenCapture!.claimNumber}";
+  //     } else {
+  //       return "Stop screenshot service";
+  //     }
+  //   }
+  //   return "Start screenshot service";
+  // }
 
   void _setCardColor() async {
     _screenshotClaim = widget.screenCapture!.claimNumber;

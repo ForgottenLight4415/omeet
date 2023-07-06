@@ -26,7 +26,7 @@ class DocumentProvider extends AppServerProvider {
         urlPath = ApiUrl.getDocumentsUrl;
         break;
     }
-    final DecodedResponse _response = await getRequest(
+    final DecodedResponse _response = await postRequest(
       path: urlPath,
       data: <String, String> {
         "CASE_ID": caseId,

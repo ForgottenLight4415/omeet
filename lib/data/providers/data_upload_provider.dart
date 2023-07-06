@@ -1,9 +1,12 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:omeet_motor/data/repositories/auth_repo.dart';
 import 'package:omeet_motor/utilities/api_urls.dart';
 
+import '../../utilities/document_utilities.dart';
 import '../databases/database.dart';
+import '../models/document.dart';
 import '../providers/app_server_provider.dart';
 
 class DataUploadProvider extends AppServerProvider {
@@ -12,7 +15,9 @@ class DataUploadProvider extends AppServerProvider {
     required double latitude,
     required double longitude,
     required File file,
-    bool isDoc = false,
+    required bool directUpload,
+    required DocumentType type,
+    Map<String, Object?>? extraParams,
     bool uploadNow = false,
   }) async {
     int uploadId = await OMeetDatabase.instance.exists(file.path);
@@ -23,7 +28,9 @@ class DataUploadProvider extends AppServerProvider {
           latitude: latitude,
           longitude: longitude,
           file: file.path,
+          directUpload: directUpload,
           time: DateTime.now(),
+          extraParams: extraParams,
         ),
       );
     }
@@ -32,20 +39,25 @@ class DataUploadProvider extends AppServerProvider {
       final Map<String, String> _data = <String, String>{
         'CASE_ID': claimNumber,
         'lat': latitude.toString(),
-        'long': longitude.toString(),
+        'lon': longitude.toString(),
+        'phone_no': await AuthRepository.getPhone(),
       };
+      if (extraParams != null) {
+        for (var element in extraParams.keys) {
+          _data[element] = extraParams[element] as String;
+        }
+      }
       final Map<String, String> _files = <String, String>{
         'anyfile': file.path,
       };
       try {
-        final DecodedResponse _requestResponse = await multiPartRequest(
+        final DecodedResponse requestResponse = await multiPartRequest(
             baseUrl: ApiUrl.secondaryBaseUrl,
             data: _data,
             files: _files,
-            path: isDoc ? ApiUrl.uploadDocUrl : ApiUrl.uploadVideoUrl
+            path: DocumentUtilities.getUploadUrl(type)
         );
-        log(_requestResponse.statusCode.toString());
-        if (_requestResponse.statusCode == successCode) {
+        if (requestResponse.statusCode == successCode) {
           await OMeetDatabase.instance.delete(uploadId);
           return true;
         }

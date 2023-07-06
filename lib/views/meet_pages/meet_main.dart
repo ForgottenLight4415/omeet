@@ -4,7 +4,7 @@ import 'package:omeet_motor/views/meet_pages/questions_section.dart';
 
 import '../../data/models/claim.dart';
 import '../../widgets/buttons.dart';
-import 'conclusion_page.dart';
+// import 'conclusion_page.dart';
 import 'details_section.dart';
 import 'documents_section.dart';
 import 'meet_section.dart';
@@ -22,7 +22,7 @@ class _MeetingMainPageState extends State<MeetingMainPage> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 5,
+      length: 4,
       child: Scaffold(
         appBar: AppBar(
           leading: const AppBackButton(),
@@ -41,7 +41,7 @@ class _MeetingMainPageState extends State<MeetingMainPage> {
               Tab(icon: FaIcon(FontAwesomeIcons.video), text: "Meet"),
               Tab(icon: FaIcon(FontAwesomeIcons.question), text: "Q & A"),
               Tab(icon: FaIcon(FontAwesomeIcons.file), text: "Documents"),
-              Tab(icon: FaIcon(FontAwesomeIcons.circleCheck), text: "Conclusion"),
+              // Tab(icon: FaIcon(FontAwesomeIcons.circleCheck), text: "Conclusion"),
               Tab(icon: FaIcon(FontAwesomeIcons.info), text: "Details"),
             ],
           ),
@@ -51,7 +51,7 @@ class _MeetingMainPageState extends State<MeetingMainPage> {
             VideoMeetPage(claim: widget.claim),
             QuestionsPage(claimId: widget.claim.claimId),
             DocumentsView(caseId: widget.claim.claimId),
-            ConclusionPage(claim: widget.claim),
+            // ConclusionPage(claim: widget.claim),
             MeetDetails(claim: widget.claim),
           ],
         ),

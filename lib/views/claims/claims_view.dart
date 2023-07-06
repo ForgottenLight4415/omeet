@@ -12,8 +12,9 @@ import '../../widgets/claim_card.dart';
 
 class ClaimsView extends StatefulWidget {
   final bool forSelfAssignment;
+  final bool rejected;
 
-  const ClaimsView({Key? key, this.forSelfAssignment = false}) : super(key: key);
+  const ClaimsView({Key? key, this.forSelfAssignment = false, this.rejected = false}) : super(key: key);
 
   @override
   State<ClaimsView> createState() => _ClaimsViewState();
@@ -80,6 +81,7 @@ class _ClaimsViewState extends State<ClaimsView> with AutomaticKeepAliveClientMi
                       BlocProvider.of<GetClaimsCubit>(context).getClaims(
                         context,
                         forSelfAssignment: widget.forSelfAssignment,
+                        rejected: widget.rejected,
                       );
                     },
                     child: ListView.builder(
@@ -91,10 +93,12 @@ class _ClaimsViewState extends State<ClaimsView> with AutomaticKeepAliveClientMi
                       itemCount: state.claims.length,
                       itemBuilder: (context, index) => ClaimCard(
                         claim: state.claims[index],
+                        cubit: _claimsCubit,
                         isEditable: !widget.forSelfAssignment,
                         screenRecorder: _recorderInitialization?.screenRecorder,
                         screenCapture: _recorderInitialization?.screenCapture,
                         videoRecorder: _recorderInitialization?.videoRecorder,
+                        isRejected: widget.rejected,
                       ),
                     ),
                   );
