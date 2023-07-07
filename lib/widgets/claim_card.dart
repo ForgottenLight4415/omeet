@@ -6,8 +6,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:omeet_motor/blocs/home_bloc/get_claims_cubit.dart';
 import 'package:omeet_motor/utilities/bridge_call.dart';
-import 'package:omeet_motor/views/call_conclusion.dart';
 
+import '../utilities/document_utilities.dart';
 import 'allocate_case_dialog.dart';
 import 'base_card.dart';
 import 'card_detail_text.dart';
@@ -397,6 +397,15 @@ class _ClaimCardState extends State<ClaimCard> {
                 );
               },
             ),
+            widget.isEditable && !widget.isRejected
+                ? ClaimPageTiles(
+              faIcon: FontAwesomeIcons.peopleGroup,
+              label: "Reporting",
+              onPressed: () async {
+                Navigator.pop(modalContext);
+                await DocumentUtilities.documentUploadDialog(context, widget.claim.claimId, DocumentType.audio, noFileReporting: true);
+              },
+            ) : const SizedBox(),
             widget.isEditable && !widget.isRejected
                 ? ClaimPageTiles(
               faIcon: FontAwesomeIcons.circleCheck,

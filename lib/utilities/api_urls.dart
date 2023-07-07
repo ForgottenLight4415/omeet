@@ -13,6 +13,7 @@ class ApiUrl {
   static const String newClaim = "api/addnewcase.php";
   static const String claimConclusion = "api/conclusion.php";
   static const String callConclusion = "api/call_conclusion.php";
+  static const String reporting = "api/reporting.php";
 
   //  VOICE CALL AND MESSAGES
   static const String bridgeCallUrl = "https://dashboard.hellotubelight.com/tenant/v1/cpaas/calls";

@@ -11,7 +11,7 @@ class DocumentUtilities {
   static final List<String> allowedAudioExtensions = ["wav", "mp3", "ogg", "m4a", "aac"];
   static final List<String> allowedVideoExtensions = ["mp4", "mov", "wmv", "flv", "avi"];
 
-  static final List<String> allowedImageExtensions = ["jpg", "jpeg", "png"];
+  static final List<String> allowedImageExtensions = ["jpg", "jpeg", "png", "tiff"];
   static final List<String> allowedDocumentExtensions = ["pdf", "doc", "docx"];
   static final List<String> allowedFileExtensions = allowedDocumentExtensions + allowedImageExtensions;
 
@@ -41,7 +41,7 @@ class DocumentUtilities {
   }
 
   static Future<bool> documentUploadDialog(BuildContext context, String caseId, DocumentType type,
-      {File? file}) async {
+      {File? file, bool noFileReporting = false}) async {
     bool? result = await showModalBottomSheet<bool?>(
       context: context,
       isScrollControlled: true,
@@ -49,6 +49,7 @@ class DocumentUtilities {
         caseId: caseId,
         type: type,
         recFile: file,
+        noFileReporting: noFileReporting,
       ),
     );
     if (result != null && result) {

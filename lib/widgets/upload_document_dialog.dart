@@ -6,21 +6,25 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:location/location.dart';
 import 'package:omeet_motor/data/models/document.dart';
+import 'package:omeet_motor/data/providers/app_server_provider.dart';
 import 'package:omeet_motor/widgets/input_fields.dart';
 import 'package:omeet_motor/widgets/snack_bar.dart';
 
+import '../data/providers/claim_provider.dart';
 import '../data/repositories/data_upload_repo.dart';
 import '../utilities/app_constants.dart';
 import '../utilities/document_utilities.dart';
 import '../utilities/location_service.dart';
+import '../utilities/show_snackbars.dart';
 import '../utilities/upload_dialog.dart';
 
 class UploadDocumentsDialog extends StatefulWidget {
   final File? recFile;
   final String caseId;
   final DocumentType type;
+  final bool noFileReporting;
 
-  const UploadDocumentsDialog({Key? key, required this.caseId, required this.type, this.recFile}) : super(key: key);
+  const UploadDocumentsDialog({Key? key, required this.caseId, required this.type, this.recFile, this.noFileReporting = false}) : super(key: key);
 
   @override
   State<UploadDocumentsDialog> createState() => _UploadDocumentsDialogState();
@@ -182,99 +186,101 @@ class _UploadDocumentsDialogState extends State<UploadDocumentsDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(
-        left: 15.0,
-        top: 15.0,
-        right: 15.0,
-        bottom: MediaQuery.of(context).viewInsets.bottom + 15.0,
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          Card(
-            child: SizedBox(
-              height: 70.h,
-              child: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: DropdownButton<String>(
-                  value: selected,
-                  isExpanded: true,
-                  icon: const FaIcon(FontAwesomeIcons.chevronDown),
-                  underline: const SizedBox(),
-                  items: <DropdownMenuItem<String>>[
-                    ...options.map(
-                      (option) => DropdownMenuItem<String>(
-                        child: Text(option),
-                        value: option,
+    return Align(
+      alignment: Alignment.topCenter,
+      child: Padding(
+        padding: const EdgeInsets.only(
+          left: 15.0,
+          top: 40.0,
+          right: 15.0,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Card(
+              child: SizedBox(
+                height: 70.h,
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: DropdownButton<String>(
+                    value: selected,
+                    isExpanded: true,
+                    icon: const FaIcon(FontAwesomeIcons.chevronDown),
+                    underline: const SizedBox(),
+                    items: <DropdownMenuItem<String>>[
+                      ...options.map(
+                        (option) => DropdownMenuItem<String>(
+                          child: Text(option),
+                          value: option,
+                        ),
                       ),
-                    ),
-                  ],
-                  onChanged: (conclusion) {
-                    setState(() {
-                      selected = conclusion ?? documentOptions[0];
-                    });
-                  },
+                    ],
+                    onChanged: (conclusion) {
+                      setState(() {
+                        selected = conclusion ?? documentOptions[0];
+                      });
+                    },
+                  ),
                 ),
               ),
             ),
-          ),
-          const SizedBox(height: 12.0),
-          CustomTextFormField(
-            textEditingController: _descriptionController,
-            label: "Description",
-            hintText: "Describe this file",
-            textInputAction: TextInputAction.done,
-          ),
-          const SizedBox(height: 12.0),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              widget.recFile == null ? Expanded(
-                child: ElevatedButton(
-                  onPressed: () => _selectFile(),
-                  child: const Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Icon(Icons.upload),
-                      SizedBox(width: 8.0),
-                      Text("Select file"),
-                    ],
-                  ),
-                ),
-              ) : const SizedBox(),
-            ],
-          ),
-          const SizedBox(height: 16.0),
-          file != null
-              ? Text(file!.path.split("/").last) : const SizedBox(),
-          file != null
-              ? const SizedBox(height: 16.0) : const SizedBox(),
-          Align(
-            alignment: Alignment.centerRight,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              mainAxisSize: MainAxisSize.min,
+            const SizedBox(height: 12.0),
+            CustomTextFormField(
+              textEditingController: _descriptionController,
+              label: "Description",
+              hintText: "Describe this file",
+              textInputAction: TextInputAction.done,
+            ),
+            const SizedBox(height: 12.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                ElevatedButton(
-                  onPressed: () async {
-                    await _uploadDocuments(context, uploadNow: false);
-                    Navigator.pop(context);
-                  },
-                  child: const Text("Upload later"),
-                ),
-                const SizedBox(width: 16.0),
-                ElevatedButton(
-                  onPressed: () async {
-                    await _uploadDocuments(context);
-                    Navigator.pop(context);
-                  },
-                  child: const Text("Upload"),
-                ),
+                !widget.noFileReporting && widget.recFile == null ? Expanded(
+                  child: ElevatedButton(
+                    onPressed: () => _selectFile(),
+                    child: const Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Icon(Icons.upload),
+                        SizedBox(width: 8.0),
+                        Text("Select file"),
+                      ],
+                    ),
+                  ),
+                ) : const SizedBox(),
               ],
             ),
-          ),
-        ],
+            const SizedBox(height: 16.0),
+            file != null
+                ? Text(file!.path.split("/").last) : const SizedBox(),
+            file != null
+                ? const SizedBox(height: 16.0) : const SizedBox(),
+            Align(
+              alignment: Alignment.centerRight,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  !widget.noFileReporting ? ElevatedButton(
+                    onPressed: () async {
+                      await _uploadDocuments(context, uploadNow: false);
+                      Navigator.pop(context);
+                    },
+                    child: const Text("Upload later"),
+                  ) : const SizedBox(),
+                  const SizedBox(width: 16.0),
+                  ElevatedButton(
+                    onPressed: () async {
+                      await _uploadDocuments(context);
+                      Navigator.pop(context);
+                    },
+                    child: Text(!widget.noFileReporting ? "Upload" : "Submit"),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -336,6 +342,27 @@ class _UploadDocumentsDialogState extends State<UploadDocumentsDialog> {
         showSnackBar(
           context, AppStrings.fileUploadFailed, type: SnackBarType.error,
         );
+      }
+    } else if (widget.noFileReporting) {
+      final ClaimProvider _provider = ClaimProvider();
+      try {
+        showProgressDialog(context, label: "Submitting", content: "Please wait");
+        final result = await _provider.submitReporting(
+          widget.caseId,
+          selected,
+          _descriptionController.text,
+        );
+        Navigator.pop(context);
+        if (result) {
+          showInfoSnackBar(context, "Submitted",
+              color: Colors.green);
+        } else {
+          showInfoSnackBar(context, "Failed to submit conclusion",
+              color: Colors.red);
+        }
+      } on AppException {
+        Navigator.pop(context);
+        showInfoSnackBar(context, "Something went wrong", color: Colors.red);
       }
     } else {
       Navigator.pop(context);

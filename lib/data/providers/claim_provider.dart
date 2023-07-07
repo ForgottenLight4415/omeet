@@ -51,6 +51,19 @@ class ClaimProvider extends AppServerProvider {
     return response.data?["code"] == 200;
   }
 
+  Future<bool> submitReporting(String claimNumber, String selection, String description) async {
+    final DecodedResponse response = await postRequest(
+      path: ApiUrl.reporting,
+      data: <String, String> {
+        "CASE_ID" : claimNumber,
+        "phone_no" : await AuthenticationProvider.getPhone(),
+        "selection" : selection,
+        "description" : description,
+      },
+    );
+    return response.data?["code"] == 200;
+  }
+
   Future<bool> assignToSelf(Map<String, String> payload) async {
     final DecodedResponse response = await postRequest(
       path: ApiUrl.assignToSelfUrl,
