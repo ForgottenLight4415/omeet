@@ -35,9 +35,9 @@ class DocumentProvider extends AppServerProvider {
     Map<String, dynamic> _rData = _response.data!;
     if (type == DocumentType.audio) {
       if (_rData["allpost"] != null) {
-        final List<AudioRecordings> _recordings = [];
+        final List<AudioRecording> _recordings = [];
         for (var document in _rData["allpost"]) {
-          _recordings.add(AudioRecordings.fromJson(document));
+          _recordings.add(AudioRecording.fromJson(document));
         }
         return _recordings;
       }

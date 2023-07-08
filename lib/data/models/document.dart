@@ -14,6 +14,9 @@ class Document {
   final int id;
   final String claimNumber;
   final String fileUrl;
+  final String fileName;
+  final String fileType;
+  final String fileDesc;
   final DocumentType type;
   final String uploadDateTime;
 
@@ -21,6 +24,13 @@ class Document {
       : id = int.parse(decodedJson["id"]),
         claimNumber = decodedJson['CASE_ID'] ?? "Unavailable",
         fileUrl = _getDocumentUrl(decodedJson, type),
+        fileName = _getDocumentName(decodedJson, type),
+        fileType = decodedJson["document_type"] == null ||  decodedJson["document_type"] == ""
+            ? "Unavailable"
+            : decodedJson["document_type"],
+        fileDesc = decodedJson["document_description"] == null ||  decodedJson["document_description"] == ""
+            ? "Unavailable"
+            : decodedJson["document_description"],
         uploadDateTime = _getDocumentDateTime(decodedJson, type);
 
   static String _getDocumentUrl(Map<String, dynamic> decodedJson, DocumentType type) {
@@ -35,6 +45,18 @@ class Document {
       }
   }
 
+  static String _getDocumentName(Map<String, dynamic> decodedJson, DocumentType type) {
+    switch (type) {
+      case DocumentType.file:
+      case DocumentType.image:
+        return decodedJson["targetfolder"];
+      case DocumentType.video:
+        return decodedJson["videourl"];
+      case DocumentType.audio:
+        return decodedJson['callRecordingLocation'].split("/").last;
+    }
+  }
+
   static String _getDocumentDateTime(Map<String, dynamic> decodedJson, DocumentType type) {
     if (type == DocumentType.audio) {
       return decodedJson["callDateTime"];
@@ -46,12 +68,12 @@ class Document {
   }
 }
 
-class AudioRecordings extends Document {
+class AudioRecording extends Document {
   final String callFrom;
   final String callTo;
   final String callUrl;
 
-  AudioRecordings.fromJson(Map<String, dynamic> decodedJson)
+  AudioRecording.fromJson(Map<String, dynamic> decodedJson)
       : callFrom = decodedJson['callFrom'],
         callTo = decodedJson['callTo'],
         callUrl = decodedJson['callRecordingLocation'],

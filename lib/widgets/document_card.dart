@@ -25,7 +25,7 @@ class DocumentCard extends StatelessWidget {
               context,
               '/view/document',
               arguments: DocumentViewPageArguments(
-                document.fileUrl,
+                (document as Document).fileUrl,
                 type,
               ),
             );
@@ -35,8 +35,8 @@ class DocumentCard extends StatelessWidget {
               '/view/audio-video',
               arguments: VideoWebViewArguments(
                   type == DocumentType.video
-                    ? document.fileUrl
-                    : document.callUrl,
+                    ? (document as Document).fileUrl
+                    : (document as AudioRecording).callUrl,
                   type,
               )
             );
@@ -50,11 +50,12 @@ class DocumentCard extends StatelessWidget {
             ),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 Container(
                   margin: const EdgeInsets.only(right: 10.0),
                   constraints: BoxConstraints(
-                    maxHeight: 150.h,
+                    maxHeight: 180.h,
                     minHeight: 150.h,
                     maxWidth: 110.w,
                     minWidth: 110.w,
@@ -72,51 +73,59 @@ class DocumentCard extends StatelessWidget {
                   ),
                 ),
                 SizedBox(width: 10.w),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      _getCardTitle(),
-                      textAlign: TextAlign.left,
-                      overflow: TextOverflow.fade,
-                      maxLines: 2,
-                      style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                          fontWeight: FontWeight.w600, color: Colors.black87),
-                    ),
-                    SizedBox(height: 10.h),
-                    Text(
-                      "ID: ${document.id}",
-                      textAlign: TextAlign.left,
-                      overflow: TextOverflow.fade,
-                      maxLines: 2,
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
-                    type == DocumentType.audio
-                        ? Text(
-                            "From: " + document.callFrom,
-                            textAlign: TextAlign.left,
-                            overflow: TextOverflow.fade,
-                            maxLines: 2,
-                            style: Theme.of(context).textTheme.bodyMedium,
-                          )
-                        : const SizedBox(),
-                    type == DocumentType.audio
-                        ? Text(
-                            "To: " + document.callTo,
-                            textAlign: TextAlign.left,
-                            overflow: TextOverflow.fade,
-                            maxLines: 2,
-                            style: Theme.of(context).textTheme.bodyMedium,
-                          )
-                        : const SizedBox(),
-                    Text(
-                      document.uploadDateTime,
-                      textAlign: TextAlign.left,
-                      overflow: TextOverflow.fade,
-                      maxLines: 2,
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
-                  ],
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        _getCardTitle(),
+                        textAlign: TextAlign.left,
+                        overflow: TextOverflow.fade,
+                        maxLines: 2,
+                        style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                            fontWeight: FontWeight.w600, color: Colors.black87),
+                      ),
+                      SizedBox(height: 10.h),
+                      Text(
+                        (document as Document).fileName,
+                        textAlign: TextAlign.left,
+                        overflow: TextOverflow.fade,
+                        softWrap: true,
+                        maxLines: 2,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                      type == DocumentType.audio
+                          ? Text(
+                              "From: " + document.callFrom,
+                              textAlign: TextAlign.left,
+                              overflow: TextOverflow.fade,
+                              maxLines: 2,
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            )
+                          : const SizedBox(),
+                      type == DocumentType.audio
+                          ? Text(
+                              "To: " + document.callTo,
+                              textAlign: TextAlign.left,
+                              overflow: TextOverflow.fade,
+                              maxLines: 2,
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            )
+                          : const SizedBox(),
+                      SizedBox(height: 12.h),
+                      Text(
+                        document.uploadDateTime,
+                        textAlign: TextAlign.left,
+                        overflow: TextOverflow.fade,
+                        maxLines: 2,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                      TextButton(
+                        onPressed: () => showDescription(context),
+                        child: const Text("Show Details"),
+                      )
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -156,5 +165,33 @@ class DocumentCard extends StatelessWidget {
       case DocumentType.image:
         return "Image";
     }
+  }
+
+  void showDescription(BuildContext context) async {
+    await showDialog(
+        context: context,
+        builder: (context) => SimpleDialog(
+          title: const Text("Details"),
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: SingleChildScrollView(
+                child: Align(
+                  alignment: Alignment.topLeft,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text("Type: ${(document as Document).fileType}"),
+                      const SizedBox(height: 16.0),
+                      Text((document as Document).fileDesc),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+    );
   }
 }
