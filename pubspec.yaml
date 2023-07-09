@@ -45,8 +45,6 @@ dependencies:
   flutter_background_video_recorder: ^0.0.9+1
   syncfusion_flutter_pdfviewer: ^21.1.41
   jitsi_meet_wrapper: ^0.0.6
-  omeet_screen_capture:
-    path: ./omeet_screen_capture
   ed_screen_recorder:
     path: ed_screen_recorder
 

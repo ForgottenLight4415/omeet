@@ -96,7 +96,6 @@ class _ClaimsViewState extends State<ClaimsView> with AutomaticKeepAliveClientMi
                         cubit: _claimsCubit,
                         isEditable: !widget.forSelfAssignment,
                         screenRecorder: _recorderInitialization?.screenRecorder,
-                        screenCapture: _recorderInitialization?.screenCapture,
                         videoRecorder: _recorderInitialization?.videoRecorder,
                         isRejected: widget.rejected,
                       ),

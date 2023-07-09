@@ -19,7 +19,6 @@ import '../data/models/document.dart';
 
 import '../utilities/app_constants.dart';
 import '../utilities/screen_recorder.dart';
-import '../utilities/screen_capture.dart';
 import '../utilities/video_recorder.dart';
 import '../utilities/claim_option_functions.dart';
 
@@ -29,7 +28,6 @@ class ClaimCard extends StatefulWidget {
   final Claim claim;
   final GetClaimsCubit cubit;
   final ScreenRecorder? screenRecorder;
-  final ScreenCapture? screenCapture;
   final VideoRecorder? videoRecorder;
   final bool isEditable;
   final bool isRejected;
@@ -39,7 +37,6 @@ class ClaimCard extends StatefulWidget {
     required this.claim,
     required this.cubit,
     this.screenRecorder,
-    this.screenCapture,
     this.videoRecorder,
     this.isEditable = true,
     this.isRejected = false,
@@ -50,7 +47,6 @@ class ClaimCard extends StatefulWidget {
 }
 
 class _ClaimCardState extends State<ClaimCard> {
-  String? _screenshotClaim;
   Color? _cardColor;
 
   @override
@@ -337,21 +333,6 @@ class _ClaimCardState extends State<ClaimCard> {
                     },
                   )
                 : const SizedBox(),
-            // widget.isEditable && !widget.isRejected
-            //     ? ClaimPageTiles(
-            //         faIcon: FontAwesomeIcons.mobileScreenButton,
-            //         label: _getScreenshotText(),
-            //         onPressed: () async {
-            //           Navigator.pop(modalContext);
-            //           await handleScreenshotService(
-            //             context,
-            //             screenCapture: widget.screenCapture!,
-            //             claimId: widget.claim.claimId,
-            //           );
-            //           _setCardColor();
-            //         },
-            //       )
-            //     : const SizedBox(),
             ClaimPageTiles(
               faIcon: FontAwesomeIcons.fileLines,
               label: "Documents",
@@ -423,35 +404,11 @@ class _ClaimCardState extends State<ClaimCard> {
                   Navigator.pushNamed(context, '/claim/details',
                       arguments: widget.claim);
                 })
-            // ClaimPageTiles(
-            //   faIcon: FontAwesomeIcons.recordVinyl,
-            //   label: _getScreenRecordText(),
-            //   onPressed: () async {
-            //     Navigator.pop(modalContext);
-            //     await handleScreenRecordingService(
-            //       context,
-            //       widget.screenRecorder,
-            //       widget.claim.claimNumber,
-            //     );
-            //     _setCardColor();
-            //   },
-            // ),
           ],
         ),
       ),
     );
   }
-
-  // String _getScreenRecordText() {
-  //   if (widget.screenRecorder.isRecording) {
-  //     if (widget.screenRecorder.claimNumber != widget.claim.claimNumber) {
-  //       return "Stop for ${widget.screenRecorder.claimNumber}";
-  //     } else {
-  //       return "Stop recording screen";
-  //     }
-  //   }
-  //   return "Record screen";
-  // }
 
   Future<void> _allocateDialog(BuildContext context) async {
     bool? result = await showModalBottomSheet<bool?>(
@@ -484,25 +441,8 @@ class _ClaimCardState extends State<ClaimCard> {
     }
   }
 
-  // String _getScreenshotText() {
-  //   if (widget.screenCapture!.isServiceRunning) {
-  //     if (widget.screenCapture!.claimNumber != widget.claim.claimId) {
-  //       return "Stop screenshot service for ${widget.screenCapture!.claimNumber}";
-  //     } else {
-  //       return "Stop screenshot service";
-  //     }
-  //   }
-  //   return "Start screenshot service";
-  // }
-
   void _setCardColor() async {
-    _screenshotClaim = widget.screenCapture!.claimNumber;
     if (widget.screenRecorder!.isRecording) {
-      setState(() {
-        _cardColor = Colors.red.shade100;
-      });
-    } else if (_screenshotClaim != null &&
-        _screenshotClaim == widget.claim.claimId) {
       setState(() {
         _cardColor = Colors.red.shade100;
       });

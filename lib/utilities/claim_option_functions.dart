@@ -1,7 +1,6 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
-import 'package:omeet_motor/utilities/screen_capture.dart';
 import 'package:omeet_motor/utilities/screen_recorder.dart';
 import 'package:omeet_motor/utilities/video_recorder.dart';
 
@@ -12,25 +11,6 @@ import 'camera_utility.dart';
 import 'location_service.dart';
 import 'show_snackbars.dart';
 import '../views/recorder_pages/audio_recorder_page.dart';
-
-Future<bool> handleScreenshotService(BuildContext context,
-    {required ScreenCapture screenCapture, required String claimId}) async {
-  if (!screenCapture.isServiceRunning) {
-    bool storageStatus = await storagePermission(context) ?? false;
-    if (storageStatus) {
-      return await screenCapture.startService(claimNumber: claimId);
-    } else {
-      showInfoSnackBar(
-        context,
-        "Storage permission is required to access this feature.",
-        color: Colors.red,
-      );
-      return false;
-    }
-  } else {
-    return await screenCapture.stopService();
-  }
-}
 
 Future<bool> handleScreenRecordingService(BuildContext context,
     {required ScreenRecorder screenRecorder,
