@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:omeet_motor/utilities/show_snackbars.dart';
 import '../../blocs/call_bloc/call_cubit.dart';
 import '../../utilities/app_permission_manager.dart';
@@ -266,10 +265,14 @@ class Claim {
     );
     final bool? sendButtonPressed = await showModalBottomSheet<bool?>(
           context: context,
-          constraints: BoxConstraints(maxHeight: 200.h),
+          isScrollControlled: true,
           builder: (context) => Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: EdgeInsets.fromLTRB(
+                16.0, 16.0, 16.0,
+                MediaQuery.of(context).viewInsets.bottom + 16.0,
+            ),
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 CustomTextFormField(
                   textEditingController: _controller,

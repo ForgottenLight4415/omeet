@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'app_server_provider.dart';
 
 class AuthenticationProvider extends AppServerProvider {
-  Future<bool> signIn({String? phoneNumber, String? password}) async {
+  Future<bool> signIn({String? phoneNumber, String? password, bool development = false}) async {
     final bool isLoggedIn = await AuthenticationProvider.isLoggedIn();
     if (isLoggedIn) {
       return true;
@@ -13,6 +13,10 @@ class AuthenticationProvider extends AppServerProvider {
         "phone_no": phoneNumber.trim(),
         "password": password,
       };
+      if (development) {
+        _setLoginStatus(false, phone: data["phone_no"]);
+        return true;
+      }
       final DecodedResponse response = await postRequest(
         path: ApiUrl.loginUrl,
         data: data,
@@ -47,19 +51,18 @@ class AuthenticationProvider extends AppServerProvider {
     return await signIn(phoneNumber: phoneNumber, password: password);
   }
 
-  Future<bool> verifyOtp(String phoneNumber, String otp) async {
-    final Map<String, String> _data = <String, String>{
-      "phone_no": phoneNumber.trim(),
-      "otp": otp,
-    };
-    final DecodedResponse _response = await postRequest(
-      path: ApiUrl.verifyOtp,
-      data: _data,
-    );
-    final Map<String, dynamic> _rData = _response.data!;
-
-    return _setLoginStatus(_rData["code"] == successCode, phone: phoneNumber);
-    // return _setLoginStatus(true, phone: phoneNumber);
+  Future<bool> verifyOtp(String phoneNumber, String otp, {bool development = false}) async {
+    if (development) {
+      return _setLoginStatus(true, phone: phoneNumber);
+    } else {
+      final Map<String, String> data = <String, String>{
+        "phone_no": phoneNumber.trim(),
+        "otp": otp,
+      };
+      final DecodedResponse response = await postRequest(path: ApiUrl.verifyOtp, data: data);
+      final bool result = (response.data!)["code"] == successCode;
+      return _setLoginStatus(result, phone: phoneNumber);
+    }
   }
 
   static Future<void> signOut() async {

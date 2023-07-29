@@ -41,6 +41,7 @@ class _OMeetAppState extends State<OMeetApp> {
     ]);
 
     return ScreenUtilInit(
+      useInheritedMediaQuery: true,
       designSize: const Size(412, 915),
       builder: (BuildContext context, Widget? child) => MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -48,7 +49,9 @@ class _OMeetAppState extends State<OMeetApp> {
         theme: AppTheme.lightTheme,
         builder: (BuildContext? context, Widget? widget) {
           return MediaQuery(
-            data: MediaQuery.of(context!).copyWith(textScaleFactor: 1.0),
+            data: MediaQuery.of(context!).copyWith(
+              textScaleFactor: 1.0,
+            ),
             child: widget!,
           );
         },

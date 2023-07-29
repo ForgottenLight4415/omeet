@@ -3,14 +3,15 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_sound_record/flutter_sound_record.dart';
 import 'package:location/location.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:path_provider/path_provider.dart';
 
 import '../../data/models/claim.dart';
 import '../../data/models/document.dart';
 import '../../utilities/document_utilities.dart';
 import '../../utilities/show_snackbars.dart';
-import '../../utilities/sound_recorder.dart';
 import '../../widgets/buttons.dart';
 
 class AudioRecordArguments {
@@ -29,15 +30,15 @@ class AudioRecordPage extends StatefulWidget {
 }
 
 class _AudioRecordPageState extends State<AudioRecordPage> {
-  SoundRecorder? _recorder;
+  bool _isRecording = false;
+  final FlutterSoundRecord _audioRecorder = FlutterSoundRecord();
   Duration _duration = const Duration();
   Timer? _timer;
 
   @override
   void initState() {
     super.initState();
-    _recorder = SoundRecorder(widget.arguments.claim);
-    _recorder!.init();
+    _isRecording = false;
   }
 
   void _startTimer() {
@@ -64,7 +65,8 @@ class _AudioRecordPageState extends State<AudioRecordPage> {
 
   @override
   void dispose() {
-    _recorder!.dispose();
+    _timer?.cancel();
+    _audioRecorder.dispose();
     super.dispose();
   }
 
@@ -74,7 +76,7 @@ class _AudioRecordPageState extends State<AudioRecordPage> {
       appBar: AppBar(
         leading: AppBackButton(
           onPressed: () {
-            if (_recorder!.isRecording) {
+            if (_isRecording) {
               showInfoSnackBar(
                 context,
                 "Recording is in progress. Stop recording to go back.",
@@ -98,12 +100,14 @@ class _AudioRecordPageState extends State<AudioRecordPage> {
                 "Claim number",
                 style: Theme.of(context).textTheme.titleLarge,
               ),
-              Text(
-                widget.arguments.claim.claimId,
-                style: TextStyle(
-                  fontSize: 28.sp,
-                  color: Theme.of(context).primaryColor,
-                  fontWeight: FontWeight.w600,
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  widget.arguments.claim.claimId,
+                  maxLines: 2,
+                  softWrap: false,
+                  overflow: TextOverflow.fade,
+                  style: Theme.of(context).textTheme.headlineMedium,
                 ),
               ),
               Padding(
@@ -122,38 +126,47 @@ class _AudioRecordPageState extends State<AudioRecordPage> {
   }
 
   Widget _recorderButton() {
-    final bool _isRecording = _recorder!.isRecording;
-    final IconData _icon = _isRecording ? Icons.stop : Icons.mic;
-    final String _text = _isRecording ? 'Stop recording' : 'Start recording';
-    final Color _primary = _isRecording ? Colors.red : Colors.green;
-
     return ElevatedButton.icon(
       onPressed: () async {
-        File? file = await _recorder!.toggleRecording();
         if (!_isRecording) {
-          _startTimer();
+          log("Starting record");
+          try {
+            int currentTime = DateTime.now().microsecondsSinceEpoch;
+            Directory? directory = await getExternalStorageDirectory();
+            Directory? saveDirectory = await Directory(directory!.path + "/Audio").create();
+            String fileName = saveDirectory.path + "/${widget.arguments.claim.claimId}_$currentTime.aac";
+            await File(fileName).create(recursive: true);
+            await _audioRecorder.start(path: fileName);
+            bool isRecording = await _audioRecorder.isRecording();
+            setState(() {
+              _isRecording = isRecording;
+            });
+            _startTimer();
+          } on Exception catch (e) {
+            log(e.toString());
+            return;
+          }
         } else {
+          final String? path = await _audioRecorder.stop();
           _stopTimer();
           _resetTimer();
-          setState(() {});
-          log("Recorder state changed");
-          if (file != null) {
-            log(file.path);
+          setState(() => _isRecording = false);
+          if (path != null) {
             await DocumentUtilities.documentUploadDialog(
               context,
               widget.arguments.claim.claimId,
               DocumentType.audio,
-              file: file,
+              file: File(path),
             );
           }
         }
       },
       style: ElevatedButton.styleFrom(
-        backgroundColor: _primary,
+        backgroundColor: _isRecording ? Colors.red : Colors.green,
         foregroundColor: Colors.white,
       ),
-      icon: Icon(_icon),
-      label: Text(_text),
+      icon: Icon(_isRecording ? Icons.stop : Icons.mic),
+      label: Text(_isRecording ? 'Stop recording' : 'Start recording'),
     );
   }
 }

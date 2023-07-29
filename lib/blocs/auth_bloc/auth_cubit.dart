@@ -12,10 +12,10 @@ class AuthCubit extends Cubit<AuthState> {
   final AuthRepository _authRepository = AuthRepository();
   AuthCubit() : super(AuthInitial());
 
-  Future<void> signIn(String email, String password) async {
+  Future<void> signIn(String email, String password, bool development) async {
     emit(AuthLoading());
     try {
-      if (await _authRepository.signIn(email: email, password: password)) {
+      if (await _authRepository.signIn(email: email, password: password, development: development)) {
         emit(AuthSuccess());
       } else {
         emit(AuthFailed(401, "Incorrect email or password"));

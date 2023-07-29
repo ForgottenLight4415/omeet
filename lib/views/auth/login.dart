@@ -17,6 +17,7 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> {
+  late final bool development;
   late final TextEditingController _emailController;
   late final TextEditingController _passwordController;
   AuthCubit? _authCubit;
@@ -27,6 +28,8 @@ class _LoginViewState extends State<LoginView> {
   @override
   void initState() {
     super.initState();
+    // TODO: DEVELOPMENT FLAG
+    development = false;
     _emailController = TextEditingController();
     _passwordController = TextEditingController();
     _authCubit = AuthCubit();
@@ -147,6 +150,7 @@ class _LoginViewState extends State<LoginView> {
         _authCubit!.signIn(
           _emailController.text,
           _passwordController.text,
+          development,
         );
       } else {
         return;

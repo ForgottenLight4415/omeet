@@ -21,6 +21,7 @@ class VerificationView extends StatefulWidget {
 }
 
 class _VerificationViewState extends State<VerificationView> {
+  late final bool development;
   final TextEditingController _controller = TextEditingController();
 
   bool _isButtonEnabled = false; // Enable the button initially
@@ -65,6 +66,8 @@ class _VerificationViewState extends State<VerificationView> {
   @override
   void initState() {
     super.initState();
+    // TODO: DEVELOPMENT FLAG
+    development = false;
     _startTimer();
   }
 
@@ -111,6 +114,7 @@ class _VerificationViewState extends State<VerificationView> {
                                 BlocProvider.of<OtpCubit>(context).verifyOtp(
                                   widget.loginDetails[0],
                                   _controller.text,
+                                  development
                                 );
                               },
                               child: const Text("VERIFY"),
