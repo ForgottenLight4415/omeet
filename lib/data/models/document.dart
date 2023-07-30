@@ -37,7 +37,7 @@ class Document {
       switch (type) {
         case DocumentType.file:
         case DocumentType.image:
-          return ApiUrl.actualDocBaseUrl + decodedJson["targetfolder"].replaceAll(' ', '%20');
+          return ApiUrl.actualDocBaseUrl + Uri.encodeComponent(decodedJson["targetfolder"]).replaceAll(' ', '%20');
         case DocumentType.video:
           return ApiUrl.actualVideoBaseUrl + decodedJson["videourl"].replaceAll(' ', '%20');
         case DocumentType.audio:

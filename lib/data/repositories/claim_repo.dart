@@ -5,8 +5,20 @@ class ClaimRepository {
   List<Claim> _claims = [];
   final ClaimProvider _provider = ClaimProvider();
 
-  Future<List<Claim>> getClaims({bool forSelfAssignment = false, bool rejected = false}) async {
-    _claims = await _provider.getClaims(forSelfAssignment: forSelfAssignment, rejected: rejected);
+  Future<List<Claim>> getClaims({
+    bool forSelfAssignment = false,
+    bool rejected = false,
+    String state = "",
+    String district = "",
+    String policeStation = "",
+  }) async {
+    _claims = await _provider.getClaims(
+      forSelfAssignment: forSelfAssignment,
+      rejected: rejected,
+      state: state,
+      district: district,
+      policeStation: policeStation,
+    );
     return _claims;
   }
 

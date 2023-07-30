@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
@@ -37,6 +39,7 @@ class _DocumentViewPageState extends State<DocumentViewPage> {
   @override
   void initState() {
     super.initState();
+    log("Opening document: ${widget.documentUrl}");
     switch (widget.type) {
       case DocumentType.file:
         pageTitle = "PDF viewer";
@@ -92,6 +95,7 @@ class _DocumentViewPageState extends State<DocumentViewPage> {
               child: BlocBuilder<ViewDocumentCubit, ViewDocumentState>(
                 builder: (context, state) {
                   if (state is ViewDocumentReady) {
+                    log(state.docUrl);
                     if (state.docType == DocType.pdf) {
                       return SfPdfViewer.network(
                         state.docUrl,

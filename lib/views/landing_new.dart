@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:omeet_motor/blocs/home_bloc/get_claims_cubit.dart';
 
 import '../blocs/call_bloc/call_cubit.dart';
 import '../utilities/bridge_call.dart';
@@ -10,14 +11,43 @@ import '../utilities/app_constants.dart';
 import '../widgets/omeet_drawer_header.dart';
 import '../widgets/snack_bar.dart';
 
-class ModernLandingPage extends StatelessWidget {
+class ModernLandingPage extends StatefulWidget {
   final String email;
   final String phone;
 
-  ModernLandingPage({Key? key, required this.email, required this.phone})
+  const ModernLandingPage({Key? key, required this.email, required this.phone})
       : super(key: key);
 
+  @override
+  State<ModernLandingPage> createState() => _ModernLandingPageState();
+}
+
+class _ModernLandingPageState extends State<ModernLandingPage> {
+  late final GetClaimsCubit _allClaims;
+  late final GetClaimsCubit _acceptedClaims;
+  late final GetClaimsCubit _rejectedClaims;
+
+  int _noAllClaims = 0;
+  int _noAcceptedClaims = 0;
+  int _noRejectedClaims = 0;
+
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  @override
+  void initState() {
+    super.initState();
+    _allClaims = GetClaimsCubit();
+    _acceptedClaims = GetClaimsCubit();
+    _rejectedClaims = GetClaimsCubit();
+  }
+
+  @override
+  void dispose() {
+    _allClaims.close();
+    _acceptedClaims.close();
+    _rejectedClaims.close();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,15 +63,48 @@ class ModernLandingPage extends StatelessWidget {
             onPressed: () => _scaffoldKey.currentState?.openDrawer(),
             icon: const Icon(Icons.menu),
           ),
-          bottom: const TabBar(
+          bottom: TabBar(
             labelColor: Colors.black,
-            indicator: UnderlineTabIndicator(
+            indicator: const UnderlineTabIndicator(
               borderSide: BorderSide(color: Colors.black),
             ),
             tabs: [
-              Tab(text: "Allocated"),
-              Tab(text: "Accepted"),
-              Tab(text: "Rejected"),
+              BlocProvider<GetClaimsCubit>(
+                create: (context) => _allClaims
+                  ..getClaims(context, forSelfAssignment: true),
+                child: BlocBuilder<GetClaimsCubit, GetClaimsState>(
+                  builder: (context, state) {
+                    if (state is GetClaimsSuccess) {
+                      _noAllClaims = state.claims.length;
+                    }
+                    return Tab(text: "Allocated $_noAllClaims");
+                  },
+                ),
+              ),
+              BlocProvider<GetClaimsCubit>(
+                create: (context) => _acceptedClaims
+                  ..getClaims(context, forSelfAssignment: false),
+                child: BlocBuilder<GetClaimsCubit, GetClaimsState>(
+                  builder: (context, state) {
+                    if (state is GetClaimsSuccess) {
+                      _noAcceptedClaims = state.claims.length;
+                    }
+                    return Tab(text: "Accepted $_noAcceptedClaims");
+                  },
+                ),
+              ),
+              BlocProvider<GetClaimsCubit>(
+                create: (context) => _rejectedClaims
+                  ..getClaims(context, forSelfAssignment: false, rejected: true),
+                child: BlocBuilder<GetClaimsCubit, GetClaimsState>(
+                  builder: (context, state) {
+                    if (state is GetClaimsSuccess) {
+                      _noRejectedClaims = state.claims.length;
+                    }
+                    return Tab(text: "Rejected $_noRejectedClaims");
+                  },
+                ),
+              ),
             ],
           ),
         ),
@@ -49,7 +112,7 @@ class ModernLandingPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              OMeetUserDrawerHeader(email: email, phone: phone),
+              OMeetUserDrawerHeader(email: widget.email, phone: widget.phone),
               BlocProvider<CallCubit>(
                 create: (context) => CallCubit(),
                 child: BlocConsumer<CallCubit, CallState>(
@@ -116,11 +179,15 @@ class ModernLandingPage extends StatelessWidget {
             ],
           ),
         ),
-        body: const TabBarView(
+        body: TabBarView(
           children: [
-            ClaimsView(forSelfAssignment: true),
-            ClaimsView(forSelfAssignment: false),
-            ClaimsView(forSelfAssignment: false, rejected: true),
+            ClaimsView(cubit: _allClaims, forSelfAssignment: true),
+            ClaimsView(cubit: _acceptedClaims, forSelfAssignment: false),
+            ClaimsView(
+                cubit: _rejectedClaims,
+                forSelfAssignment: false,
+                rejected: true,
+            ),
           ],
         ),
       ),

@@ -14,8 +14,14 @@ class GetClaimsCubit extends Cubit<GetClaimsState> {
   final ClaimRepository _homeRepository = ClaimRepository();
   GetClaimsCubit() : super(GetClaimsInitial());
 
-  Future<void> getClaims(BuildContext context,
-      {bool forSelfAssignment = false, bool rejected = false}) async {
+  Future<void> getClaims(
+    BuildContext context, {
+    bool forSelfAssignment = false,
+    bool rejected = false,
+    String state = "",
+    String district = "",
+    String policeStation = "",
+  }) async {
     if (!await checkConnection(context)) {
       emit(GetClaimsFailed(1000, "No internet connection"));
       return;
@@ -24,7 +30,13 @@ class GetClaimsCubit extends Cubit<GetClaimsState> {
     try {
       emit(
         GetClaimsSuccess(
-          await _homeRepository.getClaims(forSelfAssignment: forSelfAssignment, rejected: rejected),
+          await _homeRepository.getClaims(
+            forSelfAssignment: forSelfAssignment,
+            rejected: rejected,
+            state: state,
+            district: district,
+            policeStation: policeStation,
+          ),
         ),
       );
     } on SocketException {
@@ -55,15 +67,15 @@ class GetClaimsCubit extends Cubit<GetClaimsState> {
         String firNumber = claim.firNumber.toLowerCase();
         String district = claim.district.toLowerCase();
         String policeStation = claim.policeStation.toLowerCase();
-        if (insuredName.contains(_searchQuery)
-            || phoneNumber.contains(_searchQuery)
-            || firNumber.contains(_searchQuery)
-            || vehicleNumber.contains(_searchQuery)
-            || victimVehicleNumberA.contains(_searchQuery)
-            || victimVehicleNumberB.contains(_searchQuery)
-            || district.contains(_searchQuery)
-            || policeStation.contains(_searchQuery)
-            || caseId.contains(_searchQuery)) {
+        if (insuredName.contains(_searchQuery) ||
+            phoneNumber.contains(_searchQuery) ||
+            firNumber.contains(_searchQuery) ||
+            vehicleNumber.contains(_searchQuery) ||
+            victimVehicleNumberA.contains(_searchQuery) ||
+            victimVehicleNumberB.contains(_searchQuery) ||
+            district.contains(_searchQuery) ||
+            policeStation.contains(_searchQuery) ||
+            caseId.contains(_searchQuery)) {
           _result.add(claim);
         }
       }

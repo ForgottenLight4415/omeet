@@ -24,7 +24,13 @@ class UploadDocumentsDialog extends StatefulWidget {
   final DocumentType type;
   final bool noFileReporting;
 
-  const UploadDocumentsDialog({Key? key, required this.caseId, required this.type, this.recFile, this.noFileReporting = false}) : super(key: key);
+  const UploadDocumentsDialog(
+      {Key? key,
+      required this.caseId,
+      required this.type,
+      this.recFile,
+      this.noFileReporting = false})
+      : super(key: key);
 
   @override
   State<UploadDocumentsDialog> createState() => _UploadDocumentsDialogState();
@@ -128,7 +134,7 @@ class _UploadDocumentsDialogState extends State<UploadDocumentsDialog> {
     "Other - free text",
   ];
 
-  final List<String> audioOptions = <String> [
+  final List<String> audioOptions = <String>[
     "IV",
     "IV Driver",
     "IV Family Member",
@@ -186,101 +192,101 @@ class _UploadDocumentsDialogState extends State<UploadDocumentsDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.topCenter,
-      child: Padding(
-        padding: const EdgeInsets.only(
-          left: 15.0,
-          top: 40.0,
-          right: 15.0,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Card(
-              child: SizedBox(
-                height: 70.h,
-                child: Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: DropdownButton<String>(
-                    value: selected,
-                    isExpanded: true,
-                    icon: const FaIcon(FontAwesomeIcons.chevronDown),
-                    underline: const SizedBox(),
-                    items: <DropdownMenuItem<String>>[
-                      ...options.map(
-                        (option) => DropdownMenuItem<String>(
-                          child: Text(option),
-                          value: option,
-                        ),
+    return Padding(
+      padding: EdgeInsets.fromLTRB(
+        16.0,
+        16.0,
+        16.0,
+        MediaQuery.of(context).viewInsets.bottom + 16,
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Card(
+            child: SizedBox(
+              height: 70.h,
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: DropdownButton<String>(
+                  value: selected,
+                  isExpanded: true,
+                  icon: const FaIcon(FontAwesomeIcons.chevronDown),
+                  underline: const SizedBox(),
+                  items: <DropdownMenuItem<String>>[
+                    ...options.map(
+                      (option) => DropdownMenuItem<String>(
+                        child: Text(option),
+                        value: option,
                       ),
-                    ],
-                    onChanged: (conclusion) {
-                      setState(() {
-                        selected = conclusion ?? documentOptions[0];
-                      });
-                    },
-                  ),
+                    ),
+                  ],
+                  onChanged: (conclusion) {
+                    setState(() {
+                      selected = conclusion ?? documentOptions[0];
+                    });
+                  },
                 ),
               ),
             ),
-            const SizedBox(height: 12.0),
-            CustomTextFormField(
-              textEditingController: _descriptionController,
-              label: "Description",
-              hintText: "Describe this file",
-              textInputAction: TextInputAction.done,
-            ),
-            const SizedBox(height: 12.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+          ),
+          const SizedBox(height: 12.0),
+          CustomTextFormField(
+            textEditingController: _descriptionController,
+            label: "Description",
+            hintText: "Describe this file",
+            textInputAction: TextInputAction.done,
+          ),
+          const SizedBox(height: 12.0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              !widget.noFileReporting && widget.recFile == null
+                  ? Expanded(
+                      child: ElevatedButton(
+                        onPressed: () => _selectFile(),
+                        child: const Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            Icon(Icons.upload),
+                            SizedBox(width: 8.0),
+                            Text("Select file"),
+                          ],
+                        ),
+                      ),
+                    )
+                  : const SizedBox(),
+            ],
+          ),
+          const SizedBox(height: 16.0),
+          file != null ? Text(file!.path.split("/").last) : const SizedBox(),
+          file != null ? const SizedBox(height: 16.0) : const SizedBox(),
+          Align(
+            alignment: Alignment.centerRight,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                !widget.noFileReporting && widget.recFile == null ? Expanded(
-                  child: ElevatedButton(
-                    onPressed: () => _selectFile(),
-                    child: const Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        Icon(Icons.upload),
-                        SizedBox(width: 8.0),
-                        Text("Select file"),
-                      ],
-                    ),
-                  ),
-                ) : const SizedBox(),
+                !widget.noFileReporting
+                    ? ElevatedButton(
+                        onPressed: () async {
+                          await _uploadDocuments(context, uploadNow: false);
+                          Navigator.pop(context);
+                        },
+                        child: const Text("Upload later"),
+                      )
+                    : const SizedBox(),
+                const SizedBox(width: 16.0),
+                ElevatedButton(
+                  onPressed: () async {
+                    await _uploadDocuments(context);
+                    Navigator.pop(context);
+                  },
+                  child: Text(!widget.noFileReporting ? "Upload" : "Submit"),
+                ),
               ],
             ),
-            const SizedBox(height: 16.0),
-            file != null
-                ? Text(file!.path.split("/").last) : const SizedBox(),
-            file != null
-                ? const SizedBox(height: 16.0) : const SizedBox(),
-            Align(
-              alignment: Alignment.centerRight,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  !widget.noFileReporting ? ElevatedButton(
-                    onPressed: () async {
-                      await _uploadDocuments(context, uploadNow: false);
-                      Navigator.pop(context);
-                    },
-                    child: const Text("Upload later"),
-                  ) : const SizedBox(),
-                  const SizedBox(width: 16.0),
-                  ElevatedButton(
-                    onPressed: () async {
-                      await _uploadDocuments(context);
-                      Navigator.pop(context);
-                    },
-                    child: Text(!widget.noFileReporting ? "Upload" : "Submit"),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -288,65 +294,68 @@ class _UploadDocumentsDialogState extends State<UploadDocumentsDialog> {
   void _selectFile() async {
     List<String> allowedFileTypes = DocumentUtilities.allowedFileExtensions;
     if (widget.type == DocumentType.file || widget.type == DocumentType.image) {
-      allowedFileTypes = DocumentUtilities.allowedDocumentExtensions;
+      allowedFileTypes = DocumentUtilities.allowedFileExtensions;
     } else if (widget.type == DocumentType.video) {
       allowedFileTypes = DocumentUtilities.allowedVideoExtensions;
     } else {
       allowedFileTypes = DocumentUtilities.allowedAudioExtensions;
     }
-    final FilePickerResult? result = await FilePicker.platform.pickFiles(
-        type: FileType.custom,
-        allowedExtensions: allowedFileTypes
-    );
+    final FilePickerResult? result = await FilePicker.platform
+        .pickFiles(type: FileType.custom, allowedExtensions: allowedFileTypes);
     if (result != null) {
       String filePath = result.files.single.path!;
-      final String fileExtension = filePath
-          .split(".")
-          .last;
+      final String fileExtension = filePath.split(".").last;
       if (allowedFileTypes.contains(fileExtension)) {
         setState(() {
           file = File(filePath);
         });
       } else {
         showSnackBar(
-          context, AppStrings.unsupportedFile, type: SnackBarType.error,
+          context,
+          AppStrings.unsupportedFile,
+          type: SnackBarType.error,
         );
       }
     }
   }
 
-  Future<void> _uploadDocuments(BuildContext context, {bool uploadNow = true}) async {
+  Future<void> _uploadDocuments(BuildContext context,
+      {bool uploadNow = true}) async {
     if (file != null) {
       final DataUploadRepository repository = DataUploadRepository();
       final LocationService locationService = LocationService();
       final LocationData location = await locationService.getLocation(context);
       showProgressDialog(context);
       bool result = await repository.uploadData(
-        claimId: widget.caseId,
-        latitude: location.latitude ?? 0,
-        longitude: location.longitude ?? 0,
-        file: file!,
-        uploadNow: uploadNow,
-        directUpload: true,
-        extraParams: {
-          "document_type": selected,
-          "document_description": _descriptionController.text,
-        }
-      );
+          claimId: widget.caseId,
+          latitude: location.latitude ?? 0,
+          longitude: location.longitude ?? 0,
+          file: file!,
+          uploadNow: uploadNow,
+          directUpload: true,
+          extraParams: {
+            "document_type": selected,
+            "document_description": _descriptionController.text,
+          });
       Navigator.pop(context);
       if (result) {
         showSnackBar(
-          context, AppStrings.fileUploaded, type: SnackBarType.success,
+          context,
+          AppStrings.fileUploaded,
+          type: SnackBarType.success,
         );
       } else {
         showSnackBar(
-          context, AppStrings.fileUploadFailed, type: SnackBarType.error,
+          context,
+          AppStrings.fileUploadFailed,
+          type: SnackBarType.error,
         );
       }
     } else if (widget.noFileReporting) {
       final ClaimProvider _provider = ClaimProvider();
       try {
-        showProgressDialog(context, label: "Submitting", content: "Please wait");
+        showProgressDialog(context,
+            label: "Submitting", content: "Please wait");
         final result = await _provider.submitReporting(
           widget.caseId,
           selected,
@@ -354,8 +363,7 @@ class _UploadDocumentsDialogState extends State<UploadDocumentsDialog> {
         );
         Navigator.pop(context);
         if (result) {
-          showInfoSnackBar(context, "Submitted",
-              color: Colors.green);
+          showInfoSnackBar(context, "Submitted", color: Colors.green);
         } else {
           showInfoSnackBar(context, "Failed to submit conclusion",
               color: Colors.red);
@@ -367,7 +375,9 @@ class _UploadDocumentsDialogState extends State<UploadDocumentsDialog> {
     } else {
       Navigator.pop(context);
       showSnackBar(
-        context, AppStrings.noFileSelected, type: SnackBarType.error,
+        context,
+        AppStrings.noFileSelected,
+        type: SnackBarType.error,
       );
     }
   }

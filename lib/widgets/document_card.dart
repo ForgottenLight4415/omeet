@@ -78,10 +78,10 @@ class DocumentCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        _getCardTitle(),
+                        (document as Document).fileType,
                         textAlign: TextAlign.left,
                         overflow: TextOverflow.fade,
-                        maxLines: 2,
+                        maxLines: 1,
                         style: Theme.of(context).textTheme.headlineSmall!.copyWith(
                             fontWeight: FontWeight.w600, color: Colors.black87),
                       ),
@@ -89,7 +89,7 @@ class DocumentCard extends StatelessWidget {
                       Text(
                         (document as Document).fileName,
                         textAlign: TextAlign.left,
-                        overflow: TextOverflow.fade,
+                        overflow: TextOverflow.ellipsis,
                         softWrap: true,
                         maxLines: 2,
                         style: Theme.of(context).textTheme.bodyMedium,
@@ -182,7 +182,7 @@ class DocumentCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Text("Type: ${(document as Document).fileType}"),
+                      Text("Type: ${_getCardTitle()}"),
                       const SizedBox(height: 16.0),
                       Text((document as Document).fileDesc),
                     ],
