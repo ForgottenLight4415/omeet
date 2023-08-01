@@ -6,18 +6,16 @@ class ClaimRepository {
   final ClaimProvider _provider = ClaimProvider();
 
   Future<List<Claim>> getClaims({
-    bool forSelfAssignment = false,
-    bool rejected = false,
+    ClaimType claimType = ClaimType.allocated,
     String state = "",
     String district = "",
     String policeStation = "",
   }) async {
     _claims = await _provider.getClaims(
-      forSelfAssignment: forSelfAssignment,
-      rejected: rejected,
       state: state,
       district: district,
       policeStation: policeStation,
+      claimType: claimType
     );
     return _claims;
   }

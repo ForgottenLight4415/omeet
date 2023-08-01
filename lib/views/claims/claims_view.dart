@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:omeet_motor/data/models/claim.dart';
+import 'package:omeet_motor/data/providers/claim_provider.dart';
 import 'package:omeet_motor/widgets/list_filter.dart';
 
 import '../../blocs/home_bloc/get_claims_cubit.dart';
@@ -14,14 +15,12 @@ import '../../widgets/claim_card.dart';
 
 class ClaimsView extends StatefulWidget {
   final GetClaimsCubit cubit;
-  final bool forSelfAssignment;
-  final bool rejected;
+  final ClaimType claimType;
 
   const ClaimsView({
     Key? key,
     required this.cubit,
-    this.forSelfAssignment = false,
-    this.rejected = false,
+    required this.claimType,
   }) : super(key: key);
 
   @override
@@ -41,7 +40,7 @@ class _ClaimsViewState extends State<ClaimsView>
   @override
   void initState() {
     super.initState();
-    if (!widget.forSelfAssignment) {
+    if (widget.claimType == ClaimType.accepted) {
       initializeRecorders();
     }
     _searchController = TextEditingController();
@@ -93,8 +92,7 @@ class _ClaimsViewState extends State<ClaimsView>
                             _stateFilter = value;
                             widget.cubit.getClaims(
                               context,
-                              forSelfAssignment: widget.forSelfAssignment,
-                              rejected: widget.rejected,
+                              claimType: widget.claimType,
                               state: _stateFilter,
                               district: _districtFilter,
                               policeStation: _policeStationFilter,
@@ -123,8 +121,6 @@ class _ClaimsViewState extends State<ClaimsView>
                             _districtFilter = value;
                             widget.cubit.getClaims(
                               context,
-                              forSelfAssignment: widget.forSelfAssignment,
-                              rejected: widget.rejected,
                               state: _stateFilter,
                               district: _districtFilter,
                               policeStation: _policeStationFilter,
@@ -153,8 +149,7 @@ class _ClaimsViewState extends State<ClaimsView>
                             _policeStationFilter = value;
                             widget.cubit.getClaims(
                               context,
-                              forSelfAssignment: widget.forSelfAssignment,
-                              rejected: widget.rejected,
+                              claimType: widget.claimType,
                               state: _stateFilter,
                               district: _districtFilter,
                               policeStation: _policeStationFilter,
@@ -179,7 +174,7 @@ class _ClaimsViewState extends State<ClaimsView>
             value: widget.cubit
               ..getClaims(
                 context,
-                forSelfAssignment: widget.forSelfAssignment,
+                claimType: widget.claimType
               ),
             child: BlocBuilder<GetClaimsCubit, GetClaimsState>(
               builder: (context, state) {
@@ -194,8 +189,7 @@ class _ClaimsViewState extends State<ClaimsView>
                     onRefresh: () async {
                       BlocProvider.of<GetClaimsCubit>(context).getClaims(
                         context,
-                        forSelfAssignment: widget.forSelfAssignment,
-                        rejected: widget.rejected,
+                        claimType: widget.claimType
                       );
                     },
                     child: ListView.builder(
@@ -208,10 +202,9 @@ class _ClaimsViewState extends State<ClaimsView>
                       itemBuilder: (context, index) => ClaimCard(
                         claim: state.claims[index],
                         cubit: widget.cubit,
-                        isEditable: !widget.forSelfAssignment,
+                        claimType: widget.claimType,
                         screenRecorder: _recorderInitialization?.screenRecorder,
                         videoRecorder: _recorderInitialization?.videoRecorder,
-                        isRejected: widget.rejected,
                       ),
                     ),
                   );
@@ -221,7 +214,7 @@ class _ClaimsViewState extends State<ClaimsView>
                     action: () {
                       BlocProvider.of<GetClaimsCubit>(context).getClaims(
                         context,
-                        forSelfAssignment: widget.forSelfAssignment,
+                        claimType: widget.claimType
                       );
                     },
                   );

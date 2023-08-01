@@ -67,7 +67,7 @@ class _VerificationViewState extends State<VerificationView> {
   void initState() {
     super.initState();
     // TODO: DEVELOPMENT FLAG
-    development = true;
+    development = false;
     _startTimer();
   }
 

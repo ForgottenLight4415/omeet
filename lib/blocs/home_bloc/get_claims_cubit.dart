@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:omeet_motor/data/providers/claim_provider.dart';
 
 import '../../data/models/claim.dart';
 import '../../data/providers/app_server_provider.dart';
@@ -16,8 +17,7 @@ class GetClaimsCubit extends Cubit<GetClaimsState> {
 
   Future<void> getClaims(
     BuildContext context, {
-    bool forSelfAssignment = false,
-    bool rejected = false,
+    ClaimType claimType = ClaimType.allocated,
     String state = "",
     String district = "",
     String policeStation = "",
@@ -31,8 +31,7 @@ class GetClaimsCubit extends Cubit<GetClaimsState> {
       emit(
         GetClaimsSuccess(
           await _homeRepository.getClaims(
-            forSelfAssignment: forSelfAssignment,
-            rejected: rejected,
+            claimType: claimType,
             state: state,
             district: district,
             policeStation: policeStation,

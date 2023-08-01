@@ -6,7 +6,9 @@ class ApiUrl {
   static const String verifyOtp = "api/verify_otp.php";
 
   // CLAIMS
-  static const String getClaimsUrl = "api/allclaims.php";
+  static const String getClaimsUrl = "api/allocatedclaims.php";
+  static const String getOverallClaimsUrl = "api/overallcases.php";
+  static const String getConcludedClaimsUrl = "api/concludedcases.php";
   static const String acceptedClaimsUrl = "api/acceptedcases.php";
   static const String rejectedClaimsUrl = "api/rejectedcases.php";
   static const String assignToSelfUrl = "api/reviewandaccept.php";

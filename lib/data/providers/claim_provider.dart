@@ -6,13 +6,14 @@ import '/data/models/claim.dart';
 import '/data/providers/app_server_provider.dart';
 import '/data/providers/authentication_provider.dart';
 
+enum ClaimType { overall, allocated, accepted, rejected, concluded }
+
 class ClaimProvider extends AppServerProvider {
   Future<List<Claim>> getClaims(
-      {bool forSelfAssignment = false,
-      bool rejected = false,
-      String state = "",
+      {String state = "",
       String district = "",
-      String policeStation = ""}) async {
+      String policeStation = "",
+      ClaimType claimType = ClaimType.allocated}) async {
     final Map<String, String> _data = <String, String>{
       "phone_no": await AuthenticationProvider.getPhone(),
     };
@@ -25,12 +26,27 @@ class ClaimProvider extends AppServerProvider {
     if (policeStation.isNotEmpty) {
       _data["police_station"] = policeStation;
     }
+    String path = "";
+    switch (claimType) {
+      case ClaimType.overall:
+        path = ApiUrl.getOverallClaimsUrl;
+        break;
+      case ClaimType.allocated:
+        path = ApiUrl.getClaimsUrl;
+        break;
+      case ClaimType.accepted:
+        path = ApiUrl.acceptedClaimsUrl;
+        break;
+      case ClaimType.rejected:
+        path = ApiUrl.rejectedClaimsUrl;
+        break;
+      case ClaimType.concluded:
+        path = ApiUrl.getConcludedClaimsUrl;
+        break;
+    }
+    log("Hit: $path");
     final DecodedResponse _response = await postRequest(
-      path: forSelfAssignment
-          ? ApiUrl.getClaimsUrl
-          : rejected
-              ? ApiUrl.rejectedClaimsUrl
-              : ApiUrl.acceptedClaimsUrl,
+      path: path,
       data: _data,
     );
     final Map<String, dynamic> _rData = _response.data!;

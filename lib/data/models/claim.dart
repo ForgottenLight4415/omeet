@@ -40,7 +40,7 @@ class Claim {
 
   Claim.fromJson(Map<String, dynamic> decodedJson)
       : claimId = _cleanOrConvert(decodedJson['CASE_ID']),
-        state = _cleanOrConvert(decodedJson['STATE']),
+        state = _cleanOrConvert(decodedJson['ACCIDENT_STATE']),
         district = _cleanOrConvert(decodedJson['DISTRICT']),
         policeStation = _cleanOrConvert(decodedJson['POLICE_STATION']),
         accidentYear = _cleanOrConvert(decodedJson['ACCIDENT_YEAR']),
