@@ -40,7 +40,8 @@ class AppServerProvider {
     Map<String, dynamic>? data,
   }) async {
     try {
-      Uri uri = Uri.parse((baseUrl ?? ApiUrl.baseUrl) + (path ?? ""));
+      final String callUrl = (baseUrl ?? ApiUrl.baseUrl) + (path ?? "");
+      Uri uri = Uri.parse(callUrl);
       if (data != null) {
         uri = uri.replace(queryParameters: data);
       }
@@ -51,6 +52,7 @@ class AppServerProvider {
           "Accept": "application/json",
         },
       );
+      log(callUrl + ":\n" + _response.body);
       return processResponse(_response);
     } catch (e) {
       throw AppException(
@@ -67,8 +69,9 @@ class AppServerProvider {
     Map<String, String>? headers,
   }) async {
     try {
+      final String callUrl = (baseUrl ?? ApiUrl.baseUrl) + (path ?? "");
       final Response _response = await post(
-        Uri.parse((baseUrl ?? ApiUrl.baseUrl) + (path ?? "")),
+        Uri.parse(callUrl),
         headers: headers ??
             <String, String>{
               "Content-Type": "application/json; charset=UTF-8",
@@ -76,7 +79,8 @@ class AppServerProvider {
             },
         body: jsonEncode(data),
       );
-      log(_response.body);
+      log(callUrl + ":\n" + _response.body);
+      log("Params:\n" + data.toString());
       return processResponse(_response);
     } catch (e) {
       throw AppException(
@@ -93,6 +97,7 @@ class AppServerProvider {
     required Map<String, String> files,
     Map<String, String>? headers,
   }) async {
+    final String callUrl = (baseUrl ?? ApiUrl.baseUrl) + (path ?? "");
     final MultipartRequest _request = MultipartRequest(
       "POST",
       Uri.parse((baseUrl ?? ApiUrl.baseUrl) + (path ?? "")),
@@ -110,7 +115,7 @@ class AppServerProvider {
     Response _multipartResponse = await Response.fromStream(
       await _request.send(),
     );
-    log(_multipartResponse.body);
+    log(callUrl + ":\n" + _multipartResponse.body);
     return DecodedResponse(
       statusCode: _multipartResponse.statusCode,
       reasonPhrase: _multipartResponse.reasonPhrase,

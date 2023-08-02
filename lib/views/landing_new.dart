@@ -80,14 +80,14 @@ class _ModernLandingPageState extends State<ModernLandingPage> {
             ),
             tabs: [
               BlocProvider<GetClaimsCubit>(
-                create: (context) => _acceptedClaims
-                  ..getClaims(context, claimType: ClaimType.accepted),
+                create: (context) => _overallClaims
+                  ..getClaims(context, claimType: ClaimType.overall),
                 child: BlocBuilder<GetClaimsCubit, GetClaimsState>(
                   builder: (context, state) {
                     if (state is GetClaimsSuccess) {
-                      _noAcceptedClaims = state.claims.length;
+                      _noOverallClaims = state.claims.length;
                     }
-                    return Tab(text: "Accepted $_noAcceptedClaims");
+                    return Tab(text: "Overall $_noOverallClaims");
                   },
                 ),
               ),
@@ -104,14 +104,14 @@ class _ModernLandingPageState extends State<ModernLandingPage> {
                 ),
               ),
               BlocProvider<GetClaimsCubit>(
-                create: (context) => _overallClaims
-                  ..getClaims(context, claimType: ClaimType.overall),
+                create: (context) => _acceptedClaims
+                  ..getClaims(context, claimType: ClaimType.accepted),
                 child: BlocBuilder<GetClaimsCubit, GetClaimsState>(
                   builder: (context, state) {
                     if (state is GetClaimsSuccess) {
-                      _noOverallClaims = state.claims.length;
+                      _noAcceptedClaims = state.claims.length;
                     }
-                    return Tab(text: "Overall $_noOverallClaims");
+                    return Tab(text: "Accepted $_noAcceptedClaims");
                   },
                 ),
               ),
@@ -179,6 +179,20 @@ class _ModernLandingPageState extends State<ModernLandingPage> {
                 onTap: () {
                   _scaffoldKey.currentState?.closeDrawer();
                   Navigator.pushNamed(context, '/uploads');
+                },
+              ),
+              ListTile(
+                leading: FaIcon(
+                  FontAwesomeIcons.wandSparkles,
+                  color: Theme.of(context).primaryColor,
+                ),
+                title: const Text(
+                  "IL-IBNR 1.4 (Beta)",
+                  style: TextStyle(fontSize: 20),
+                ),
+                onTap: () {
+                  _scaffoldKey.currentState?.closeDrawer();
+                  Navigator.pushNamed(context, '/new_landing_b', arguments: [widget.email, widget.phone]);
                 },
               ),
               Expanded(child: Container()),

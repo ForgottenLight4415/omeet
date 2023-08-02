@@ -5,7 +5,9 @@ import '../utilities/images.dart';
 import '../utilities/app_constants.dart';
 
 class AppLogo extends StatelessWidget {
-  const AppLogo({Key? key}) : super(key: key);
+  final double? size;
+
+  const AppLogo({Key? key, this.size}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -14,18 +16,22 @@ class AppLogo extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: 45.0),
-          child: Image.asset(Images.appLogo, height: 170.w, width: 170.w),
+          padding: size == null
+              ? const EdgeInsets.symmetric(vertical: 45.0)
+              : EdgeInsets.zero,
+          child: Image.asset(Images.appLogo, height: size ?? 170.w, width: size ?? 170.w),
         ),
-        Text(
+        size == null ? Text(
           AppStrings.appName,
           textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.displaySmall!.copyWith(
             color: Colors.black87,
             fontWeight: FontWeight.w500,
           ),
-        ),
-        SizedBox(height: 20.h),
+        ) : const SizedBox(),
+        size == null
+          ? SizedBox(height: 20.h)
+          : const SizedBox(),
       ],
     );
   }

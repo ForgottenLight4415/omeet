@@ -143,7 +143,7 @@ class _ClaimsViewState extends State<ClaimsView>
                         }
                       }
                       return ListFilterElement(
-                          buttonLabel: "POLICE STATION",
+                          buttonLabel: "PS",
                           options: options,
                           onChanged: (value) {
                             _policeStationFilter = value;
@@ -171,11 +171,7 @@ class _ClaimsViewState extends State<ClaimsView>
         ),
         Expanded(
           child: BlocProvider<GetClaimsCubit>.value(
-            value: widget.cubit
-              ..getClaims(
-                context,
-                claimType: widget.claimType
-              ),
+            value: widget.cubit,
             child: BlocBuilder<GetClaimsCubit, GetClaimsState>(
               builder: (context, state) {
                 if (state is GetClaimsSuccess) {

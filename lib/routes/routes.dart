@@ -6,6 +6,7 @@ import 'package:omeet_motor/data/models/document.dart';
 import 'package:omeet_motor/views/call_conclusion.dart';
 import 'package:omeet_motor/views/documents/video_player.dart';
 import 'package:omeet_motor/views/documents/videos_page.dart';
+import 'package:omeet_motor/views/landing_new_b.dart';
 
 import '../data/models/claim.dart';
 import '../utilities/camera_utility.dart';
@@ -43,6 +44,15 @@ class RouteGenerator {
         final List<String?>? userDetails = args as List<String?>?;
         return _platformDependentRouting(
           ModernLandingPage(
+            email: userDetails?[0] ?? "Unavailable",
+            phone: userDetails?[1] ?? "Unavailable",
+          ),
+        );
+
+      case '/new_landing_b':
+        final List<String?>? userDetails = args as List<String?>?;
+        return _platformDependentRouting(
+          LandingNewB(
             email: userDetails?[0] ?? "Unavailable",
             phone: userDetails?[1] ?? "Unavailable",
           ),

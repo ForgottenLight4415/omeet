@@ -36,7 +36,7 @@ class _ListFilterElementState extends State<ListFilterElement> {
       child: Container(
         margin: EdgeInsets.only(right: 8.w),
         constraints: BoxConstraints(
-          minHeight: 45.h,
+          minHeight: 40.h,
           minWidth: 100.w,
         ),
         decoration: BoxDecoration(
@@ -45,13 +45,13 @@ class _ListFilterElementState extends State<ListFilterElement> {
         ),
         child: Center(
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.w),
+            padding: EdgeInsets.symmetric(horizontal: 12.w),
             child: Text(
               "${widget.buttonLabel}: $_selected",
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w500,
-                fontSize: 18.sp,
+                fontSize: 12.sp,
               ),
             ),
           ),
