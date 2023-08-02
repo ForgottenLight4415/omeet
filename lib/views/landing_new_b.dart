@@ -23,7 +23,8 @@ class LandingNewB extends StatefulWidget {
   final String email;
   final String phone;
 
-  const LandingNewB({Key? key, required this.email, required this.phone}) : super(key: key);
+  const LandingNewB({Key? key, required this.email, required this.phone})
+      : super(key: key);
 
   @override
   State<LandingNewB> createState() => _LandingNewBState();
@@ -47,6 +48,10 @@ class _LandingNewBState extends State<LandingNewB> {
   String _districtFilter = "ALL";
   String _policeStationFilter = "ALL";
 
+  List<String> _stateOptions = ['ALL'];
+  List<String> _districtOptions = ['ALL'];
+  List<String> _policeStationOptions = ['ALL'];
+
   GetClaimsCubit? _currentCubit;
   ClaimType _currentClaimType = ClaimType.overall;
 
@@ -68,6 +73,7 @@ class _LandingNewBState extends State<LandingNewB> {
     _searchController = TextEditingController();
     _searchController.addListener(() {
       _currentCubit!.searchClaims(_searchController.text);
+      setState(() {});
     });
   }
 
@@ -80,17 +86,6 @@ class _LandingNewBState extends State<LandingNewB> {
     _concludedClaims.close();
     _searchController.dispose();
     super.dispose();
-  }
-
-  void getClaimsCallback(BuildContext context, ClaimType claimType) {
-    _currentClaimType = claimType;
-    _allClaims.getClaims(
-      context,
-      claimType: claimType,
-      state: _stateFilter,
-      district: _districtFilter,
-      policeStation: _policeStationFilter
-    );
   }
 
   @override
@@ -109,21 +104,23 @@ class _LandingNewBState extends State<LandingNewB> {
                 value: _currentCubit!,
                 child: BlocBuilder<GetClaimsCubit, GetClaimsState>(
                   builder: (context, state) {
-                    final List<String> options = ["ALL"];
                     if (state is GetClaimsSuccess) {
-                      for (Claim claim in state.claims) {
-                        String state = claim.state;
-                        if (!options.contains(state)) {
-                          options.add(claim.state);
+                      if (_stateFilter == "ALL") {
+                        _stateOptions = ["ALL"];
+                        for (Claim claim in state.claims) {
+                          String state = claim.state;
+                          if (!_stateOptions.contains(state)) {
+                            _stateOptions.add(claim.state);
+                          }
                         }
                       }
                     }
                     return ListFilterElement(
                         buttonLabel: "STATE",
-                        options: options,
+                        options: _stateOptions,
                         onChanged: (value) {
                           _stateFilter = value;
-                          _allClaims.getClaims(
+                          _currentCubit?.getClaims(
                             context,
                             claimType: _currentClaimType,
                             state: _stateFilter,
@@ -138,21 +135,23 @@ class _LandingNewBState extends State<LandingNewB> {
                 value: _currentCubit!,
                 child: BlocBuilder<GetClaimsCubit, GetClaimsState>(
                   builder: (context, state) {
-                    final List<String> options = ["ALL"];
                     if (state is GetClaimsSuccess) {
-                      for (Claim claim in state.claims) {
-                        String district = claim.district;
-                        if (!options.contains(district)) {
-                          options.add(claim.district);
+                      if (_districtFilter == "ALL") {
+                        _districtOptions = ["ALL"];
+                        for (Claim claim in state.claims) {
+                          String district = claim.district;
+                          if (!_districtOptions.contains(district)) {
+                            _districtOptions.add(claim.district);
+                          }
                         }
                       }
                     }
                     return ListFilterElement(
                         buttonLabel: "DISTRICT",
-                        options: options,
+                        options: _districtOptions,
                         onChanged: (value) {
                           _districtFilter = value;
-                          _allClaims.getClaims(
+                          _currentCubit?.getClaims(
                             context,
                             claimType: _currentClaimType,
                             state: _stateFilter,
@@ -167,21 +166,23 @@ class _LandingNewBState extends State<LandingNewB> {
                 value: _currentCubit!,
                 child: BlocBuilder<GetClaimsCubit, GetClaimsState>(
                   builder: (context, state) {
-                    final List<String> options = ["ALL"];
                     if (state is GetClaimsSuccess) {
-                      for (Claim claim in state.claims) {
-                        String policeStation = claim.policeStation;
-                        if (!options.contains(policeStation)) {
-                          options.add(claim.policeStation);
+                      if (_policeStationFilter == "ALL") {
+                        _policeStationOptions = ["ALL"];
+                        for (Claim claim in state.claims) {
+                          String policeStation = claim.policeStation;
+                          if (!_policeStationOptions.contains(policeStation)) {
+                            _policeStationOptions.add(claim.policeStation);
+                          }
                         }
                       }
                     }
                     return ListFilterElement(
                         buttonLabel: "PS",
-                        options: options,
+                        options: _policeStationOptions,
                         onChanged: (value) {
                           _policeStationFilter = value;
-                          _allClaims.getClaims(
+                          _currentCubit?.getClaims(
                             context,
                             claimType: _currentClaimType,
                             state: _stateFilter,
@@ -251,7 +252,8 @@ class _LandingNewBState extends State<LandingNewB> {
               ),
               onTap: () {
                 _scaffoldKey.currentState?.closeDrawer();
-                Navigator.pushNamed(context, '/new_landing_b', arguments: [widget.email, widget.phone]);
+                Navigator.pushNamed(context, '/new_landing_b',
+                    arguments: [widget.email, widget.phone]);
               },
             ),
             Expanded(child: Container()),
@@ -269,7 +271,7 @@ class _LandingNewBState extends State<LandingNewB> {
                 Navigator.pushNamedAndRemoveUntil(
                   context,
                   '/login',
-                      (route) => false,
+                  (route) => false,
                 );
               },
             ),
@@ -309,10 +311,13 @@ class _LandingNewBState extends State<LandingNewB> {
                         _noOverallClaims = state.claims.length;
                       }
                       return CaseHeader(
-                        noCases: _noOverallClaims.toString(),
+                        noCases: _currentClaimType != ClaimType.overall && _searchController.text.isNotEmpty
+                            ? "-"
+                            : _noOverallClaims.toString(),
                         label: "Overall",
                         isActive: _currentClaimType == ClaimType.overall,
                         onPressed: () {
+                          _searchController.clear();
                           _currentCubit = _overallClaims;
                           _currentClaimType = ClaimType.overall;
                           setState(() {
@@ -321,6 +326,13 @@ class _LandingNewBState extends State<LandingNewB> {
                               claimType: _currentClaimType,
                             );
                           });
+                          _currentCubit!.getClaims(
+                            context,
+                            claimType: _currentClaimType,
+                            state: _stateFilter,
+                            district: _districtFilter,
+                            policeStation: _policeStationFilter,
+                          );
                         },
                       );
                     },
@@ -335,10 +347,13 @@ class _LandingNewBState extends State<LandingNewB> {
                         _noAllClaims = state.claims.length;
                       }
                       return CaseHeader(
-                        noCases: _noAllClaims.toString(),
+                        noCases: _currentClaimType != ClaimType.allocated && _searchController.text.isNotEmpty
+                            ? "-"
+                            : _noAllClaims.toString(),
                         label: "Allocated",
                         isActive: _currentClaimType == ClaimType.allocated,
                         onPressed: () {
+                          _searchController.clear();
                           _currentCubit = _allClaims;
                           _currentClaimType = ClaimType.allocated;
                           setState(() {
@@ -347,6 +362,13 @@ class _LandingNewBState extends State<LandingNewB> {
                               claimType: _currentClaimType,
                             );
                           });
+                          _currentCubit!.getClaims(
+                            context,
+                            claimType: _currentClaimType,
+                            state: _stateFilter,
+                            district: _districtFilter,
+                            policeStation: _policeStationFilter,
+                          );
                         },
                       );
                     },
@@ -361,10 +383,13 @@ class _LandingNewBState extends State<LandingNewB> {
                         _noAcceptedClaims = state.claims.length;
                       }
                       return CaseHeader(
-                        noCases: _noAcceptedClaims.toString(),
+                        noCases: _currentClaimType != ClaimType.accepted && _searchController.text.isNotEmpty
+                            ? "-"
+                            : _noAcceptedClaims.toString(),
                         label: "Accepted",
                         isActive: _currentClaimType == ClaimType.accepted,
                         onPressed: () {
+                          _searchController.clear();
                           _currentCubit = _acceptedClaims;
                           _currentClaimType = ClaimType.accepted;
                           setState(() {
@@ -373,6 +398,13 @@ class _LandingNewBState extends State<LandingNewB> {
                               claimType: _currentClaimType,
                             );
                           });
+                          _currentCubit!.getClaims(
+                            context,
+                            claimType: _currentClaimType,
+                            state: _stateFilter,
+                            district: _districtFilter,
+                            policeStation: _policeStationFilter,
+                          );
                         },
                       );
                     },
@@ -387,10 +419,13 @@ class _LandingNewBState extends State<LandingNewB> {
                         _noRejectedClaims = state.claims.length;
                       }
                       return CaseHeader(
-                        noCases: _noRejectedClaims.toString(),
+                        noCases: _currentClaimType != ClaimType.rejected && _searchController.text.isNotEmpty
+                            ? "-"
+                            : _noRejectedClaims.toString(),
                         label: "Rejected",
                         isActive: _currentClaimType == ClaimType.rejected,
                         onPressed: () {
+                          _searchController.clear();
                           _currentCubit = _rejectedClaims;
                           _currentClaimType = ClaimType.rejected;
                           setState(() {
@@ -399,6 +434,13 @@ class _LandingNewBState extends State<LandingNewB> {
                               claimType: _currentClaimType,
                             );
                           });
+                          _currentCubit!.getClaims(
+                            context,
+                            claimType: _currentClaimType,
+                            state: _stateFilter,
+                            district: _districtFilter,
+                            policeStation: _policeStationFilter,
+                          );
                         },
                       );
                     },
@@ -413,10 +455,13 @@ class _LandingNewBState extends State<LandingNewB> {
                         _noConcludedClaims = state.claims.length;
                       }
                       return CaseHeader(
-                        noCases: _noConcludedClaims.toString(),
+                        noCases: _currentClaimType != ClaimType.concluded && _searchController.text.isNotEmpty
+                            ? "-"
+                            : _noConcludedClaims.toString(),
                         label: "Concluded",
                         isActive: _currentClaimType == ClaimType.concluded,
                         onPressed: () {
+                          _searchController.clear();
                           _currentCubit = _concludedClaims;
                           _currentClaimType = ClaimType.concluded;
                           setState(() {
@@ -425,6 +470,13 @@ class _LandingNewBState extends State<LandingNewB> {
                               claimType: _currentClaimType,
                             );
                           });
+                          _currentCubit!.getClaims(
+                            context,
+                            claimType: _currentClaimType,
+                            state: _stateFilter,
+                            district: _districtFilter,
+                            policeStation: _policeStationFilter,
+                          );
                         },
                       );
                     },
