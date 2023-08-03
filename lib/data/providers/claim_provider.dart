@@ -56,6 +56,7 @@ class ClaimProvider extends AppServerProvider {
         _claims.add(Claim.fromJson(claim));
       }
     }
+    log("Count: " + _claims.length.toString());
     return _claims;
   }
 

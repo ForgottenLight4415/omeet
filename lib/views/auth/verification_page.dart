@@ -177,7 +177,7 @@ class _VerificationViewState extends State<VerificationView> {
       List<String?>? userDetails = await AuthRepository().getUserDetails();
       Navigator.pushNamedAndRemoveUntil(
         context,
-        '/new_landing',
+        '/new_landing_b',
         (route) => false,
         arguments: userDetails,
       );

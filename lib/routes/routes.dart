@@ -18,7 +18,6 @@ import '../views/documents/doc_viewer.dart';
 import '../views/documents/documents_page.dart';
 import '../views/auth/login.dart';
 import '../views/invalid_route.dart';
-import '../views/landing_new.dart';
 import '../views/meet_pages/details_page.dart';
 import '../views/meet_pages/meet_main.dart';
 import '../views/recorder_pages/audio_recorder_page.dart';
@@ -38,15 +37,6 @@ class RouteGenerator {
         final List<String> loginDetails = args as List<String>;
         return _platformDependentRouting(
           VerificationView(loginDetails: loginDetails),
-        );
-
-      case '/new_landing':
-        final List<String?>? userDetails = args as List<String?>?;
-        return _platformDependentRouting(
-          ModernLandingPage(
-            email: userDetails?[0] ?? "Unavailable",
-            phone: userDetails?[1] ?? "Unavailable",
-          ),
         );
 
       case '/new_landing_b':

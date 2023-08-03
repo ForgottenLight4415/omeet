@@ -61,7 +61,7 @@ class _OMeetAppState extends State<OMeetApp> {
             return [
               RouteGenerator.generateRoute(
                 RouteSettings(
-                  name: '/new_landing',
+                  name: '/new_landing_b',
                   arguments: widget.userDetails,
                 ),
               ),

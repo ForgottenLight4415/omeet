@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -24,8 +26,7 @@ class ClaimsViewNew extends StatefulWidget {
   State<ClaimsViewNew> createState() => _ClaimsViewNewState();
 }
 
-class _ClaimsViewNewState extends State<ClaimsViewNew>
-    with AutomaticKeepAliveClientMixin {
+class _ClaimsViewNewState extends State<ClaimsViewNew> with AutomaticKeepAliveClientMixin {
 
   RecorderInitialization? _recorderInitialization;
 
@@ -37,14 +38,9 @@ class _ClaimsViewNewState extends State<ClaimsViewNew>
     }
   }
 
-  @override
-  void dispose() {
-    widget.cubit.close();
-    super.dispose();
-  }
-
   void initializeRecorders() async {
     _recorderInitialization = await RecorderInitialization.create();
+    log("Recorder Initialized");
   }
 
   @override

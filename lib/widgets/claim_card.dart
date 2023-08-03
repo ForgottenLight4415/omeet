@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -188,26 +186,26 @@ class _ClaimCardState extends State<ClaimCard> {
                     },
                   )
                 : const SizedBox(),
-            widget.claimType == ClaimType.accepted
-                ? BlocProvider<CallCubit>(
-                    create: (callContext) => CallCubit(),
-                    child: BlocConsumer<CallCubit, CallState>(
-                      listener: _callListener,
-                      builder: (context, state) => ClaimPageTiles(
-                        onPressed: () async {
-                          log("Calling");
-                          bool result = await widget.claim.call(context);
-                          if (!result) {
-                            showSnackBar(context, "Phone number not available.",
-                                type: SnackBarType.error);
-                          }
-                        },
-                        faIcon: FontAwesomeIcons.phone,
-                        label: "Voice Call",
-                      ),
-                    ),
-                  )
-                : const SizedBox(),
+            // widget.claimType == ClaimType.accepted
+            //     ? BlocProvider<CallCubit>(
+            //         create: (callContext) => CallCubit(),
+            //         child: BlocConsumer<CallCubit, CallState>(
+            //           listener: _callListener,
+            //           builder: (context, state) => ClaimPageTiles(
+            //             onPressed: () async {
+            //               log("Calling");
+            //               bool result = await widget.claim.call(context);
+            //               if (!result) {
+            //                 showSnackBar(context, "Phone number not available.",
+            //                     type: SnackBarType.error);
+            //               }
+            //             },
+            //             faIcon: FontAwesomeIcons.phone,
+            //             label: "Voice Call",
+            //           ),
+            //         ),
+            //       )
+            //     : const SizedBox(),
             widget.claimType == ClaimType.accepted
                 ? BlocProvider<CallCubit>(
                     create: (context) => CallCubit(),

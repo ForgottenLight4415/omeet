@@ -5,7 +5,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:omeet_motor/blocs/home_bloc/get_claims_cubit.dart';
 import 'package:omeet_motor/data/providers/claim_provider.dart';
 import 'package:omeet_motor/widgets/app_logo.dart';
-import 'package:omeet_motor/widgets/loading_widget.dart';
 
 import '../blocs/call_bloc/call_cubit.dart';
 import '../data/models/claim.dart';
@@ -30,7 +29,7 @@ class LandingNewB extends StatefulWidget {
   State<LandingNewB> createState() => _LandingNewBState();
 }
 
-class _LandingNewBState extends State<LandingNewB> {
+class _LandingNewBState extends State<LandingNewB> with SingleTickerProviderStateMixin {
   late final GetClaimsCubit _allClaims;
   late final GetClaimsCubit _overallClaims;
   late final GetClaimsCubit _acceptedClaims;
@@ -55,7 +54,7 @@ class _LandingNewBState extends State<LandingNewB> {
   GetClaimsCubit? _currentCubit;
   ClaimType _currentClaimType = ClaimType.overall;
 
-  Widget view = const LoadingWidget();
+  late final TabController _controller;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -68,7 +67,7 @@ class _LandingNewBState extends State<LandingNewB> {
     _rejectedClaims = GetClaimsCubit();
     _concludedClaims = GetClaimsCubit();
     _currentCubit = _overallClaims;
-    view = ClaimsViewNew(cubit: _overallClaims, claimType: ClaimType.overall);
+    _controller = TabController(length: 5, vsync: this);
 
     _searchController = TextEditingController();
     _searchController.addListener(() {
@@ -241,21 +240,6 @@ class _LandingNewBState extends State<LandingNewB> {
                 Navigator.pushNamed(context, '/uploads');
               },
             ),
-            ListTile(
-              leading: FaIcon(
-                FontAwesomeIcons.wandSparkles,
-                color: Theme.of(context).primaryColor,
-              ),
-              title: const Text(
-                "IL-IBNR 1.3",
-                style: TextStyle(fontSize: 20),
-              ),
-              onTap: () {
-                _scaffoldKey.currentState?.closeDrawer();
-                Navigator.pushNamed(context, '/new_landing_b',
-                    arguments: [widget.email, widget.phone]);
-              },
-            ),
             Expanded(child: Container()),
             ListTile(
               leading: FaIcon(
@@ -304,14 +288,21 @@ class _LandingNewBState extends State<LandingNewB> {
               children: <Widget>[
                 BlocProvider<GetClaimsCubit>(
                   create: (context) => _overallClaims
-                    ..getClaims(context, claimType: ClaimType.overall),
+                    ..getClaims(
+                      context,
+                      claimType: ClaimType.overall,
+                      state: _stateFilter,
+                      district: _districtFilter,
+                      policeStation: _policeStationFilter,
+                    ),
                   child: BlocBuilder<GetClaimsCubit, GetClaimsState>(
                     builder: (context, state) {
                       if (state is GetClaimsSuccess) {
                         _noOverallClaims = state.claims.length;
                       }
                       return CaseHeader(
-                        noCases: _currentClaimType != ClaimType.overall && _searchController.text.isNotEmpty
+                        noCases: _currentClaimType != ClaimType.overall &&
+                                _searchController.text.isNotEmpty
                             ? "-"
                             : _noOverallClaims.toString(),
                         label: "Overall",
@@ -320,19 +311,8 @@ class _LandingNewBState extends State<LandingNewB> {
                           _searchController.clear();
                           _currentCubit = _overallClaims;
                           _currentClaimType = ClaimType.overall;
-                          setState(() {
-                            view = ClaimsViewNew(
-                              cubit: _overallClaims,
-                              claimType: _currentClaimType,
-                            );
-                          });
-                          _currentCubit!.getClaims(
-                            context,
-                            claimType: _currentClaimType,
-                            state: _stateFilter,
-                            district: _districtFilter,
-                            policeStation: _policeStationFilter,
-                          );
+                          _controller.animateTo(0);
+                          setState(() {});
                         },
                       );
                     },
@@ -340,14 +320,21 @@ class _LandingNewBState extends State<LandingNewB> {
                 ),
                 BlocProvider<GetClaimsCubit>(
                   create: (context) => _allClaims
-                    ..getClaims(context, claimType: ClaimType.allocated),
+                    ..getClaims(
+                      context,
+                      claimType: ClaimType.allocated,
+                      state: _stateFilter,
+                      district: _districtFilter,
+                      policeStation: _policeStationFilter,
+                    ),
                   child: BlocBuilder<GetClaimsCubit, GetClaimsState>(
                     builder: (context, state) {
                       if (state is GetClaimsSuccess) {
                         _noAllClaims = state.claims.length;
                       }
                       return CaseHeader(
-                        noCases: _currentClaimType != ClaimType.allocated && _searchController.text.isNotEmpty
+                        noCases: _currentClaimType != ClaimType.allocated &&
+                                _searchController.text.isNotEmpty
                             ? "-"
                             : _noAllClaims.toString(),
                         label: "Allocated",
@@ -356,19 +343,8 @@ class _LandingNewBState extends State<LandingNewB> {
                           _searchController.clear();
                           _currentCubit = _allClaims;
                           _currentClaimType = ClaimType.allocated;
-                          setState(() {
-                            view = ClaimsViewNew(
-                              cubit: _allClaims,
-                              claimType: _currentClaimType,
-                            );
-                          });
-                          _currentCubit!.getClaims(
-                            context,
-                            claimType: _currentClaimType,
-                            state: _stateFilter,
-                            district: _districtFilter,
-                            policeStation: _policeStationFilter,
-                          );
+                          _controller.animateTo(1);
+                          setState(() {});
                         },
                       );
                     },
@@ -376,14 +352,21 @@ class _LandingNewBState extends State<LandingNewB> {
                 ),
                 BlocProvider<GetClaimsCubit>(
                   create: (context) => _acceptedClaims
-                    ..getClaims(context, claimType: ClaimType.accepted),
+                    ..getClaims(
+                      context,
+                      claimType: ClaimType.accepted,
+                      state: _stateFilter,
+                      district: _districtFilter,
+                      policeStation: _policeStationFilter,
+                    ),
                   child: BlocBuilder<GetClaimsCubit, GetClaimsState>(
                     builder: (context, state) {
                       if (state is GetClaimsSuccess) {
                         _noAcceptedClaims = state.claims.length;
                       }
                       return CaseHeader(
-                        noCases: _currentClaimType != ClaimType.accepted && _searchController.text.isNotEmpty
+                        noCases: _currentClaimType != ClaimType.accepted &&
+                                _searchController.text.isNotEmpty
                             ? "-"
                             : _noAcceptedClaims.toString(),
                         label: "Accepted",
@@ -392,19 +375,8 @@ class _LandingNewBState extends State<LandingNewB> {
                           _searchController.clear();
                           _currentCubit = _acceptedClaims;
                           _currentClaimType = ClaimType.accepted;
-                          setState(() {
-                            view = ClaimsViewNew(
-                              cubit: _acceptedClaims,
-                              claimType: _currentClaimType,
-                            );
-                          });
-                          _currentCubit!.getClaims(
-                            context,
-                            claimType: _currentClaimType,
-                            state: _stateFilter,
-                            district: _districtFilter,
-                            policeStation: _policeStationFilter,
-                          );
+                          _controller.animateTo(2);
+                          setState(() {});
                         },
                       );
                     },
@@ -412,14 +384,21 @@ class _LandingNewBState extends State<LandingNewB> {
                 ),
                 BlocProvider<GetClaimsCubit>(
                   create: (context) => _rejectedClaims
-                    ..getClaims(context, claimType: ClaimType.rejected),
+                    ..getClaims(
+                      context,
+                      claimType: ClaimType.rejected,
+                      state: _stateFilter,
+                      district: _districtFilter,
+                      policeStation: _policeStationFilter,
+                    ),
                   child: BlocBuilder<GetClaimsCubit, GetClaimsState>(
                     builder: (context, state) {
                       if (state is GetClaimsSuccess) {
                         _noRejectedClaims = state.claims.length;
                       }
                       return CaseHeader(
-                        noCases: _currentClaimType != ClaimType.rejected && _searchController.text.isNotEmpty
+                        noCases: _currentClaimType != ClaimType.rejected &&
+                                _searchController.text.isNotEmpty
                             ? "-"
                             : _noRejectedClaims.toString(),
                         label: "Rejected",
@@ -428,19 +407,8 @@ class _LandingNewBState extends State<LandingNewB> {
                           _searchController.clear();
                           _currentCubit = _rejectedClaims;
                           _currentClaimType = ClaimType.rejected;
-                          setState(() {
-                            view = ClaimsViewNew(
-                              cubit: _rejectedClaims,
-                              claimType: _currentClaimType,
-                            );
-                          });
-                          _currentCubit!.getClaims(
-                            context,
-                            claimType: _currentClaimType,
-                            state: _stateFilter,
-                            district: _districtFilter,
-                            policeStation: _policeStationFilter,
-                          );
+                          _controller.animateTo(3);
+                          setState(() {});
                         },
                       );
                     },
@@ -448,14 +416,21 @@ class _LandingNewBState extends State<LandingNewB> {
                 ),
                 BlocProvider<GetClaimsCubit>(
                   create: (context) => _concludedClaims
-                    ..getClaims(context, claimType: ClaimType.concluded),
+                    ..getClaims(
+                      context,
+                      claimType: ClaimType.concluded,
+                      state: _stateFilter,
+                      district: _districtFilter,
+                      policeStation: _policeStationFilter,
+                    ),
                   child: BlocBuilder<GetClaimsCubit, GetClaimsState>(
                     builder: (context, state) {
                       if (state is GetClaimsSuccess) {
                         _noConcludedClaims = state.claims.length;
                       }
                       return CaseHeader(
-                        noCases: _currentClaimType != ClaimType.concluded && _searchController.text.isNotEmpty
+                        noCases: _currentClaimType != ClaimType.concluded &&
+                                _searchController.text.isNotEmpty
                             ? "-"
                             : _noConcludedClaims.toString(),
                         label: "Concluded",
@@ -464,19 +439,8 @@ class _LandingNewBState extends State<LandingNewB> {
                           _searchController.clear();
                           _currentCubit = _concludedClaims;
                           _currentClaimType = ClaimType.concluded;
-                          setState(() {
-                            view = ClaimsViewNew(
-                              cubit: _concludedClaims,
-                              claimType: _currentClaimType,
-                            );
-                          });
-                          _currentCubit!.getClaims(
-                            context,
-                            claimType: _currentClaimType,
-                            state: _stateFilter,
-                            district: _districtFilter,
-                            policeStation: _policeStationFilter,
-                          );
+                          _controller.animateTo(4);
+                          setState(() {});
                         },
                       );
                     },
@@ -485,7 +449,18 @@ class _LandingNewBState extends State<LandingNewB> {
               ],
             ),
           ),
-          Expanded(child: view),
+          Expanded(
+            child: TabBarView(
+              controller: _controller,
+              children: [
+                ClaimsViewNew(cubit: _overallClaims, claimType: ClaimType.overall),
+                ClaimsViewNew(cubit: _allClaims, claimType: ClaimType.allocated),
+                ClaimsViewNew(cubit: _acceptedClaims, claimType: ClaimType.accepted),
+                ClaimsViewNew(cubit: _rejectedClaims, claimType: ClaimType.rejected),
+                ClaimsViewNew(cubit: _concludedClaims, claimType: ClaimType.concluded),
+              ],
+            ),
+          ),
         ],
       ),
     );

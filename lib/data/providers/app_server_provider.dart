@@ -79,7 +79,7 @@ class AppServerProvider {
             },
         body: jsonEncode(data),
       );
-      log(callUrl + ":\n" + _response.body);
+      log(callUrl + ":\n");
       log("Params:\n" + data.toString());
       return processResponse(_response);
     } catch (e) {
