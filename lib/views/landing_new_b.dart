@@ -29,13 +29,16 @@ class LandingNewB extends StatefulWidget {
   State<LandingNewB> createState() => _LandingNewBState();
 }
 
-class _LandingNewBState extends State<LandingNewB> with SingleTickerProviderStateMixin {
+class _LandingNewBState extends State<LandingNewB>
+    with SingleTickerProviderStateMixin {
   late final GetClaimsCubit _allClaims;
   late final GetClaimsCubit _overallClaims;
   late final GetClaimsCubit _acceptedClaims;
   late final GetClaimsCubit _rejectedClaims;
   late final GetClaimsCubit _concludedClaims;
   late final TextEditingController _searchController;
+
+  late final List<GetClaimsCubit> _cubitList;
 
   int _noAllClaims = 0;
   int _noOverallClaims = 0;
@@ -51,7 +54,6 @@ class _LandingNewBState extends State<LandingNewB> with SingleTickerProviderStat
   List<String> _districtOptions = ['ALL'];
   List<String> _policeStationOptions = ['ALL'];
 
-  GetClaimsCubit? _currentCubit;
   ClaimType _currentClaimType = ClaimType.overall;
 
   late final TabController _controller;
@@ -61,28 +63,55 @@ class _LandingNewBState extends State<LandingNewB> with SingleTickerProviderStat
   @override
   void initState() {
     super.initState();
-    _allClaims = GetClaimsCubit();
-    _overallClaims = GetClaimsCubit();
-    _acceptedClaims = GetClaimsCubit();
-    _rejectedClaims = GetClaimsCubit();
-    _concludedClaims = GetClaimsCubit();
-    _currentCubit = _overallClaims;
+    _allClaims = GetClaimsCubit(ClaimType.allocated);
+    _overallClaims = GetClaimsCubit(ClaimType.overall);
+    _acceptedClaims = GetClaimsCubit(ClaimType.accepted);
+    _rejectedClaims = GetClaimsCubit(ClaimType.rejected);
+    _concludedClaims = GetClaimsCubit(ClaimType.concluded);
+    _cubitList = [
+      _overallClaims,
+      _allClaims,
+      _acceptedClaims,
+      _rejectedClaims,
+      _concludedClaims,
+    ];
+
     _controller = TabController(length: 5, vsync: this);
+    _controller.addListener(() {
+      switch (_controller.index) {
+        case 0:
+          _currentClaimType = ClaimType.overall;
+          break;
+        case 1:
+          _currentClaimType = ClaimType.allocated;
+          break;
+        case 2:
+          _currentClaimType = ClaimType.accepted;
+          break;
+        case 3:
+          _currentClaimType = ClaimType.rejected;
+          break;
+        case 4:
+          _currentClaimType = ClaimType.concluded;
+          break;
+      }
+      setState(() {});
+    });
 
     _searchController = TextEditingController();
     _searchController.addListener(() {
-      _currentCubit!.searchClaims(_searchController.text);
+      for (var cubit in _cubitList) {
+        cubit.searchClaims(_searchController.text);
+      }
       setState(() {});
     });
   }
 
   @override
   void dispose() {
-    _allClaims.close();
-    _overallClaims.close();
-    _acceptedClaims.close();
-    _rejectedClaims.close();
-    _concludedClaims.close();
+    for (var cubit in _cubitList) {
+      cubit.close();
+    }
     _searchController.dispose();
     super.dispose();
   }
@@ -96,103 +125,103 @@ class _LandingNewBState extends State<LandingNewB> with SingleTickerProviderStat
       appBar: AppBar(
         title: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              BlocProvider<GetClaimsCubit>.value(
-                value: _currentCubit!,
-                child: BlocBuilder<GetClaimsCubit, GetClaimsState>(
-                  builder: (context, state) {
-                    if (state is GetClaimsSuccess) {
-                      if (_stateFilter == "ALL") {
-                        _stateOptions = ["ALL"];
-                        for (Claim claim in state.claims) {
-                          String state = claim.state;
-                          if (!_stateOptions.contains(state)) {
-                            _stateOptions.add(claim.state);
-                          }
-                        }
+          child: BlocProvider<GetClaimsCubit>.value(
+            value: _overallClaims,
+            child: BlocBuilder<GetClaimsCubit, GetClaimsState>(
+              builder: (context, state) {
+                List<String> _tempList = [];
+                if (state is GetClaimsSuccess) {
+                  if (_stateFilter == "ALL") {
+                    _stateOptions = ["ALL"];
+                    for (Claim claim in state.claims) {
+                      String state = claim.state;
+                      if (!_tempList.contains(state)) {
+                        _tempList.add(claim.state);
                       }
                     }
-                    return ListFilterElement(
+                    _tempList.sort();
+                    _stateOptions.addAll(_tempList);
+                    _tempList.clear();
+                  }
+
+                  if (_districtFilter == "ALL") {
+                    _districtOptions = ["ALL"];
+                    for (Claim claim in state.claims) {
+                      String district = claim.district;
+                      if (!_tempList.contains(district)) {
+                        _tempList.add(claim.district);
+                      }
+                    }
+                    _tempList.sort();
+                    _districtOptions.addAll(_tempList);
+                    _tempList.clear();
+                  }
+
+                  if (_policeStationFilter == "ALL") {
+                    _policeStationOptions = ["ALL"];
+                    for (Claim claim in state.claims) {
+                      String policeStation = claim.policeStation;
+                      if (!_tempList.contains(policeStation)) {
+                        _tempList.add(claim.policeStation);
+                      }
+                    }
+                    _tempList.sort();
+                    _policeStationOptions.addAll(_tempList);
+                    _tempList.clear();
+                  }
+                }
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    ListFilterElement(
                         buttonLabel: "STATE",
                         options: _stateOptions,
                         onChanged: (value) {
                           _stateFilter = value;
-                          _currentCubit?.getClaims(
-                            context,
-                            claimType: _currentClaimType,
-                            state: _stateFilter,
-                            district: _districtFilter,
-                            policeStation: _policeStationFilter,
-                          );
-                        });
-                  },
-                ),
-              ),
-              BlocProvider<GetClaimsCubit>.value(
-                value: _currentCubit!,
-                child: BlocBuilder<GetClaimsCubit, GetClaimsState>(
-                  builder: (context, state) {
-                    if (state is GetClaimsSuccess) {
-                      if (_districtFilter == "ALL") {
-                        _districtOptions = ["ALL"];
-                        for (Claim claim in state.claims) {
-                          String district = claim.district;
-                          if (!_districtOptions.contains(district)) {
-                            _districtOptions.add(claim.district);
+                          for (var cubit in _cubitList) {
+                            cubit.getClaims(
+                              context,
+                              claimType: cubit.claimType,
+                              state: _stateFilter,
+                              district: _districtFilter,
+                              policeStation: _policeStationFilter,
+                            );
                           }
-                        }
-                      }
-                    }
-                    return ListFilterElement(
+                        }),
+                    ListFilterElement(
                         buttonLabel: "DISTRICT",
                         options: _districtOptions,
                         onChanged: (value) {
                           _districtFilter = value;
-                          _currentCubit?.getClaims(
-                            context,
-                            claimType: _currentClaimType,
-                            state: _stateFilter,
-                            district: _districtFilter,
-                            policeStation: _policeStationFilter,
-                          );
-                        });
-                  },
-                ),
-              ),
-              BlocProvider<GetClaimsCubit>.value(
-                value: _currentCubit!,
-                child: BlocBuilder<GetClaimsCubit, GetClaimsState>(
-                  builder: (context, state) {
-                    if (state is GetClaimsSuccess) {
-                      if (_policeStationFilter == "ALL") {
-                        _policeStationOptions = ["ALL"];
-                        for (Claim claim in state.claims) {
-                          String policeStation = claim.policeStation;
-                          if (!_policeStationOptions.contains(policeStation)) {
-                            _policeStationOptions.add(claim.policeStation);
+                          for (var cubit in _cubitList) {
+                            cubit.getClaims(
+                              context,
+                              claimType: cubit.claimType,
+                              state: _stateFilter,
+                              district: _districtFilter,
+                              policeStation: _policeStationFilter,
+                            );
                           }
-                        }
-                      }
-                    }
-                    return ListFilterElement(
+                        }),
+                    ListFilterElement(
                         buttonLabel: "PS",
                         options: _policeStationOptions,
                         onChanged: (value) {
                           _policeStationFilter = value;
-                          _currentCubit?.getClaims(
-                            context,
-                            claimType: _currentClaimType,
-                            state: _stateFilter,
-                            district: _districtFilter,
-                            policeStation: _policeStationFilter,
-                          );
-                        });
-                  },
-                ),
-              ),
-            ],
+                          for (var cubit in _cubitList) {
+                            cubit.getClaims(
+                              context,
+                              claimType: cubit.claimType,
+                              state: _stateFilter,
+                              district: _districtFilter,
+                              policeStation: _policeStationFilter,
+                            );
+                          }
+                        }),
+                  ],
+                );
+              },
+            ),
           ),
         ),
         leading: IconButton(
@@ -301,19 +330,10 @@ class _LandingNewBState extends State<LandingNewB> with SingleTickerProviderStat
                         _noOverallClaims = state.claims.length;
                       }
                       return CaseHeader(
-                        noCases: _currentClaimType != ClaimType.overall &&
-                                _searchController.text.isNotEmpty
-                            ? "-"
-                            : _noOverallClaims.toString(),
+                        noCases: _noOverallClaims.toString(),
                         label: "Overall",
                         isActive: _currentClaimType == ClaimType.overall,
-                        onPressed: () {
-                          _searchController.clear();
-                          _currentCubit = _overallClaims;
-                          _currentClaimType = ClaimType.overall;
-                          _controller.animateTo(0);
-                          setState(() {});
-                        },
+                        onPressed: () => _controller.animateTo(0),
                       );
                     },
                   ),
@@ -333,19 +353,10 @@ class _LandingNewBState extends State<LandingNewB> with SingleTickerProviderStat
                         _noAllClaims = state.claims.length;
                       }
                       return CaseHeader(
-                        noCases: _currentClaimType != ClaimType.allocated &&
-                                _searchController.text.isNotEmpty
-                            ? "-"
-                            : _noAllClaims.toString(),
+                        noCases: _noAllClaims.toString(),
                         label: "Allocated",
                         isActive: _currentClaimType == ClaimType.allocated,
-                        onPressed: () {
-                          _searchController.clear();
-                          _currentCubit = _allClaims;
-                          _currentClaimType = ClaimType.allocated;
-                          _controller.animateTo(1);
-                          setState(() {});
-                        },
+                        onPressed: () => _controller.animateTo(1),
                       );
                     },
                   ),
@@ -365,19 +376,10 @@ class _LandingNewBState extends State<LandingNewB> with SingleTickerProviderStat
                         _noAcceptedClaims = state.claims.length;
                       }
                       return CaseHeader(
-                        noCases: _currentClaimType != ClaimType.accepted &&
-                                _searchController.text.isNotEmpty
-                            ? "-"
-                            : _noAcceptedClaims.toString(),
+                        noCases: _noAcceptedClaims.toString(),
                         label: "Accepted",
                         isActive: _currentClaimType == ClaimType.accepted,
-                        onPressed: () {
-                          _searchController.clear();
-                          _currentCubit = _acceptedClaims;
-                          _currentClaimType = ClaimType.accepted;
-                          _controller.animateTo(2);
-                          setState(() {});
-                        },
+                        onPressed: () => _controller.animateTo(2),
                       );
                     },
                   ),
@@ -397,19 +399,10 @@ class _LandingNewBState extends State<LandingNewB> with SingleTickerProviderStat
                         _noRejectedClaims = state.claims.length;
                       }
                       return CaseHeader(
-                        noCases: _currentClaimType != ClaimType.rejected &&
-                                _searchController.text.isNotEmpty
-                            ? "-"
-                            : _noRejectedClaims.toString(),
+                        noCases: _noRejectedClaims.toString(),
                         label: "Rejected",
                         isActive: _currentClaimType == ClaimType.rejected,
-                        onPressed: () {
-                          _searchController.clear();
-                          _currentCubit = _rejectedClaims;
-                          _currentClaimType = ClaimType.rejected;
-                          _controller.animateTo(3);
-                          setState(() {});
-                        },
+                        onPressed: () => _controller.animateTo(3),
                       );
                     },
                   ),
@@ -429,19 +422,10 @@ class _LandingNewBState extends State<LandingNewB> with SingleTickerProviderStat
                         _noConcludedClaims = state.claims.length;
                       }
                       return CaseHeader(
-                        noCases: _currentClaimType != ClaimType.concluded &&
-                                _searchController.text.isNotEmpty
-                            ? "-"
-                            : _noConcludedClaims.toString(),
+                        noCases: _noConcludedClaims.toString(),
                         label: "Concluded",
                         isActive: _currentClaimType == ClaimType.concluded,
-                        onPressed: () {
-                          _searchController.clear();
-                          _currentCubit = _concludedClaims;
-                          _currentClaimType = ClaimType.concluded;
-                          _controller.animateTo(4);
-                          setState(() {});
-                        },
+                        onPressed: () => _controller.animateTo(4),
                       );
                     },
                   ),
@@ -453,11 +437,81 @@ class _LandingNewBState extends State<LandingNewB> with SingleTickerProviderStat
             child: TabBarView(
               controller: _controller,
               children: [
-                ClaimsViewNew(cubit: _overallClaims, claimType: ClaimType.overall),
-                ClaimsViewNew(cubit: _allClaims, claimType: ClaimType.allocated),
-                ClaimsViewNew(cubit: _acceptedClaims, claimType: ClaimType.accepted),
-                ClaimsViewNew(cubit: _rejectedClaims, claimType: ClaimType.rejected),
-                ClaimsViewNew(cubit: _concludedClaims, claimType: ClaimType.concluded),
+                RefreshIndicator(
+                  onRefresh: () async {
+                    _overallClaims.getClaims(
+                      context,
+                      claimType: _currentClaimType,
+                      state: _stateFilter,
+                      district: _districtFilter,
+                      policeStation: _policeStationFilter,
+                    );
+                  },
+                  child: ClaimsViewNew(
+                    cubit: _overallClaims,
+                    claimType: ClaimType.overall,
+                  ),
+                ),
+                RefreshIndicator(
+                  onRefresh: () async {
+                    _allClaims.getClaims(
+                      context,
+                      claimType: _currentClaimType,
+                      state: _stateFilter,
+                      district: _districtFilter,
+                      policeStation: _policeStationFilter,
+                    );
+                  },
+                  child: ClaimsViewNew(
+                    cubit: _allClaims,
+                    claimType: ClaimType.allocated,
+                  ),
+                ),
+                RefreshIndicator(
+                  onRefresh: () async {
+                    _acceptedClaims.getClaims(
+                      context,
+                      claimType: _currentClaimType,
+                      state: _stateFilter,
+                      district: _districtFilter,
+                      policeStation: _policeStationFilter,
+                    );
+                  },
+                  child: ClaimsViewNew(
+                    cubit: _acceptedClaims,
+                    claimType: ClaimType.accepted,
+                  ),
+                ),
+                RefreshIndicator(
+                  onRefresh: () async {
+                    _rejectedClaims.getClaims(
+                      context,
+                      claimType: _currentClaimType,
+                      state: _stateFilter,
+                      district: _districtFilter,
+                      policeStation: _policeStationFilter,
+                    );
+                  },
+                  child: ClaimsViewNew(
+                    cubit: _rejectedClaims,
+                    claimType: ClaimType.rejected,
+                  ),
+                ),
+                RefreshIndicator(
+                  onRefresh: () async {
+                    _concludedClaims.getClaims(
+                      context,
+                      claimType: _currentClaimType,
+                      state: _stateFilter,
+                      district: _districtFilter,
+                      policeStation: _policeStationFilter,
+                    );
+                  },
+                  child: ClaimsViewNew(
+                    cubit: _concludedClaims,
+                    claimType: ClaimType.concluded,
+                  ),
+                ),
               ],
             ),
           ),

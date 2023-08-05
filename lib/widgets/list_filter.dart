@@ -65,6 +65,10 @@ class _ListFilterElementState extends State<ListFilterElement> {
       context: context,
       builder: (context) => SimpleDialog(
         title: Text(widget.buttonLabel),
+        insetPadding: const EdgeInsets.symmetric(horizontal: 10.0),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(18.0),
+        ),
         children: widget.options.map((e) => ListTile(
             title: Text(e),
             onTap: () {

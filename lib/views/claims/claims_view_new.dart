@@ -60,27 +60,19 @@ class _ClaimsViewNewState extends State<ClaimsViewNew> with AutomaticKeepAliveCl
                       label: AppStrings.noClaims,
                     );
                   }
-                  return RefreshIndicator(
-                    onRefresh: () async {
-                      BlocProvider.of<GetClaimsCubit>(context).getClaims(
-                          context,
-                          claimType: widget.claimType
-                      );
-                    },
-                    child: ListView.builder(
-                      padding: EdgeInsets.only(
-                        left: 16.w,
-                        right: 16.w,
-                        bottom: 16.h,
-                      ),
-                      itemCount: state.claims.length,
-                      itemBuilder: (context, index) => ClaimCard(
-                        claim: state.claims[index],
-                        cubit: widget.cubit,
-                        claimType: widget.claimType,
-                        screenRecorder: _recorderInitialization?.screenRecorder,
-                        videoRecorder: _recorderInitialization?.videoRecorder,
-                      ),
+                  return ListView.builder(
+                    padding: EdgeInsets.only(
+                      left: 16.w,
+                      right: 16.w,
+                      bottom: 16.h,
+                    ),
+                    itemCount: state.claims.length,
+                    itemBuilder: (context, index) => ClaimCard(
+                      claim: state.claims[index],
+                      cubit: widget.cubit,
+                      claimType: widget.claimType,
+                      screenRecorder: _recorderInitialization?.screenRecorder,
+                      videoRecorder: _recorderInitialization?.videoRecorder,
                     ),
                   );
                 } else if (state is GetClaimsFailed) {

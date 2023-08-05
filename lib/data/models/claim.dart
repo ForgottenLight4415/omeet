@@ -85,6 +85,7 @@ class Claim {
         'Victim 2 vehicle number': victim2,
         'Loss type': lossType,
         'Police station contact no.': landlinePhone,
+        'Police station email address': policeStationEmail,
         'Police station CUG no.': cugNumber,
       },
       'Policy Details': <String, dynamic> {

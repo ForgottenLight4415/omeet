@@ -12,8 +12,10 @@ import '../../utilities/check_connection.dart';
 part 'get_claims_state.dart';
 
 class GetClaimsCubit extends Cubit<GetClaimsState> {
+  final ClaimType claimType;
   final ClaimRepository _homeRepository = ClaimRepository();
-  GetClaimsCubit() : super(GetClaimsInitial());
+
+  GetClaimsCubit(this.claimType) : super(GetClaimsInitial());
 
   Future<void> getClaims(
     BuildContext context, {
