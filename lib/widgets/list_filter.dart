@@ -18,14 +18,6 @@ class ListFilterElement extends StatefulWidget {
 }
 
 class _ListFilterElementState extends State<ListFilterElement> {
-  late String _selected;
-
-  @override
-  void initState() {
-    super.initState();
-    _selected = widget.options[0];
-  }
-
   @override
   Widget build(BuildContext context) {
     return TextButton(
@@ -47,7 +39,7 @@ class _ListFilterElementState extends State<ListFilterElement> {
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 12.w),
             child: Text(
-              "${widget.buttonLabel}: $_selected",
+              widget.buttonLabel,
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w500,
@@ -65,20 +57,33 @@ class _ListFilterElementState extends State<ListFilterElement> {
       context: context,
       builder: (context) => SimpleDialog(
         title: Text(widget.buttonLabel),
-        insetPadding: const EdgeInsets.symmetric(horizontal: 10.0),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 10.0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(18.0),
         ),
-        children: widget.options.map((e) => ListTile(
-            title: Text(e),
-            onTap: () {
-              setState(() {
-                _selected = e;
-              });
-              widget.onChanged(e);
-              Navigator.pop(context);
-            },
-        )).toList(),
+        children: [
+          Container(
+            constraints: BoxConstraints(
+                maxHeight: MediaQuery.of(context).size.height * 0.6,
+                maxWidth: MediaQuery.of(context).size.width * 0.9,
+                minWidth: MediaQuery.of(context).size.width * 0.9,
+            ),
+            child: SingleChildScrollView(
+              child: Column(
+                children: List.generate(
+                  widget.options.length,
+                  (index) => ListTile(
+                    title: Text(widget.options[index]),
+                    onTap: () {
+                      widget.onChanged(widget.options[index]);
+                      Navigator.pop(context);
+                    },
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -89,7 +89,6 @@ class Claim {
         'Police station CUG no.': cugNumber,
       },
       'Policy Details': <String, dynamic> {
-        'Police station email address': policeStationEmail,
         'Accused insurance company': accusedInsurer,
         'Policy number': policyNumber,
         'Policy start date': policyStartDate,

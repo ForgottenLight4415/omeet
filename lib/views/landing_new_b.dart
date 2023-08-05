@@ -51,8 +51,8 @@ class _LandingNewBState extends State<LandingNewB>
   String _policeStationFilter = "ALL";
 
   List<String> _stateOptions = ['ALL'];
-  List<String> _districtOptions = ['ALL'];
-  List<String> _policeStationOptions = ['ALL'];
+  List<DistrictFilter> _districtOptions = [ const DistrictFilter("ALL", "ALL") ];
+  List<PoliceStationFilter> _policeStationOptions = [ const PoliceStationFilter("ALL", "ALL", "ALL") ];
 
   ClaimType _currentClaimType = ClaimType.overall;
 
@@ -131,7 +131,7 @@ class _LandingNewBState extends State<LandingNewB>
               builder: (context, state) {
                 List<String> _tempList = [];
                 if (state is GetClaimsSuccess) {
-                  if (_stateFilter == "ALL") {
+                  if (_stateOptions.length == 1) {
                     _stateOptions = ["ALL"];
                     for (Claim claim in state.claims) {
                       String state = claim.state;
@@ -141,43 +141,44 @@ class _LandingNewBState extends State<LandingNewB>
                     }
                     _tempList.sort();
                     _stateOptions.addAll(_tempList);
-                    _tempList.clear();
                   }
 
-                  if (_districtFilter == "ALL") {
-                    _districtOptions = ["ALL"];
+                  List<DistrictFilter> _tempDFilter = [];
+                  if (_districtOptions.length == 1) {
+                    _districtOptions = [];
                     for (Claim claim in state.claims) {
-                      String district = claim.district;
-                      if (!_tempList.contains(district)) {
-                        _tempList.add(claim.district);
+                      DistrictFilter district = DistrictFilter(claim.state, claim.district);
+                      if (!_tempDFilter.contains(district)) {
+                        _tempDFilter.add(district);
                       }
                     }
-                    _tempList.sort();
-                    _districtOptions.addAll(_tempList);
-                    _tempList.clear();
+                    _tempDFilter.sort((a, b) => a.districtName.compareTo(b.districtName));
+                    _districtOptions.addAll(_tempDFilter);
                   }
 
-                  if (_policeStationFilter == "ALL") {
-                    _policeStationOptions = ["ALL"];
+                  List<PoliceStationFilter> _tempPFilter = [];
+                  if (_policeStationOptions.length == 1) {
+                    _policeStationOptions = [];
                     for (Claim claim in state.claims) {
-                      String policeStation = claim.policeStation;
-                      if (!_tempList.contains(policeStation)) {
-                        _tempList.add(claim.policeStation);
+                      PoliceStationFilter policeStation = PoliceStationFilter(claim.state, claim.district, claim.policeStation);
+                      if (!_tempPFilter.contains(policeStation)) {
+                        _tempPFilter.add(policeStation);
                       }
                     }
-                    _tempList.sort();
-                    _policeStationOptions.addAll(_tempList);
-                    _tempList.clear();
+                    _tempPFilter.sort((a, b) => a.psName.compareTo(b.psName));
+                    _policeStationOptions.addAll(_tempPFilter);
                   }
                 }
                 return Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     ListFilterElement(
-                        buttonLabel: "STATE",
+                        buttonLabel: "STATE: $_stateFilter",
                         options: _stateOptions,
                         onChanged: (value) {
                           _stateFilter = value;
+                          _districtFilter = "ALL";
+                          _policeStationFilter = "ALL";
                           for (var cubit in _cubitList) {
                             cubit.getClaims(
                               context,
@@ -189,10 +190,11 @@ class _LandingNewBState extends State<LandingNewB>
                           }
                         }),
                     ListFilterElement(
-                        buttonLabel: "DISTRICT",
-                        options: _districtOptions,
+                        buttonLabel: "DISTRICT: $_districtFilter",
+                        options: getDistrictOptions(),
                         onChanged: (value) {
                           _districtFilter = value;
+                          _policeStationFilter = "ALL";
                           for (var cubit in _cubitList) {
                             cubit.getClaims(
                               context,
@@ -204,8 +206,8 @@ class _LandingNewBState extends State<LandingNewB>
                           }
                         }),
                     ListFilterElement(
-                        buttonLabel: "PS",
-                        options: _policeStationOptions,
+                        buttonLabel: "PS: $_policeStationFilter",
+                        options: getPoliceStationOptions(),
                         onChanged: (value) {
                           _policeStationFilter = value;
                           for (var cubit in _cubitList) {
@@ -520,6 +522,33 @@ class _LandingNewBState extends State<LandingNewB>
     );
   }
 
+  List<String> getDistrictOptions() {
+    List<String> results = ["ALL"];
+    for (DistrictFilter filter in _districtOptions) {
+      if (_stateFilter == "ALL" || _stateFilter == filter.filterState) {
+        String dName = filter.districtName;
+        if (!results.contains(dName)) {
+          results.add(dName);
+        }
+      }
+    }
+    return results;
+  }
+
+  List<String> getPoliceStationOptions() {
+    List<String> results = ["ALL"];
+    for (PoliceStationFilter filter in _policeStationOptions) {
+      if ((_stateFilter == "ALL" || _stateFilter == filter.filterState)
+          || (_districtFilter == "ALL" || _districtFilter == filter.filterDistrict)) {
+        String psName = filter.psName;
+        if (!results.contains(psName)) {
+          results.add(psName);
+        }
+      }
+    }
+    return results;
+  }
+
   void _callListener(BuildContext context, CallState state) {
     if (state is CallLoading) {
       showSnackBar(context, AppStrings.connecting);
@@ -529,4 +558,19 @@ class _LandingNewBState extends State<LandingNewB>
       showSnackBar(context, state.cause, type: SnackBarType.error);
     }
   }
+}
+
+class DistrictFilter {
+  final String filterState;
+  final String districtName;
+
+  const DistrictFilter(this.filterState, this.districtName);
+}
+
+class PoliceStationFilter {
+  final String filterState;
+  final String filterDistrict;
+  final String psName;
+
+  const PoliceStationFilter(this.filterState, this.filterDistrict, this.psName);
 }
