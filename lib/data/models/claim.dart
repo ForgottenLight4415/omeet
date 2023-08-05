@@ -38,6 +38,22 @@ class Claim {
   final String email;
   final String caseUpdatedDate;
 
+  // Accepted
+  final String caseAcceptedByPolice;
+  final String caseAcceptanceDateByPolice;
+  final String caseAcceptedByPoliceReason;
+  final String caseAcceptedByVendor;
+  final String caseAcceptedDateByVendor;
+  final String caseAcceptedByVendorReason;
+
+  // Conclusion
+  final String policeConclusion;
+  final String vendorConclusion;
+  final String policeCurrentStatus;
+  final String vendorCurrentStatus;
+
+
+
   Claim.fromJson(Map<String, dynamic> decodedJson)
       : claimId = _cleanOrConvert(decodedJson['CASE_ID']),
         state = _cleanOrConvert(decodedJson['ACCIDENT_STATE']),
@@ -65,11 +81,21 @@ class Claim {
         insuredName = _cleanOrConvert(decodedJson['INSURED_NAME']),
         customerMobileNumber = _cleanOrConvert(decodedJson['INSURED_MOBILE_NO']),
         email = _cleanOrConvert(decodedJson['INSURED_EMAIL_ID']),
-        caseUpdatedDate = _cleanOrConvert(decodedJson['ALLOCATION_DATE']);
+        caseUpdatedDate = _cleanOrConvert(decodedJson['ALLOCATION_DATE']),
+        caseAcceptedByPolice = _cleanOrConvert(decodedJson['Case_Acceptde_by_Police']),
+        caseAcceptanceDateByPolice = _cleanOrConvert(decodedJson['Case_Acceptance_Date_Police']),
+        caseAcceptedByPoliceReason = _cleanOrConvert(decodedJson['Case_Accepted_by_Police_Reason']),
+        caseAcceptedByVendor = _cleanOrConvert(decodedJson['Case_Accepted_by_Vendor']),
+        caseAcceptedDateByVendor = _cleanOrConvert(decodedJson['Case_Acceptance_Date_Vendor']),
+        caseAcceptedByVendorReason = _cleanOrConvert(decodedJson['Case_Accepted_by_Vendor_Reason']),
+        policeConclusion = _cleanOrConvert(decodedJson['Police_Conclusion']),
+        vendorConclusion = _cleanOrConvert(decodedJson['Vendor_Conclusion']),
+        policeCurrentStatus = _cleanOrConvert(decodedJson['Police_Current_Status']),
+        vendorCurrentStatus = _cleanOrConvert(decodedJson['Vendor_Current_Status']);
 
-  Map<String, Map<String, dynamic>> toMap() {
-    return <String, Map<String, dynamic>>{
-      'Accident Details': <String, dynamic>{
+  Map<String, Map<String, String>> toMap() {
+    return <String, Map<String, String>>{
+      'Accident Details': <String, String>{
         'Case ID': claimId,
         'Accident state': state,
         'Accident district': district,
@@ -88,7 +114,7 @@ class Claim {
         'Police station email address': policeStationEmail,
         'Police station CUG no.': cugNumber,
       },
-      'Policy Details': <String, dynamic> {
+      'Policy Details': <String, String> {
         'Accused insurance company': accusedInsurer,
         'Policy number': policyNumber,
         'Policy start date': policyStartDate,
@@ -96,6 +122,22 @@ class Claim {
         'Insured name': insuredName,
         'Insured mobile': customerMobileNumber,
         'Insured email address': email,
+      },
+      'Acceptance Status': <String, String> {
+        'Case Accepted by Police': caseAcceptedByPolice,
+        'Case Acceptance Date by Police': caseAcceptanceDateByPolice,
+        'Case Acceptance Reason by Police': caseAcceptedByPoliceReason,
+        'Case Accepted by Vendor': caseAcceptedByVendor,
+        'Case Acceptance Date by Vendor': caseAcceptedDateByVendor,
+        'Case Acceptance Reason by Vendor': caseAcceptedByVendorReason,
+      },
+      'Status': <String, String> {
+        'Police Current Status': policeCurrentStatus,
+        'Vendor Current Status': vendorCurrentStatus,
+      },
+      'Conclusion': <String, String> {
+        'Police Conclusion': policeConclusion,
+        'Vendor Conclusion': vendorConclusion,
       }
     };
   }

@@ -13,11 +13,12 @@ class CardDetailText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      padding: const EdgeInsets.symmetric(vertical: 2.0),
       child: RichText(
         text: TextSpan(
           text: title + '\n',
-          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+          style: Theme.of(context).textTheme.bodySmall!.copyWith(
+            color: Colors.black,
             fontWeight: FontWeight.w600,
           ),
           children: <TextSpan>[

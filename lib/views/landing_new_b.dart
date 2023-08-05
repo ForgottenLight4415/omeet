@@ -120,9 +120,10 @@ class _LandingNewBState extends State<LandingNewB>
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFFFAFAFA),
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
+        backgroundColor: Colors.white.withAlpha(0),
         title: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: BlocProvider<GetClaimsCubit>.value(
