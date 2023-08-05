@@ -135,9 +135,9 @@ class Claim {
         'Police Current Status': policeCurrentStatus,
         'Vendor Current Status': vendorCurrentStatus,
       },
-      'Conclusion': <String, String> {
-        'Police Conclusion': policeConclusion,
-        'Vendor Conclusion': vendorConclusion,
+      'Findings': <String, String> {
+        'Police Findings': policeConclusion,
+        'Vendor Findings': vendorConclusion,
       }
     };
   }

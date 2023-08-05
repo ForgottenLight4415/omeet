@@ -27,7 +27,7 @@ class AppTheme {
 
   static final lightTheme = ThemeData(
     primarySwatch: themeColor,
-    scaffoldBackgroundColor: Colors.white,
+    scaffoldBackgroundColor: const Color(0xFFFAFAFA),
     appBarTheme: const AppBarTheme(
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,

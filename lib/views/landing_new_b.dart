@@ -120,7 +120,6 @@ class _LandingNewBState extends State<LandingNewB>
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      backgroundColor: const Color(0xFFFAFAFA),
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
         backgroundColor: Colors.white.withAlpha(0),
