@@ -292,7 +292,7 @@ class _LandingNewBState extends State<LandingNewB>
             const Align(
               alignment: Alignment.center,
               child: Text(
-                "VERSION 1.4 EARLY ACCESS",
+                AppStrings.appVersion,
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 14, color: Colors.black45),
               ),
