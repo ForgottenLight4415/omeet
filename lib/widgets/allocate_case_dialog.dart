@@ -96,7 +96,12 @@ class _AllocateCaseDialogState extends State<AllocateCaseDialog> {
                     } else if (state is AssignSelfSuccess) {
                       Navigator.pop(context);
                       Navigator.pop(context, true);
-                      showInfoSnackBar(context, "Case updated", color: Colors.green);
+                      if (state.success) {
+                        showInfoSnackBar(
+                            context, "Case updated", color: Colors.green);
+                      } else {
+                        showInfoSnackBar(context, "Failed to update", color: Colors.red);
+                      }
                     } else if (state is AssignSelfFailed) {
                       Navigator.pop(context);
                       Navigator.pop(context, false);

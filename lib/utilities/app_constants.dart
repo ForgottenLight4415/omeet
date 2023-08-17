@@ -1,6 +1,6 @@
 class AppStrings {
   static const String appName = "IL-IBNR";
-  static const String appVersion = "VERSION 1.4.2 (BUILD 102)";
+  static const String appVersion = "VERSION 1.4.3 (BUILD 103)";
 
   // ERRORS AND FILLERS
   static const String blank = "";

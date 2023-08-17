@@ -79,10 +79,7 @@ class _ClaimsViewNewState extends State<ClaimsViewNew> with AutomaticKeepAliveCl
                   return CustomErrorWidget(
                     errorText: state.cause + "\n(Error code: ${state.code})",
                     action: () {
-                      BlocProvider.of<GetClaimsCubit>(context).getClaims(
-                          context,
-                          claimType: widget.claimType
-                      );
+                      BlocProvider.of<GetClaimsCubit>(context).getClaims(context);
                     },
                   );
                 } else {

@@ -383,7 +383,7 @@ class _ClaimCardState extends State<ClaimCard> {
     );
 
     if (result != null && result) {
-      widget.cubit.getClaims(context, claimType: widget.claimType);
+      widget.cubit.getClaims(context);
     }
   }
 

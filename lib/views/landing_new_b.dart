@@ -63,11 +63,11 @@ class _LandingNewBState extends State<LandingNewB>
   @override
   void initState() {
     super.initState();
-    _allClaims = GetClaimsCubit(ClaimType.allocated);
-    _overallClaims = GetClaimsCubit(ClaimType.overall);
-    _acceptedClaims = GetClaimsCubit(ClaimType.accepted);
-    _rejectedClaims = GetClaimsCubit(ClaimType.rejected);
-    _concludedClaims = GetClaimsCubit(ClaimType.concluded);
+    _allClaims = GetClaimsCubit(claimType: ClaimType.allocated);
+    _overallClaims = GetClaimsCubit(claimType: ClaimType.overall);
+    _acceptedClaims = GetClaimsCubit(claimType: ClaimType.accepted);
+    _rejectedClaims = GetClaimsCubit(claimType: ClaimType.rejected);
+    _concludedClaims = GetClaimsCubit(claimType: ClaimType.concluded);
     _cubitList = [
       _overallClaims,
       _allClaims,
@@ -180,13 +180,12 @@ class _LandingNewBState extends State<LandingNewB>
                           _districtFilter = "ALL";
                           _policeStationFilter = "ALL";
                           for (var cubit in _cubitList) {
-                            cubit.getClaims(
-                              context,
-                              claimType: cubit.claimType,
-                              state: _stateFilter,
-                              district: _districtFilter,
-                              policeStation: _policeStationFilter,
-                            );
+                            cubit.setStateName(_stateFilter);
+                            cubit.setDistrictName(_districtFilter);
+                            cubit.setPoliceStationName(_policeStationFilter);
+                          }
+                          for (var cubit in _cubitList) {
+                            cubit.getClaims(context);
                           }
                         }),
                     ListFilterElement(
@@ -196,13 +195,11 @@ class _LandingNewBState extends State<LandingNewB>
                           _districtFilter = value;
                           _policeStationFilter = "ALL";
                           for (var cubit in _cubitList) {
-                            cubit.getClaims(
-                              context,
-                              claimType: cubit.claimType,
-                              state: _stateFilter,
-                              district: _districtFilter,
-                              policeStation: _policeStationFilter,
-                            );
+                            cubit.setDistrictName(_districtFilter);
+                            cubit.setPoliceStationName(_policeStationFilter);
+                          }
+                          for (var cubit in _cubitList) {
+                            cubit.getClaims(context);
                           }
                         }),
                     ListFilterElement(
@@ -211,13 +208,10 @@ class _LandingNewBState extends State<LandingNewB>
                         onChanged: (value) {
                           _policeStationFilter = value;
                           for (var cubit in _cubitList) {
-                            cubit.getClaims(
-                              context,
-                              claimType: cubit.claimType,
-                              state: _stateFilter,
-                              district: _districtFilter,
-                              policeStation: _policeStationFilter,
-                            );
+                            cubit.setPoliceStationName(_policeStationFilter);
+                          }
+                          for (var cubit in _cubitList) {
+                            cubit.getClaims(context);
                           }
                         }),
                   ],
@@ -319,13 +313,7 @@ class _LandingNewBState extends State<LandingNewB>
               children: <Widget>[
                 BlocProvider<GetClaimsCubit>(
                   create: (context) => _overallClaims
-                    ..getClaims(
-                      context,
-                      claimType: ClaimType.overall,
-                      state: _stateFilter,
-                      district: _districtFilter,
-                      policeStation: _policeStationFilter,
-                    ),
+                    ..getClaims(context),
                   child: BlocBuilder<GetClaimsCubit, GetClaimsState>(
                     builder: (context, state) {
                       if (state is GetClaimsSuccess) {
@@ -342,13 +330,7 @@ class _LandingNewBState extends State<LandingNewB>
                 ),
                 BlocProvider<GetClaimsCubit>(
                   create: (context) => _allClaims
-                    ..getClaims(
-                      context,
-                      claimType: ClaimType.allocated,
-                      state: _stateFilter,
-                      district: _districtFilter,
-                      policeStation: _policeStationFilter,
-                    ),
+                    ..getClaims(context),
                   child: BlocBuilder<GetClaimsCubit, GetClaimsState>(
                     builder: (context, state) {
                       if (state is GetClaimsSuccess) {
@@ -365,13 +347,7 @@ class _LandingNewBState extends State<LandingNewB>
                 ),
                 BlocProvider<GetClaimsCubit>(
                   create: (context) => _acceptedClaims
-                    ..getClaims(
-                      context,
-                      claimType: ClaimType.accepted,
-                      state: _stateFilter,
-                      district: _districtFilter,
-                      policeStation: _policeStationFilter,
-                    ),
+                    ..getClaims(context),
                   child: BlocBuilder<GetClaimsCubit, GetClaimsState>(
                     builder: (context, state) {
                       if (state is GetClaimsSuccess) {
@@ -388,13 +364,7 @@ class _LandingNewBState extends State<LandingNewB>
                 ),
                 BlocProvider<GetClaimsCubit>(
                   create: (context) => _rejectedClaims
-                    ..getClaims(
-                      context,
-                      claimType: ClaimType.rejected,
-                      state: _stateFilter,
-                      district: _districtFilter,
-                      policeStation: _policeStationFilter,
-                    ),
+                    ..getClaims(context),
                   child: BlocBuilder<GetClaimsCubit, GetClaimsState>(
                     builder: (context, state) {
                       if (state is GetClaimsSuccess) {
@@ -411,13 +381,7 @@ class _LandingNewBState extends State<LandingNewB>
                 ),
                 BlocProvider<GetClaimsCubit>(
                   create: (context) => _concludedClaims
-                    ..getClaims(
-                      context,
-                      claimType: ClaimType.concluded,
-                      state: _stateFilter,
-                      district: _districtFilter,
-                      policeStation: _policeStationFilter,
-                    ),
+                    ..getClaims(context),
                   child: BlocBuilder<GetClaimsCubit, GetClaimsState>(
                     builder: (context, state) {
                       if (state is GetClaimsSuccess) {
@@ -441,13 +405,7 @@ class _LandingNewBState extends State<LandingNewB>
               children: [
                 RefreshIndicator(
                   onRefresh: () async {
-                    _overallClaims.getClaims(
-                      context,
-                      claimType: _currentClaimType,
-                      state: _stateFilter,
-                      district: _districtFilter,
-                      policeStation: _policeStationFilter,
-                    );
+                    _overallClaims.getClaims(context);
                   },
                   child: ClaimsViewNew(
                     cubit: _overallClaims,
@@ -456,13 +414,7 @@ class _LandingNewBState extends State<LandingNewB>
                 ),
                 RefreshIndicator(
                   onRefresh: () async {
-                    _allClaims.getClaims(
-                      context,
-                      claimType: _currentClaimType,
-                      state: _stateFilter,
-                      district: _districtFilter,
-                      policeStation: _policeStationFilter,
-                    );
+                    _allClaims.getClaims(context);
                   },
                   child: ClaimsViewNew(
                     cubit: _allClaims,
@@ -471,13 +423,7 @@ class _LandingNewBState extends State<LandingNewB>
                 ),
                 RefreshIndicator(
                   onRefresh: () async {
-                    _acceptedClaims.getClaims(
-                      context,
-                      claimType: _currentClaimType,
-                      state: _stateFilter,
-                      district: _districtFilter,
-                      policeStation: _policeStationFilter,
-                    );
+                    _acceptedClaims.getClaims(context);
                   },
                   child: ClaimsViewNew(
                     cubit: _acceptedClaims,
@@ -486,13 +432,7 @@ class _LandingNewBState extends State<LandingNewB>
                 ),
                 RefreshIndicator(
                   onRefresh: () async {
-                    _rejectedClaims.getClaims(
-                      context,
-                      claimType: _currentClaimType,
-                      state: _stateFilter,
-                      district: _districtFilter,
-                      policeStation: _policeStationFilter,
-                    );
+                    _rejectedClaims.getClaims(context);
                   },
                   child: ClaimsViewNew(
                     cubit: _rejectedClaims,
@@ -501,13 +441,7 @@ class _LandingNewBState extends State<LandingNewB>
                 ),
                 RefreshIndicator(
                   onRefresh: () async {
-                    _concludedClaims.getClaims(
-                      context,
-                      claimType: _currentClaimType,
-                      state: _stateFilter,
-                      district: _districtFilter,
-                      policeStation: _policeStationFilter,
-                    );
+                    _concludedClaims.getClaims(context);
                   },
                   child: ClaimsViewNew(
                     cubit: _concludedClaims,

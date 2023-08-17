@@ -73,6 +73,7 @@ class ClaimProvider extends AppServerProvider {
     final DecodedResponse response = await postRequest(
       path: ApiUrl.claimConclusion,
       data: <String, String>{
+        "phone_no": await AuthenticationProvider.getPhone(),
         "CASE_ID": claimNumber,
         "Conclusion": conclusion,
         "Ground_Of_Defence": groundOfDefense,
@@ -102,7 +103,6 @@ class ClaimProvider extends AppServerProvider {
       data: payload,
     );
     final Map<String, dynamic> responseData = response.data!;
-    log(responseData.toString());
-    return true;
+    return responseData['code'] == 200;
   }
 }

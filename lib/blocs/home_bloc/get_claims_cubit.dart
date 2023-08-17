@@ -15,15 +15,25 @@ class GetClaimsCubit extends Cubit<GetClaimsState> {
   final ClaimType claimType;
   final ClaimRepository _homeRepository = ClaimRepository();
 
-  GetClaimsCubit(this.claimType) : super(GetClaimsInitial());
+  String _state = "ALL";
+  String _district = "ALL";
+  String _policeStation = "ALL";
 
-  Future<void> getClaims(
-    BuildContext context, {
-    ClaimType claimType = ClaimType.allocated,
-    String state = "",
-    String district = "",
-    String policeStation = "",
-  }) async {
+  GetClaimsCubit({this.claimType = ClaimType.allocated}) : super(GetClaimsInitial());
+
+  void setStateName(String stateName) {
+    _state = stateName;
+  }
+
+  void setDistrictName(String districtName) {
+    _district = districtName;
+  }
+
+  void setPoliceStationName(String policeStationName) {
+    _policeStation = policeStationName;
+  }
+
+  Future<void> getClaims(BuildContext context) async {
     if (!await checkConnection(context)) {
       emit(GetClaimsFailed(1000, "No internet connection"));
       return;
@@ -34,9 +44,9 @@ class GetClaimsCubit extends Cubit<GetClaimsState> {
         GetClaimsSuccess(
           await _homeRepository.getClaims(
             claimType: claimType,
-            state: state,
-            district: district,
-            policeStation: policeStation,
+            state: _state,
+            district: _district,
+            policeStation: _policeStation,
           ),
         ),
       );
