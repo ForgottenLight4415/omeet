@@ -7,11 +7,12 @@ import 'package:omeet_motor/views/call_conclusion.dart';
 import 'package:omeet_motor/views/documents/video_player.dart';
 import 'package:omeet_motor/views/documents/videos_page.dart';
 import 'package:omeet_motor/views/landing_new_b.dart';
+import 'package:omeet_motor/withdrawal_module/data/models/withdrawal.dart';
+import 'package:omeet_motor/withdrawal_module/landing.dart';
 
 import '../data/models/claim.dart';
 import '../utilities/camera_utility.dart';
 import '../views/auth/verification_page.dart';
-import '../views/claims/create_claim_page.dart';
 import '../views/conclusion_page_main.dart';
 import '../views/documents/audio_page.dart';
 import '../views/documents/doc_viewer.dart';
@@ -24,6 +25,12 @@ import '../views/recorder_pages/audio_recorder_page.dart';
 import '../views/recorder_pages/image_capture_page.dart';
 import '../views/recorder_pages/video_recorder_page.dart';
 import '../views/uploads_page.dart';
+
+import '../withdrawal_module/views/meet_pages/details_page.dart' as dp;
+import '../withdrawal_module/data/models/document.dart' as doc;
+import '../withdrawal_module/views/documents/documents_page.dart' as doc_page;
+import '../withdrawal_module/views/documents/videos_page.dart' as vid_page;
+import '../withdrawal_module/views/documents/audio_page.dart' as aud_page;
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -48,13 +55,26 @@ class RouteGenerator {
           ),
         );
 
+      case '/withdrawal/landing':
+        final List<String?>? userDetails = args as List<String?>?;
+        return _platformDependentRouting(
+          WithdrawalLanding(
+            email: userDetails?[0] ?? "Unavailable",
+            phone: userDetails?[1] ?? "Unavailable",
+          ),
+        );
+
       // Claims
-      case '/new/claim':
-        return _platformDependentRouting(const NewClaimPage());
       case '/claim/details':
         final Claim _claim = args as Claim;
         return _platformDependentRouting(
           DetailsPage(claim: _claim),
+        );
+
+      case '/withdrawal/claim/details':
+        final Withdrawal _claim = args as Withdrawal;
+        return _platformDependentRouting(
+          dp.DetailsPage(claim: _claim),
         );
 
       // MEETING ROUTES
@@ -91,6 +111,16 @@ class RouteGenerator {
             readOnly: _arguments.readOnly,
           ),
         );
+
+      case '/withdrawal/documents':
+        final doc.DocumentPageArguments _arguments = args as doc.DocumentPageArguments;
+        return _platformDependentRouting(
+          doc_page.DocumentsPage(
+            caseId: _arguments.claimNumber,
+            readOnly: _arguments.readOnly,
+          ),
+        );
+
       case '/videos':
         final DocumentPageArguments _arguments = args as DocumentPageArguments;
         return _platformDependentRouting(
@@ -99,6 +129,16 @@ class RouteGenerator {
             readOnly: _arguments.readOnly,
           ),
         );
+
+      case '/withdrawal/videos':
+        final doc.DocumentPageArguments _arguments = args as doc.DocumentPageArguments;
+        return _platformDependentRouting(
+          vid_page.VideosPage(
+            caseId: _arguments.claimNumber,
+            readOnly: _arguments.readOnly,
+          ),
+        );
+
       case '/audio':
         final DocumentPageArguments _arguments = args as DocumentPageArguments;
         return _platformDependentRouting(
@@ -107,6 +147,16 @@ class RouteGenerator {
             readOnly: _arguments.readOnly,
           ),
         );
+
+      case '/withdrawal/audio':
+        final doc.DocumentPageArguments _arguments = args as doc.DocumentPageArguments;
+        return _platformDependentRouting(
+          aud_page.AudioPage(
+            caseId: _arguments.claimNumber,
+            readOnly: _arguments.readOnly,
+          ),
+        );
+
       case '/view/document':
         final DocumentViewPageArguments _documentArguments =
             args as DocumentViewPageArguments;

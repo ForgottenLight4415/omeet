@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:omeet_motor/views/meet_pages/videos_section.dart';
 
 import '../../data/models/document.dart';
 import '../../utilities/document_utilities.dart';
-import '../meet_pages/audio_section.dart';
 import '../../widgets/buttons.dart';
 
-class AudioPage extends StatelessWidget {
+class VideosPage extends StatelessWidget {
   final String caseId;
   final bool readOnly;
 
-  const AudioPage({Key? key, required this.caseId, this.readOnly = false})
+  const VideosPage({Key? key, required this.caseId, this.readOnly = false})
       : super(key: key);
 
   @override
@@ -17,15 +17,15 @@ class AudioPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         leading: const AppBackButton(),
-        title: const Text("All audio recordings"),
+        title: const Text("All videos"),
         actions: readOnly ? null : [
           IconButton(
-            onPressed: () => DocumentUtilities.documentUploadDialog(context, caseId, DocumentType.audio),
+            onPressed: () => DocumentUtilities.documentUploadDialog(context, caseId, DocumentType.video),
             icon: const Icon(Icons.upload),
           ),
         ],
       ),
-      body: AudioView(claimNumber: caseId),
+      body: VideosView(claimNumber: caseId),
     );
   }
 }

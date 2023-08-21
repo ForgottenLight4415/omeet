@@ -1,31 +1,29 @@
 import 'package:flutter/material.dart';
 
-import '../../data/models/document.dart';
 import '../../utilities/document_utilities.dart';
-import '../meet_pages/audio_section.dart';
+import '../../data/models/document.dart';
+import '../meet_pages/documents_section.dart';
 import '../../widgets/buttons.dart';
 
-class AudioPage extends StatelessWidget {
+class DocumentsPage extends StatelessWidget {
   final String caseId;
   final bool readOnly;
-
-  const AudioPage({Key? key, required this.caseId, this.readOnly = false})
-      : super(key: key);
+  const DocumentsPage({Key? key, required this.caseId, this.readOnly = false}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         leading: const AppBackButton(),
-        title: const Text("All audio recordings"),
+        title: const Text("All documents"),
         actions: readOnly ? null : [
           IconButton(
-            onPressed: () => DocumentUtilities.documentUploadDialog(context, caseId, DocumentType.audio),
+            onPressed: () => DocumentUtilities.documentUploadDialog(context, caseId, DocumentType.file),
             icon: const Icon(Icons.upload),
           ),
         ],
       ),
-      body: AudioView(claimNumber: caseId),
+      body: DocumentsView(caseId: caseId),
     );
   }
 }
