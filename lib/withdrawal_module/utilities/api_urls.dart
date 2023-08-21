@@ -2,9 +2,6 @@ class ApiUrl {
   static const String baseUrl = 'https://omeet.in/MOTOR/ICICI/withdrawal/';
   static const String secondaryBaseUrl = "https://omeet.in/MOTOR/";
 
-  static const String loginUrl = "loginm.php";
-  static const String verifyOtp = "verify_otp.php";
-
   // CLAIMS
   static const String getClaimsUrl = "allocatedclaims.php";
   static const String getOverallClaimsUrl = "overallcases.php";

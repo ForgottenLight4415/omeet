@@ -46,9 +46,13 @@ class _WithdrawalLandingState extends State<WithdrawalLanding>
   int _noRejectedClaims = 0;
   int _noConcludedClaims = 0;
 
+  String _stateFilter = "ALL";
+  String _districtFilter = "ALL";
   String _policeStationFilter = "ALL";
 
-  List<PoliceStationFilter> _policeStationOptions = [ const PoliceStationFilter("ALL") ];
+  List<String> _stateOptions = ['ALL'];
+  List<DistrictFilter> _districtOptions = [ const DistrictFilter("ALL", "ALL") ];
+  List<PoliceStationFilter> _policeStationOptions = [ const PoliceStationFilter("ALL", "ALL", "ALL") ];
 
   ClaimType _currentClaimType = ClaimType.overall;
 
@@ -126,12 +130,38 @@ class _WithdrawalLandingState extends State<WithdrawalLanding>
             value: _overallClaims,
             child: BlocBuilder<GetClaimsCubit, GetClaimsState>(
               builder: (context, state) {
+                List<String> _tempList = [];
                 if (state is GetClaimsSuccess) {
+                  if (_stateOptions.length == 1) {
+                    _stateOptions = ["ALL"];
+                    for (Withdrawal claim in state.claims) {
+                      String state = claim.courtState;
+                      if (!_tempList.contains(state)) {
+                        _tempList.add(claim.courtState);
+                      }
+                    }
+                    _tempList.sort();
+                    _stateOptions.addAll(_tempList);
+                  }
+
+                  List<DistrictFilter> _tempDFilter = [];
+                  if (_districtOptions.length == 1) {
+                    _districtOptions = [];
+                    for (Withdrawal claim in state.claims) {
+                      DistrictFilter district = DistrictFilter(claim.courtState, claim.courtLocation);
+                      if (!_tempDFilter.contains(district)) {
+                        _tempDFilter.add(district);
+                      }
+                    }
+                    _tempDFilter.sort((a, b) => a.districtName.compareTo(b.districtName));
+                    _districtOptions.addAll(_tempDFilter);
+                  }
+
                   List<PoliceStationFilter> _tempPFilter = [];
                   if (_policeStationOptions.length == 1) {
                     _policeStationOptions = [];
                     for (Withdrawal claim in state.claims) {
-                      PoliceStationFilter policeStation = PoliceStationFilter(claim.policeStation);
+                      PoliceStationFilter policeStation = PoliceStationFilter(claim.courtState, claim.courtLocation, claim.policeStation);
                       if (!_tempPFilter.contains(policeStation)) {
                         _tempPFilter.add(policeStation);
                       }
@@ -143,6 +173,36 @@ class _WithdrawalLandingState extends State<WithdrawalLanding>
                 return Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
+                    ListFilterElement(
+                        buttonLabel: "STATE: $_stateFilter",
+                        options: _stateOptions,
+                        onChanged: (value) {
+                          _stateFilter = value;
+                          _districtFilter = "ALL";
+                          _policeStationFilter = "ALL";
+                          for (var cubit in _cubitList) {
+                            cubit.setStateName(_stateFilter);
+                            cubit.setDistrictName(_districtFilter);
+                            cubit.setPoliceStationName(_policeStationFilter);
+                          }
+                          for (var cubit in _cubitList) {
+                            cubit.getClaims(context);
+                          }
+                        }),
+                    ListFilterElement(
+                        buttonLabel: "LOCATION: $_districtFilter",
+                        options: getDistrictOptions(),
+                        onChanged: (value) {
+                          _districtFilter = value;
+                          _policeStationFilter = "ALL";
+                          for (var cubit in _cubitList) {
+                            cubit.setDistrictName(_districtFilter);
+                            cubit.setPoliceStationName(_policeStationFilter);
+                          }
+                          for (var cubit in _cubitList) {
+                            cubit.getClaims(context);
+                          }
+                        }),
                     ListFilterElement(
                         buttonLabel: "PS: $_policeStationFilter",
                         options: getPoliceStationOptions(),
@@ -212,7 +272,7 @@ class _WithdrawalLandingState extends State<WithdrawalLanding>
                 color: Theme.of(context).primaryColor,
               ),
               title: const Text(
-                "Main",
+                "CCTNS",
                 style: TextStyle(fontSize: 20),
               ),
               onTap: () {
@@ -416,12 +476,28 @@ class _WithdrawalLandingState extends State<WithdrawalLanding>
     );
   }
 
+  List<String> getDistrictOptions() {
+    List<String> results = ["ALL"];
+    for (DistrictFilter filter in _districtOptions) {
+      if (_stateFilter == "ALL" || _stateFilter == filter.filterState) {
+        String dName = filter.districtName;
+        if (!results.contains(dName)) {
+          results.add(dName);
+        }
+      }
+    }
+    return results;
+  }
+
   List<String> getPoliceStationOptions() {
     List<String> results = ["ALL"];
     for (PoliceStationFilter filter in _policeStationOptions) {
-      String psName = filter.psName;
-      if (!results.contains(psName)) {
-        results.add(psName);
+      if ((_stateFilter == "ALL" || _stateFilter == filter.filterState)
+          || (_districtFilter == "ALL" || _districtFilter == filter.filterDistrict)) {
+        String psName = filter.psName;
+        if (!results.contains(psName)) {
+          results.add(psName);
+        }
       }
     }
     return results;
@@ -438,8 +514,17 @@ class _WithdrawalLandingState extends State<WithdrawalLanding>
   }
 }
 
+class DistrictFilter {
+  final String filterState;
+  final String districtName;
+
+  const DistrictFilter(this.filterState, this.districtName);
+}
+
 class PoliceStationFilter {
+  final String filterState;
+  final String filterDistrict;
   final String psName;
 
-  const PoliceStationFilter(this.psName);
+  const PoliceStationFilter(this.filterState, this.filterDistrict, this.psName);
 }

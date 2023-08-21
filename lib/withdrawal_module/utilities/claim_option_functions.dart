@@ -77,7 +77,7 @@ Future<void> recordAudio(BuildContext context, Withdrawal claim) async {
   bool microphoneStatus = await microphonePermission(context) ?? false;
   bool storageStatus = await storagePermission(context) ?? false;
   if (microphoneStatus && storageStatus && locationData != null) {
-    Navigator.pushNamed(context, '/record/audio',
+    Navigator.pushNamed(context, 'withdrawal/record/audio',
         arguments: AudioRecordArguments(claim, locationData));
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
   } else {
@@ -99,7 +99,7 @@ Future<void> recordVideo(
   videoRecorder.caseLocation = locationData;
   await Navigator.pushNamed(
     context,
-    '/record/video',
+    'withdrawal/record/video',
     arguments: VideoPageConfig(
       videoRecorder,
       claim,
@@ -123,7 +123,7 @@ Future<void> captureImage(BuildContext context, Withdrawal claim) async {
       _cameras = await availableCameras();
       Navigator.pushNamed(
         context,
-        '/capture/image',
+        'withdrawal/capture/image',
         arguments: CameraCaptureArguments(_cameras, _locationData, claim),
       );
       ScaffoldMessenger.of(context).removeCurrentSnackBar();

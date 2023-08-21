@@ -33,14 +33,15 @@ class ScreenRecorder {
     LocationService locationService = LocationService();
     _locationData = await locationService.getLocation(context);
 
+    String fileName = "${claimId}_${DateTime.now().microsecondsSinceEpoch}".replaceAll('/', '_');
     Directory? directory = await getExternalStorageDirectory();
-    Directory? _saveDirectory = await Directory(
+    Directory _saveDirectory = await Directory(
       "${directory!.path}/ScreenRecordings",
-    ).create();
+    ).create(recursive: true);
 
     final Map<String, dynamic> response =
     await _edScreenRecorder.startRecordScreen(
-      fileName: "${claimId}_${DateTime.now().microsecondsSinceEpoch}",
+      fileName: fileName,
       dirPathToSave: _saveDirectory.path,
       audioEnable: true,
     );

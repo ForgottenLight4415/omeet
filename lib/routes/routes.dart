@@ -31,6 +31,11 @@ import '../withdrawal_module/data/models/document.dart' as doc;
 import '../withdrawal_module/views/documents/documents_page.dart' as doc_page;
 import '../withdrawal_module/views/documents/videos_page.dart' as vid_page;
 import '../withdrawal_module/views/documents/audio_page.dart' as aud_page;
+import '../withdrawal_module/views/meet_pages/meet_main.dart' as meet_main;
+import '../withdrawal_module/views/recorder_pages/video_recorder_page.dart' as video_rec;
+import '../withdrawal_module/views/recorder_pages/image_capture_page.dart' as image_cap;
+import '../withdrawal_module/views/recorder_pages/audio_recorder_page.dart' as audio_rec;
+import '../withdrawal_module/utilities/camera_utility.dart' as cam_util;
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -82,6 +87,10 @@ class RouteGenerator {
         final Claim _claim = args as Claim;
         return _platformDependentRouting(MeetingMainPage(claim: _claim));
 
+      case 'withdrawal/claim/meeting':
+        final Withdrawal _claim = args as Withdrawal;
+        return _platformDependentRouting(meet_main.MeetingMainPage(claim: _claim));
+
       // RECORDER ROUTES
       case '/record/audio':
         final AudioRecordArguments _audioRecArguments =
@@ -98,6 +107,23 @@ class RouteGenerator {
             args as CameraCaptureArguments;
         return _platformDependentRouting(
           CaptureImagePage(arguments: _captureImageArgs),
+        );
+
+      case 'withdrawal/record/audio':
+        final audio_rec.AudioRecordArguments _audioRecArguments =
+        args as audio_rec.AudioRecordArguments;
+        return _platformDependentRouting(
+            audio_rec.AudioRecordPage(arguments: _audioRecArguments));
+      case 'withdrawal/record/video':
+        final video_rec.VideoPageConfig _videoRecArgs = args as video_rec.VideoPageConfig;
+        return _platformDependentRouting(
+          video_rec.VideoRecordPage(config: _videoRecArgs),
+        );
+      case 'withdrawal/capture/image':
+        final cam_util.CameraCaptureArguments _captureImageArgs =
+        args as cam_util.CameraCaptureArguments;
+        return _platformDependentRouting(
+          image_cap.CaptureImagePage(arguments: _captureImageArgs),
         );
 
       // DOCUMENT ROUTES

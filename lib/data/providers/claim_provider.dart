@@ -60,14 +60,6 @@ class ClaimProvider extends AppServerProvider {
     return _claims;
   }
 
-  Future<bool> createClaim(Claim claim) async {
-    await postRequest(
-      path: ApiUrl.newClaim,
-      data: claim.toInternetMap(),
-    );
-    return true;
-  }
-
   Future<bool> submitConclusion(String claimNumber, String conclusion,
       String groundOfDefense, String observation) async {
     final DecodedResponse response = await postRequest(

@@ -27,6 +27,4 @@ class ClaimRepository {
   List<Claim> getClaimList() {
     return _claims;
   }
-
-  Future<bool> newClaim(Claim claim) => _provider.createClaim(claim);
 }

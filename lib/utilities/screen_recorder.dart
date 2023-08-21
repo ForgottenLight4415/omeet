@@ -40,7 +40,7 @@ class ScreenRecorder {
 
     final Map<String, dynamic> response =
     await _edScreenRecorder.startRecordScreen(
-      fileName: "${claimId}_${DateTime.now().microsecondsSinceEpoch}",
+      fileName: "${claimId}_${DateTime.now().microsecondsSinceEpoch}".replaceAll("/", "_"),
       dirPathToSave: _saveDirectory.path,
       audioEnable: true,
     );

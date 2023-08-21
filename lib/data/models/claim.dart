@@ -142,37 +142,6 @@ class Claim {
     };
   }
 
-  Map<String, dynamic> toInternetMap() {
-    return <String, String>{
-      "CASE_ID": claimId,
-      "STATE": state,
-      "DISTRICT": district,
-      "POLICE_STATION": policeStation,
-      "ACCIDENT_YEAR": accidentYear,
-      "FIR_NO": firNumber,
-      "FIR_DATE": firDate,
-      "ACCIDENT_DATE": accidentDate,
-      "SECTION": section,
-      "ACCUSED_VEHICLE_NO": accused,
-      "VICTIM_1_VEHICLE_NO": victim1,
-      "VICTIM_2_VEHICLE_NO": victim2,
-      "LOSS_TYPE": lossType,
-      "INSURANCE_COMPANY": accusedInsurer,
-      "FIR_DELAY": firDelay,
-      "LANDLINE_PHONE": landlinePhone,
-      "CUG_NO": cugNumber,
-      "POLICE_STATION_EMAIL_ID": policeStationEmail,
-      "Current_Status": currentStatus,
-      "POLICY_NO": policyNumber,
-      "POLICY_START_DATE": policyStartDate,
-      "POLICY_END_DATE": policyEndDate,
-      "INSURED_NAME": insuredName,
-      "INSURED_MOBILE_NO": customerMobileNumber,
-      "INSURED_EMAIL_ID": email,
-      "ALLOCATION_DATE": caseUpdatedDate
-    };
-  }
-
   static String _cleanStrings(String? string) {
     if (string == null || string.isEmpty) {
       return "Unavailable";

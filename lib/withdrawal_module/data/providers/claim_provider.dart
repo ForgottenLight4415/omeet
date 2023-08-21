@@ -17,13 +17,13 @@ class ClaimProvider extends AppServerProvider {
       "phone_no": await AuthenticationProvider.getPhone(),
     };
     if (state.isNotEmpty) {
-      _data["state"] = state;
+      _data["Court_State"] = state;
     }
     if (district.isNotEmpty) {
-      _data["district"] = district;
+      _data["Court_Location"] = district;
     }
     if (policeStation.isNotEmpty) {
-      _data["police_station"] = policeStation;
+      _data["Police_Station"] = policeStation;
     }
     String path = "";
     switch (claimType) {

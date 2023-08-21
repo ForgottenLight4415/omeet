@@ -8,6 +8,7 @@ class Withdrawal {
   final String insured;
   final String policeStation;
   final String courtLocation;
+  final String courtState;
   final String currentManagerName;
   final String oldManagerName;
   final String statusOfDocumentSet;
@@ -38,6 +39,7 @@ class Withdrawal {
         insured = _cleanOrConvert(decodedJson['Insured']),
         policeStation = _cleanOrConvert(decodedJson['Police_Station']),
         courtLocation = _cleanOrConvert(decodedJson['Court_Location']),
+        courtState = _cleanOrConvert(decodedJson['Court_State']),
         currentManagerName = _cleanOrConvert(decodedJson['Current_Manager_Name']),
         oldManagerName = _cleanOrConvert(decodedJson['Old_Manager_Name']),
         statusOfDocumentSet = _cleanOrConvert(decodedJson['Status_of_Document_Set']),
@@ -71,6 +73,7 @@ class Withdrawal {
         'Insured': insured,
         'Police station': policeStation,
         'Court Location': courtLocation,
+        'Court State': courtState,
         'Current Manager name': currentManagerName,
         'Old Manager Name': oldManagerName,
         'Status of document set': statusOfDocumentSet,
@@ -98,39 +101,6 @@ class Withdrawal {
     };
   }
 
-  Map<String, dynamic> toInternetMap() {
-    return <String, String>{
-      "Claim_No": claimId,
-      "Insured": insured,
-      "Police_Station": policeStation,
-      "Court_Location": courtLocation,
-      "Current_Manager_Name": currentManagerName,
-      "Old_Manager_Name": oldManagerName,
-      "Status_of_Document_Set": statusOfDocumentSet,
-      "Police_Consultant_Name": policeConsultantName,
-      "Responsible": responsible,
-      "Log_Fraud_Suspect": logFraudSuspect,
-      "Fraud_Element": fraudElement,
-      "Date_of_Allocation": dateOfAllocation,
-      "Case_Brief": caseBrief,
-      "Fraud_Suspect_Elements": fraudSuspectElements,
-      "Fraud_Findings": fraudFindings,
-      "Evidence_Available": evidenceAvailable,
-      "Current_Visit_Status": currentVisitStatus,
-      "Visit_Remark": visitRemark,
-      "Withdrawal_Status": withdrawalStatus,
-      "Case_Death_Injury": caseDeathInjury,
-      "Reserve": reserve,
-      "Case_Brief_Added": caseBriefAdded,
-      "Investigation_Findings": investigationFindings,
-      "Probable_Withdrawal": probableWithdrawal,
-      "LM_Settleable_Withdrawn": lmSettleableWithdrawn,
-      "Final_Remarks": finalRemarks,
-      "Withdrwal_Completed_Date": withdrawalCompletedDate,
-      "Current_Status": currentStatus,
-    };
-  }
-
   static String _cleanStrings(String? string) {
     if (string == null || string.isEmpty) {
       return "Unavailable";
@@ -155,7 +125,7 @@ class Withdrawal {
     await locationService.checkLocationStatus(context);
 
     if (cameraStatus && microphoneStatus && locationStatus) {
-      Navigator.pushNamed(context, '/claim/meeting', arguments: this);
+      Navigator.pushNamed(context, 'withdrawal/claim/meeting', arguments: this);
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
     } else {
       showInfoSnackBar(
