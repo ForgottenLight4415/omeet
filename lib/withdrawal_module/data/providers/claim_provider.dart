@@ -59,16 +59,26 @@ class ClaimProvider extends AppServerProvider {
     return _claims;
   }
 
-  Future<bool> submitConclusion(String claimNumber, String conclusion,
-      String groundOfDefense, String observation) async {
+  Future<bool> submitConclusion(
+    String claimNumber,
+    String currentVisitStatus,
+    String visitRemark,
+    String probableWithdrawal,
+    String lmSettlement,
+    String withdrawalStatus,
+    String finalRemarks,
+  ) async {
     final DecodedResponse response = await postRequest(
       path: ApiUrl.claimConclusion,
       data: <String, String>{
         "phone_no": await AuthenticationProvider.getPhone(),
-        "CASE_ID": claimNumber,
-        "Conclusion": conclusion,
-        "Ground_Of_Defence": groundOfDefense,
-        "Observation": observation,
+        "Claim_No": claimNumber,
+        "Current_Visit_Status": currentVisitStatus,
+        "Visit_Remark": visitRemark,
+        "Probable_Withdrawal": probableWithdrawal,
+        "LM_Settleable_Withdrawn": lmSettlement,
+        "Withdrawal_Status": withdrawalStatus,
+        "Final_Remarks": finalRemarks,
       },
     );
     return response.data?["code"] == 200;
@@ -79,7 +89,7 @@ class ClaimProvider extends AppServerProvider {
     final DecodedResponse response = await postRequest(
       path: ApiUrl.reporting,
       data: <String, String>{
-        "CASE_ID": claimNumber,
+        "Claim_No": claimNumber,
         "phone_no": await AuthenticationProvider.getPhone(),
         "selection": selection,
         "description": description,

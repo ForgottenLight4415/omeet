@@ -62,6 +62,9 @@ class ScreenRecorder {
         latitude: _locationData?.latitude ?? 0,
         longitude: _locationData?.longitude ?? 0,
         file: videoFile,
+        extraParams: <String, String> {
+          "Claim_No": claimId,
+        }
       );
       if (result) {
         showInfoSnackBar(context, AppStrings.fileSaved, color: Colors.green);

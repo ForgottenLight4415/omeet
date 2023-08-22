@@ -29,7 +29,7 @@ class DocumentProvider extends AppServerProvider {
     final DecodedResponse _response = await postRequest(
       path: urlPath,
       data: <String, String> {
-        "CASE_ID": caseId,
+        "Claim_No": caseId,
       },
     );
     Map<String, dynamic> _rData = _response.data!;

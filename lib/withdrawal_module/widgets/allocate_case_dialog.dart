@@ -115,7 +115,7 @@ class _AllocateCaseDialogState extends State<AllocateCaseDialog> {
                         onPressed: () async {
                           if (_key.currentState!.validate()) {
                             final Map<String, String> payload = <String, String> {
-                              "CASE_ID" : widget.caseId,
+                              "Claim_No" : widget.caseId,
                               "phone_no" : await AuthRepository.getPhone(),
                               "Case_Acceptance": selected == options[0] ? "ACCEPTED" : "REJECTED",
                               "Case_Rejection_Reason": _reasonController.text,

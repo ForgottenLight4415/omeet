@@ -303,7 +303,7 @@ class _ClaimCardState extends State<ClaimCard> {
             widget.claimType == ClaimType.accepted
                 ? ClaimPageTiles(
                     faIcon: FontAwesomeIcons.peopleGroup,
-                    label: "Reporting",
+                    label: "Visits",
                     onPressed: () async {
                       Navigator.pop(modalContext);
                       await DocumentUtilities.documentUploadDialog(

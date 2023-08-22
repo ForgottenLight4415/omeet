@@ -334,6 +334,7 @@ class _UploadDocumentsDialogState extends State<UploadDocumentsDialog> {
           uploadNow: uploadNow,
           directUpload: true,
           extraParams: {
+            "Claim_No": widget.caseId,
             "document_type": selected,
             "document_description": _descriptionController.text,
           });

@@ -37,7 +37,7 @@ class DataUploadProvider extends AppServerProvider {
 
     if (uploadNow) {
       final Map<String, String> _data = <String, String>{
-        'CASE_ID': claimNumber,
+        'Claim_No': claimNumber,
         'lat': latitude.toString(),
         'lon': longitude.toString(),
         'phone_no': await AuthRepository.getPhone(),

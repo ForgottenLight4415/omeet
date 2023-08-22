@@ -36,6 +36,7 @@ import '../withdrawal_module/views/recorder_pages/video_recorder_page.dart' as v
 import '../withdrawal_module/views/recorder_pages/image_capture_page.dart' as image_cap;
 import '../withdrawal_module/views/recorder_pages/audio_recorder_page.dart' as audio_rec;
 import '../withdrawal_module/utilities/camera_utility.dart' as cam_util;
+import '../withdrawal_module/views/conclusion_page_main.dart' as con_page;
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -208,6 +209,10 @@ class RouteGenerator {
       case '/final_conclusion':
         final Claim _args = args as Claim;
         return _platformDependentRouting(ConclusionPageMain(claim: _args));
+
+      case '/withdrawal/final_conclusion':
+        final Withdrawal _args = args as Withdrawal;
+        return _platformDependentRouting(con_page.ConclusionPageMain(claim: _args));
 
       default:
         return _platformDependentRouting(const InvalidRoute());

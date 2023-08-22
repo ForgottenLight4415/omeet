@@ -123,7 +123,7 @@ class _CallConclusionPageState extends State<CallConclusionPage> {
                     "Call_Version": _callVersion.text,
                     "Triggers": selectedTrigger,
                     "phone_no": widget.managerPhoneNumber,
-                    "CASE_ID": widget.caseId,
+                    "Claim_No": widget.caseId,
                   };
                   final CallProvider provider = CallProvider();
                   try {

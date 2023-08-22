@@ -81,6 +81,7 @@ class AppServerProvider {
       );
       log(callUrl + ":\n");
       log("Params:\n" + data.toString());
+      log("Response:\n" + _response.body.toString());
       return processResponse(_response);
     } catch (e) {
       throw AppException(
