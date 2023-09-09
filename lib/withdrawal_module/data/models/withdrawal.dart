@@ -69,7 +69,7 @@ class Withdrawal {
   Map<String, Map<String, String>> toMap() {
     return <String, Map<String, String>>{
       'Accident Details': <String, String>{
-        'Case ID': claimId,
+        'Claim ID': claimId,
         'Insured': insured,
         'Police station': policeStation,
         'Court Location': courtLocation,

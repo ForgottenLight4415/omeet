@@ -88,8 +88,8 @@ class Claim {
         caseAcceptedByVendor = _cleanOrConvert(decodedJson['Case_Accepted_by_Vendor']),
         caseAcceptedDateByVendor = _cleanOrConvert(decodedJson['Case_Acceptance_Date_Vendor']),
         caseAcceptedByVendorReason = _cleanOrConvert(decodedJson['Case_Accepted_by_Vendor_Reason']),
-        policeConclusion = _cleanOrConvert(decodedJson['Police_Conclusion']),
-        vendorConclusion = _cleanOrConvert(decodedJson['Vendor_Conclusion']),
+        policeConclusion = _cleanOrConvert(decodedJson['Conclusion_Police']),
+        vendorConclusion = _cleanOrConvert(decodedJson['Conclusion_Vendor']),
         policeCurrentStatus = _cleanOrConvert(decodedJson['Police_Current_Status']),
         vendorCurrentStatus = _cleanOrConvert(decodedJson['Vendor_Current_Status']);
 

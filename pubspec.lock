@@ -149,10 +149,10 @@ packages:
     dependency: transitive
     description:
       name: dio
-      sha256: "7d328c4d898a61efc3cd93655a0955858e29a0aa647f0f9e02d59b3bb275e2e8"
+      sha256: "0894a098594263fe1caaba3520e3016d8a855caeb010a882273189cca10f11e9"
       url: "https://pub.dev"
     source: hosted
-    version: "4.0.6"
+    version: "5.1.1"
   ed_screen_recorder:
     dependency: "direct main"
     description:
@@ -192,15 +192,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.2.10"
-  flowder:
+  flowder_v2:
     dependency: "direct main"
     description:
-      path: "."
-      ref: HEAD
-      resolved-ref: "1ddd171a763c4f1ba09b95e34e35e2e5cf0d1bba"
-      url: "https://github.com/Harsh223/flowder.git"
-    source: git
-    version: "0.2.0"
+      name: flowder_v2
+      sha256: "5c0c027d8e5a6aec2029858af1087686b94c2665d74ae733198e71fa4e806c37"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1"
   flutter:
     dependency: "direct main"
     description: flutter

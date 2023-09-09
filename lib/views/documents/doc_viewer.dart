@@ -42,7 +42,7 @@ class _DocumentViewPageState extends State<DocumentViewPage> {
     log("Opening document: ${widget.documentUrl}");
     switch (widget.type) {
       case DocumentType.file:
-        pageTitle = "PDF viewer";
+        pageTitle = "Document Viewer";
         _cubit = ViewDocumentCubit();
         break;
       case DocumentType.audio:
@@ -52,7 +52,7 @@ class _DocumentViewPageState extends State<DocumentViewPage> {
         // TODO: Handle this case.
         break;
       case DocumentType.image:
-        pageTitle = "Image viewer";
+        pageTitle = "Document Viewer";
         break;
     }
   }

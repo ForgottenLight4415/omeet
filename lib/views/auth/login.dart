@@ -29,7 +29,7 @@ class _LoginViewState extends State<LoginView> {
   void initState() {
     super.initState();
     // TODO: DEVELOPMENT FLAG
-    development = false;
+    development = true;
     _emailController = TextEditingController();
     _passwordController = TextEditingController();
     _authCubit = AuthCubit();

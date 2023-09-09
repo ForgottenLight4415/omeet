@@ -146,7 +146,7 @@ class _ClaimCardState extends State<ClaimCard> {
                       children: <Widget>[
                         Expanded(
                           child: CardDetailText(
-                            title: "Summary Status - 1",
+                            title: "Summary Status",
                             content: widget.claim.withdrawalStatus,
                           ),
                         ),
