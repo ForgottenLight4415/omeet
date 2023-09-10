@@ -28,9 +28,11 @@ import '../views/uploads_page.dart';
 
 import '../withdrawal_module/views/meet_pages/details_page.dart' as dp;
 import '../withdrawal_module/data/models/document.dart' as doc;
+import '../withdrawal_module/views/documents/doc_viewer.dart' as dv;
 import '../withdrawal_module/views/documents/documents_page.dart' as doc_page;
 import '../withdrawal_module/views/documents/videos_page.dart' as vid_page;
 import '../withdrawal_module/views/documents/audio_page.dart' as aud_page;
+import '../withdrawal_module/views/documents/video_player.dart' as vp;
 import '../withdrawal_module/views/meet_pages/meet_main.dart' as meet_main;
 import '../withdrawal_module/views/recorder_pages/video_recorder_page.dart' as video_rec;
 import '../withdrawal_module/views/recorder_pages/image_capture_page.dart' as image_cap;
@@ -193,10 +195,23 @@ class RouteGenerator {
             type: _documentArguments.type,
           ),
         );
+      case '/withdrawal/view/document':
+        final dv.DocumentViewPageArguments _documentArguments =
+        args as dv.DocumentViewPageArguments;
+        return _platformDependentRouting(
+          dv.DocumentViewPage(
+            documentUrl: _documentArguments.documentUrl,
+            type: _documentArguments.type,
+          ),
+        );
 
       case '/view/audio-video':
         final VideoWebViewArguments _args = args as VideoWebViewArguments;
         return _platformDependentRouting(VideoWebView(arguments: _args));
+
+      case '/withdrawal/view/audio-video':
+        final vp.VideoWebViewArguments _args = args as vp.VideoWebViewArguments;
+        return _platformDependentRouting(vp.VideoWebView(arguments: _args));
 
       case '/call_conclusion':
         final List<String> _args = args as List<String>;

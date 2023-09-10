@@ -1,18 +1,18 @@
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:flowder_v2/flowder.dart';
 import 'package:flutter/material.dart';
+import 'package:flowder_v2/flowder.dart';
+import 'package:lecle_downloads_path_provider/lecle_downloads_path_provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:omeet_motor/data/providers/document_provider.dart';
-import 'package:omeet_motor/utilities/show_snackbars.dart';
-import 'package:omeet_motor/views/documents/doc_viewer.dart';
-import 'package:omeet_motor/views/documents/video_player.dart';
-import 'package:path_provider/path_provider.dart';
 
+import '../data/providers/document_provider.dart';
+import '../utilities/show_snackbars.dart';
+import '../views/documents/doc_viewer.dart';
+import '../views/documents/video_player.dart';
 import '../widgets/scaling_tile.dart';
-import '../../data/models/document.dart';
+import '../data/models/document.dart';
 
 class DocumentCard extends StatefulWidget {
   final dynamic document;
@@ -39,8 +39,8 @@ class _DocumentCardState extends State<DocumentCard> {
     if (!mounted) return;
   }
   void _setPath() async {
-    Directory? _path = await getExternalStorageDirectory();
-    String _localPath = _path!.path + Platform.pathSeparator + 'Download';
+    String downloadsPath = (await DownloadsPath.downloadsDirectory())?.path ?? "";
+    String _localPath = downloadsPath + Platform.pathSeparator + 'ICICI-MFI';
     final savedDir = Directory(_localPath);
     bool hasExisted = await savedDir.exists();
     if (!hasExisted) {
@@ -218,8 +218,6 @@ class _DocumentCardState extends State<DocumentCard> {
       progressCallback: (current, total) {
         final progress = (current / total) * 100;
         log('Downloading: $progress');
-        log('Total: $total');
-        log('Current: $current');
       },
       file: File('$_savePath/${(widget.document as Document).fileName}'),
       progress: ProgressImplementation(),
@@ -232,6 +230,11 @@ class _DocumentCardState extends State<DocumentCard> {
         log('$_savePath/${(widget.document as Document).fileName}');
       },
       deleteOnCancel: true,
+    );
+    showInfoSnackBar(
+      context,
+      "Starting Download - ${(widget.document as Document).fileType}",
+      color: Colors.green,
     );
     await Flowder.download(
       await DocumentProvider().getDocument((widget.document as Document).fileUrl),

@@ -95,7 +95,7 @@ class _DocumentViewPageState extends State<DocumentViewPage> {
               child: BlocBuilder<ViewDocumentCubit, ViewDocumentState>(
                 builder: (context, state) {
                   if (state is ViewDocumentReady) {
-                    log(state.docUrl);
+                    log("Actual: ${state.docUrl}");
                     if (state.docType == DocType.pdf) {
                       return SfPdfViewer.network(
                         state.docUrl,
