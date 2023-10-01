@@ -29,7 +29,10 @@ class ApiUrl {
 
   // MEET DOCUMENTS SECTION
   static const String actualDocBaseUrl = "$secondaryBaseUrl/documents/s3jaya/displaydocs.php?vurl=";
+  static const String actualVideoBaseUrl = "$baseUrl/admin/meet/video_meet/s3upload/displayvideo.php?vurl=";
   static const String getDocumentsUrl = "documents.php";
+  static const String getVideosUrl = "api/videos.php";
+  static const String getAudioUrl = "api/audiolist.php";
 
   // MEET QUESTIONS SECTION
   static const String getQuestionsUrl = "allquestions.php";

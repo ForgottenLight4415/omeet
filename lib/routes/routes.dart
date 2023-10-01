@@ -7,8 +7,15 @@ import 'package:omeet_motor/views/landing_new.dart';
 import '../data/models/claim.dart';
 import '../data/models/document.dart';
 
+import '../utilities/camera_utility.dart';
 import '../views/authentication/login_view.dart';
 import '../views/authentication/verification_view.dart';
+import '../views/documents/audio_page.dart';
+import '../views/documents/video_player.dart';
+import '../views/documents/videos_page.dart';
+import '../views/recorder_pages/audio_recorder_page.dart';
+import '../views/recorder_pages/image_capture_page.dart';
+import '../views/recorder_pages/video_recorder_page.dart';
 import '../views/uploads_view.dart';
 
 import '../views/documents/documents_list_view.dart';
@@ -49,6 +56,24 @@ class RouteGenerator {
           DetailsPage(claim: _claim),
         );
 
+      // RECORDER ROUTES
+      case '/record/audio':
+        final AudioRecordArguments _audioRecArguments =
+            args as AudioRecordArguments;
+        return _platformDependentRouting(
+            AudioRecordPage(arguments: _audioRecArguments));
+      case '/record/video':
+        final VideoPageConfig _videoRecArgs = args as VideoPageConfig;
+        return _platformDependentRouting(
+          VideoRecordPage(config: _videoRecArgs),
+        );
+      case '/capture/image':
+        final CameraCaptureArguments _captureImageArgs =
+            args as CameraCaptureArguments;
+        return _platformDependentRouting(
+          CaptureImagePage(arguments: _captureImageArgs),
+        );
+
       // MEETING ROUTES
       case '/claim/meeting':
         final Claim _claim = args as Claim;
@@ -74,6 +99,26 @@ class RouteGenerator {
             type: _documentArguments.type,
           ),
         );
+      case '/videos':
+        final DocumentPageArguments _arguments = args as DocumentPageArguments;
+        return _platformDependentRouting(
+          VideosPage(
+            claimNumber: _arguments.claimNumber,
+            readOnly: _arguments.readOnly,
+          ),
+        );
+      case '/audio':
+        final DocumentPageArguments _arguments = args as DocumentPageArguments;
+        return _platformDependentRouting(
+          AudioPage(
+            claimNumber: _arguments.claimNumber,
+            readOnly: _arguments.readOnly,
+          ),
+        );
+
+      case '/view/audio-video':
+        final String _pageUrl = args as String;
+        return _platformDependentRouting(VideoWebView(pageUrl: _pageUrl));
 
       default:
         return _platformDependentRouting(const InvalidRoute());

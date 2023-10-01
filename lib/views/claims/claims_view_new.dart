@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../blocs/home_bloc/get_claims_cubit.dart';
+import '../../recorder_initialization.dart';
 import '../../utilities/app_constants.dart';
 import '../../widgets/input_fields.dart';
 import '../../widgets/loading_widget.dart';
@@ -22,9 +23,14 @@ class _ClaimsViewState extends State<ClaimsView> with AutomaticKeepAliveClientMi
   final GetClaimsCubit _claimsCubit = GetClaimsCubit();
   late TextEditingController _searchController;
 
+  RecorderInitialization? _recorderInitialization;
+
   @override
   void initState() {
     super.initState();
+    if (!widget.isCompleted) {
+      initializeRecorders();
+    }
     _searchController = TextEditingController();
     _searchController.addListener(() {
       _claimsCubit.searchClaims(_searchController.text);
@@ -38,8 +44,13 @@ class _ClaimsViewState extends State<ClaimsView> with AutomaticKeepAliveClientMi
     super.dispose();
   }
 
+  void initializeRecorders() async {
+    _recorderInitialization = await RecorderInitialization.create();
+  }
+
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Column(
       children: [
         Padding(
@@ -78,6 +89,9 @@ class _ClaimsViewState extends State<ClaimsView> with AutomaticKeepAliveClientMi
                       itemBuilder: (context, index) => ClaimCard(
                         claim: state.claims[index],
                         isEditable: !widget.isCompleted,
+                        screenRecorder: _recorderInitialization?.screenRecorder,
+                        screenCapture: _recorderInitialization?.screenCapture,
+                        videoRecorder: _recorderInitialization?.videoRecorder,
                       ),
                     ),
                   );

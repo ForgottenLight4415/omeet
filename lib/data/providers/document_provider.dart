@@ -16,6 +16,12 @@ class DocumentProvider extends AppServerProvider {
       case DocumentType.file:
         urlPath = ApiUrl.getDocumentsUrl;
         break;
+      case DocumentType.audio:
+        urlPath = ApiUrl.getAudioUrl;
+        break;
+      case DocumentType.video:
+        urlPath = ApiUrl.getVideosUrl;
+        break;
       case DocumentType.image:
         urlPath = ApiUrl.getDocumentsUrl;
         break;

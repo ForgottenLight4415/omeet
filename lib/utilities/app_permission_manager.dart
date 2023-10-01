@@ -75,3 +75,12 @@ void _permissionHandler(BuildContext context, Permission permission) async {
     openAppSettings();
   }
 }
+
+Future<bool?> storagePermission(BuildContext context) async {
+  return _permissionRequestInterface(
+    context: context,
+    permission: Permission.storage,
+    icon: const Icon(Icons.mic, color: Colors.red),
+    message: "Access to files is needed to use this feature.",
+  );
+}

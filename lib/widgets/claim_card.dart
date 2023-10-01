@@ -3,10 +3,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../utilities/screen_capture.dart';
+import '../utilities/screen_recorder.dart';
+import '../utilities/video_recorder.dart';
 import 'base_card.dart';
 import 'snack_bar.dart';
 import 'card_detail_text.dart';
 import 'claim_options_tile.dart';
+import '../utilities/claim_options_functions.dart';
 
 import '../data/models/claim.dart';
 import '../data/models/document.dart';
@@ -18,16 +22,36 @@ import '../blocs/call_bloc/call_cubit.dart';
 
 class ClaimCard extends StatefulWidget {
   final Claim claim;
+  final ScreenRecorder? screenRecorder;
+  final ScreenCapture? screenCapture;
+  final VideoRecorder? videoRecorder;
   final bool isEditable;
 
-  const ClaimCard({Key? key, required this.claim, this.isEditable = true})
-      : super(key: key);
+  const ClaimCard({
+    Key? key,
+    required this.claim,
+    this.screenRecorder,
+    this.screenCapture,
+    this.videoRecorder,
+    this.isEditable = true,
+  }) : super(key: key);
 
   @override
   State<ClaimCard> createState() => _ClaimCardState();
 }
 
 class _ClaimCardState extends State<ClaimCard> {
+  String? _screenshotClaim;
+  Color? _cardColor;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.isEditable) {
+      _setCardColor();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Theme(
@@ -64,6 +88,7 @@ class _ClaimCardState extends State<ClaimCard> {
           }
         },
         card: Card(
+          color: _cardColor,
           child: Container(
             constraints: BoxConstraints(minHeight: 180.h),
             padding: EdgeInsets.all(12.w),
@@ -194,6 +219,42 @@ class _ClaimCardState extends State<ClaimCard> {
               ),
             )
               : const SizedBox(),
+            widget.isEditable
+                ? ClaimPageTiles(
+              faIcon: FontAwesomeIcons.camera,
+              label: "Capture image",
+              onPressed: () {
+                Navigator.pop(modalContext);
+                captureImage(context, widget.claim);
+              },
+            )
+                : const SizedBox(),
+            widget.isEditable
+                ? ClaimPageTiles(
+              faIcon: FontAwesomeIcons.film,
+              label: AppStrings.recordVideo,
+              onPressed: () async {
+                Navigator.pop(modalContext);
+                await recordVideo(
+                  context,
+                  widget.claim,
+                  widget.videoRecorder!,
+                ).then((_) {
+                  _setCardColor();
+                });
+              },
+            )
+                : const SizedBox(),
+            widget.isEditable
+                ? ClaimPageTiles(
+              faIcon: FontAwesomeIcons.microphone,
+              label: AppStrings.recordAudio,
+              onPressed: () {
+                Navigator.pop(modalContext);
+                recordAudio(context, widget.claim);
+              },
+            )
+                : const SizedBox(),
             ClaimPageTiles(
               faIcon: FontAwesomeIcons.fileLines,
               label: "Documents",
@@ -202,6 +263,36 @@ class _ClaimCardState extends State<ClaimCard> {
                 Navigator.pushNamed(
                   context,
                   '/documents',
+                  arguments: DocumentPageArguments(
+                    widget.claim.claimNumber,
+                    !widget.isEditable,
+                  ),
+                );
+              },
+            ),
+            ClaimPageTiles(
+              faIcon: FontAwesomeIcons.fileAudio,
+              label: "Audio recordings",
+              onPressed: () {
+                Navigator.pop(modalContext);
+                Navigator.pushNamed(
+                  context,
+                  '/audio',
+                  arguments: DocumentPageArguments(
+                    widget.claim.claimNumber,
+                    !widget.isEditable,
+                  ),
+                );
+              },
+            ),
+            ClaimPageTiles(
+              faIcon: FontAwesomeIcons.fileVideo,
+              label: "Videos",
+              onPressed: () {
+                Navigator.pop(modalContext);
+                Navigator.pushNamed(
+                  context,
+                  '/videos',
                   arguments: DocumentPageArguments(
                     widget.claim.claimNumber,
                     !widget.isEditable,
@@ -230,6 +321,29 @@ class _ClaimCardState extends State<ClaimCard> {
       showSnackBar(context, AppStrings.receiveCall, type: SnackBarType.success);
     } else if (state is CallFailed) {
       showSnackBar(context, state.cause, type: SnackBarType.error);
+    }
+  }
+
+  void _setCardColor() async {
+    _screenshotClaim = widget.screenCapture!.claimNumber;
+    if (widget.screenRecorder!.isRecording) {
+      setState(() {
+        _cardColor = Colors.red.shade100;
+      });
+    } else if (_screenshotClaim != null &&
+        _screenshotClaim == widget.claim.claimNumber) {
+      setState(() {
+        _cardColor = Colors.red.shade100;
+      });
+    } else if (widget.videoRecorder!.caseClaimNumber != null &&
+        widget.videoRecorder!.caseClaimNumber == widget.claim.claimNumber) {
+      setState(() {
+        _cardColor = Colors.red.shade100;
+      });
+    } else {
+      setState(() {
+        _cardColor = null;
+      });
     }
   }
 }
