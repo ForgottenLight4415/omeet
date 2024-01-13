@@ -8,10 +8,14 @@ import 'data/repositories/auth_repo.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+
   final AuthRepository authRepository = AuthRepository();
   final bool isSignedIn = await authRepository.signIn();
   List<String?>? userDetails;
-
   if (isSignedIn) {
     userDetails = await authRepository.getUserDetails();
   }
@@ -35,11 +39,6 @@ class OMeetApp extends StatefulWidget {
 class _OMeetAppState extends State<OMeetApp> {
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
-
     return ScreenUtilInit(
       designSize: const Size(412, 915),
       builder: (BuildContext context, Widget? child) => MaterialApp(
