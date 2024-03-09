@@ -39,6 +39,7 @@ dependencies:
   flutter_sound_lite: ^8.5.0
   permission_handler: ^10.2.0
   shared_preferences: ^2.0.8
+  ed_screen_recorder: ^0.0.14
   flutter_screenutil: ^5.0.0+2
   font_awesome_flutter: ^10.4.0
   simple_connection_checker: ^0.2.1
@@ -47,8 +48,8 @@ dependencies:
   jitsi_meet_wrapper: ^0.0.6
   omeet_screen_capture:
     path: ./omeet_screen_capture
-  ed_screen_recorder:
-    path: ed_screen_recorder
+#  ed_screen_recorder:
+#    path: ed_screen_recorder
 
 dev_dependencies:
   flutter_test:
